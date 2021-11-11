@@ -1,6 +1,6 @@
-﻿DocInfo/DescLong=Test map stuff
+﻿DocInfo/DescLong=Emebdded Dev Tools to make your testing and iteration a bit easier
 DocInfo/DescShort=Any
-DocInfo/Name=Alevice Internal Test Mao
+DocInfo/Name=Alevice's Ingame Dev Tools
 MapInfo/Player00/Name=Neutral
 MapInfo/Player01/Name=Player 1
 MapInfo/Player02/Name=Player 2
