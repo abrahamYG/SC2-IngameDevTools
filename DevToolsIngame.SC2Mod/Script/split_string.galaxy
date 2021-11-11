@@ -1,0 +1,50 @@
+const int DATA_SPLIT_SEGMENT_MAX = 64;
+
+struct data_split_t {
+    string[DATA_SPLIT_SEGMENT_MAX] data;
+    int[DATA_SPLIT_SEGMENT_MAX] offset;
+    int count;
+};
+bool split_string(structref<data_split_t> dsplit, string str, string sep)
+{
+    int i;
+    int pos_end;
+    int curr_offset = 1;
+
+    if (str == "" || str == null) {
+        return true;
+    }
+
+    for (i = 0; i < DATA_SPLIT_SEGMENT_MAX; i += 1) {
+        dsplit.count = i + 1;
+        dsplit.offset[i] = curr_offset;
+        pos_end = StringFind(str, sep, false);
+        if (pos_end == c_stringNotFound) {
+            dsplit.data[i] = StringSub(str, 1, StringLength(str));
+            break;
+        }
+        else {
+            dsplit.data[i] = StringSub(str, 1, pos_end - 1);
+            pos_end += 1;
+        }
+        // dbg("d[" + IntToString(i) + "]= " + dsplit.data[i]);
+        curr_offset += pos_end - 1;
+        str = StringSub(str, pos_end, StringLength(str));
+    }
+
+    if (i >= DATA_SPLIT_SEGMENT_MAX) {
+        return false;
+    }
+
+    return true;
+}
+string split_string_get(string str, string sep, int idx)
+{
+    data_split_t dsplit;
+    split_string(dsplit, str, sep);
+    if (dsplit.count <= idx) {
+        
+        return "";
+    }
+    return dsplit.data[idx];
+}

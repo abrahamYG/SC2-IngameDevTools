@@ -1,0 +1,44 @@
+include "Script/debug_h";
+
+static const string ACTORMESSAGECONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/ActorMessageManager";
+static const string ACTORMESSAGEEDITBOX_PATH = "ActorMessage";
+static const string ACTORMESSAGESENDBTN_PATH = "ActorMessageSendButton";
+
+
+
+
+struct ActorMessageContainerStruct{
+    int panel;
+    int messageBox;
+    int sendButton;
+};
+
+ActorMessageContainerStruct ActorMessageContainer;
+
+
+static actor ActorMessageContainerTarget(){
+	actor a;
+	unitgroup ug = UnitGroupSelected(EventPlayer());
+	a = libNtve_gf_MainActorofUnit(UnitGroupUnit(ug,1));
+	return a;
+    
+}
+
+bool ActorMessageContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(ActorMessageContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    actor target = ActorMessageContainerTarget();
+    ActorSend(target,val);
+    //ConsoleCommand(val,true,true);
+    print(val);
+    return trigRan;
+}
+
+void ActorMessageHandler_Init(){
+    trigger t;
+    ActorMessageContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,ACTORMESSAGECONTAINERDLG_PATH);
+    ActorMessageContainer.messageBox = DialogControlHookup(ActorMessageContainer.panel,c_triggerControlTypeEditBox,ACTORMESSAGEEDITBOX_PATH);
+    ActorMessageContainer.sendButton = DialogControlHookup(ActorMessageContainer.panel,c_triggerControlTypeButton,ACTORMESSAGESENDBTN_PATH);
+    t = TriggerCreate("ActorMessageContainerSendHandler");
+    TriggerAddEventDialogControl(t,c_playerAny,ActorMessageContainer.sendButton,c_triggerControlEventTypeClick);
+}

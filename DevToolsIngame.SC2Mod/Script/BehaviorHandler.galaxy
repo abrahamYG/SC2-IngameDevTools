@@ -1,0 +1,68 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/BehaviorManager";
+
+ItemListContainerStruct BehaviorContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool BehaviorListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool BehaviorListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void BehaviorListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	DialogControlSetPropertyAsString(BehaviorContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+static unitgroup BehaviorContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string BehaviorContainerBehavior(string val){
+    return val;
+}
+
+bool BehaviorContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(BehaviorContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string behavior = BehaviorContainerBehavior(val);
+    unitgroup ug = BehaviorContainerTarget();
+    unit u;
+    int i;
+    if(EventDialogControl()==BehaviorContainer.addButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            UnitBehaviorAdd(u,behavior,u,1);
+            print("Adding behavior ["+behavior+"] to unit "+UnitGetType(u));
+        }
+    }
+    else if(EventDialogControl()==BehaviorContainer.removeButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            UnitBehaviorRemove(u,behavior,1);
+            print("Removing behavior ["+behavior+"] to unit "+UnitGetType(u));
+        }
+        
+    }
+    return trigRan;
+}
+
+void BehaviorHandler_Init(){
+    playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(BehaviorContainer, CONTAINERDLG_PATH, "BehaviorContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogBehavior, ItemListCatalogFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "BehaviorListBox", BehaviorListBoxSetActive, CONTAINERDLG_PATH);
+    ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

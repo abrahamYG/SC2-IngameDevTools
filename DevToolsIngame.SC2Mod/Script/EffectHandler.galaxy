@@ -1,0 +1,140 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/EffectManager";
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+static const string SRCBTN_PATH = "SetSourceUnit";
+static const string TGTBTN_PATH = "SetTargetUnit";
+static const string SRCUNIT_PATH = "Source";
+static const string TGTUNIT_PATH = "Target";
+
+
+struct EffectContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+    int sourceButton;
+    int targetButton;
+    int sourceUnitFrame;
+    int targetUnitFrame;
+    
+    unit source;
+    unit target;
+};
+
+EffectContainerStruct EffectContainer;
+
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+
+
+
+bool EffectListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+
+bool EffectListBoxSelectionChanged(bool a, bool b){
+	
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void EffectListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
+	DialogControlSetPropertyAsString(EffectContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+
+static unitgroup EffectContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string EffectContainerEffect(string val){
+    return val;
+    
+}
+
+bool EffectContainerSendHandler(bool a, bool b){
+    int player = EventPlayer();
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(EffectContainer.messageBox,c_triggerControlPropertyEditText,player);
+    string effect = EffectContainerEffect(val);
+    unitgroup ug = EffectContainerTarget();
+    unit u;
+    int i;
+    if(EventDialogControl()==EffectContainer.addButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            if(EffectContainer.source==null){
+                EffectContainer.source = u;
+            }
+            if(EffectContainer.target==null){
+                EffectContainer.target = u;
+            }
+            
+            UnitCreateEffectUnit(EffectContainer.source,effect,EffectContainer.target);
+            print("Adding effect ["+effect+"] from unit "+UnitGetType(EffectContainer.source)+" to unit "+UnitGetType(EffectContainer.target));
+        }
+    }
+    else if(EventDialogControl()==EffectContainer.removeButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            CatalogFieldValueSet(c_gameCatalogEffect,effect,"DebugTrace",player,"1");
+            print("Enabling Debug Trace for ["+effect+"] to player "+IntToString(player));
+        }
+    }
+    else if(EventDialogControl()==EffectContainer.sourceButton){
+        u = UnitGroupUnit(ug,1);
+        EffectContainer.source = u;
+        DialogControlSetPropertyAsUnit(EffectContainer.sourceUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
+    }
+    else if(EventDialogControl()==EffectContainer.targetButton){
+        u = UnitGroupUnit(ug,1);
+        EffectContainer.target = u;
+        DialogControlSetPropertyAsUnit(EffectContainer.targetUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
+    }
+    return trigRan;
+}
+
+
+void EffectListInitUI(){
+	playergroup pg = PlayerGroupAll();
+    ItemList_FilterListInitStandard(ListBoxFilter, "EffectListBox", EffectListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}
+
+void EffectList_Init(){
+    ItemListInitFromCatalog(ItemList, c_gameCatalogEffect, ItemListCatalogFilter);
+};
+
+
+void EffectHandler_Init(){
+    trigger t;
+    EffectContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    EffectContainer.messageBox = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    EffectContainer.addButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    EffectContainer.removeButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+    EffectContainer.sourceButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,SRCBTN_PATH);
+    EffectContainer.targetButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,TGTBTN_PATH);
+    EffectContainer.sourceUnitFrame = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeUnitStatus,SRCUNIT_PATH);
+    EffectContainer.targetUnitFrame = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeUnitStatus,TGTUNIT_PATH);
+ 
+    t = TriggerCreate("EffectContainerSendHandler");
+    TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.removeButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.sourceButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.targetButton,c_triggerControlEventTypeClick);
+    
+    EffectList_Init();
+    EffectListInitUI();
+}

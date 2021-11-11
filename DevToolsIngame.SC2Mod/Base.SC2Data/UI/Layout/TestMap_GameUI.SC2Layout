@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+	<Frame type="Frame" name="GameUI/UIContainer/ConsoleUIContainer" file="GameUI">
+		<Frame type="ToggleControl" name="DevToolsMenuContainer" template="DevTools_MenuBar/NavigationContainer">
+			<Shortcut val="Control+Shift+M"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+		</Frame>
+		<Frame type="ToggleControl" name="PortViewerContainer" template="PortView/PortViewerContainer">
+			<Shortcut val="Control+Shift+P"/>
+			<Visible val="False"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="400"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			
+		</Frame>
+		<Frame type="ToggleControl" name="DataEditorMain" template="DataEditor/MainWindow">
+			<Shortcut val="Control+Shift+D"/>
+			<Visible val="{$parent/DevToolsMenuContainer/DataEditorButton/@Toggled}"/>
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			
+		</Frame>
+		<Frame type="Frame" name="CatalogManager">
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CatalogManagerButton/HitTestFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Visible val="{$parent/DevToolsMenuContainer/CatalogManagerButton/@Toggled}"/>
+			<Frame type="TabControl" name="CatalogManagerList" template="CatalogManager/CatalogManagerList">
+				
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<TabListItem val="$this/ShowAbilityManager"/>
+				<TabListItem val="$this/ShowBehaviorManager"/>
+				<TabListItem val="$this/ShowEffectManager"/>
+				<TabListItem val="$this/ShowUnitManager"/>
+				<TabListItem val="$this/ShowUpgradeManager"/>
+				<TabListItem val="$this/ShowWeaponManager"/>
+				<TabListItem val="$this/ShowLightingManager"/>
+				<TabListItem val="$this/ShowRaceManager"/>
+				<TabListItem val="$this/ShowSkinManager"/>
+
+				<PanelListItem val="$parent/AbilityManager"/>
+				<PanelListItem val="$parent/BehaviorManager"/>
+				<PanelListItem val="$parent/EffectManager"/>
+				<PanelListItem val="$parent/UnitManager"/>
+				<PanelListItem val="$parent/UpgradeManager"/>
+				<PanelListItem val="$parent/WeaponManager"/>
+				<PanelListItem val="$parent/LightingManager"/>
+				<PanelListItem val="$parent/RaceManager"/>
+				<PanelListItem val="$parent/SkinManager"/>
+
+				<Wrap val="true"/>
+				<SelectedIndex val="3"/>
+				<Handle val="$CatalogManagerList"/>
+				<Animation name="MouseWheelIncrement">
+					<Event event="OnMouseWheelDecrement" action="Play,Reset"/>
+					<Controller type="Event" end="Pause">
+						<Key type="Event" time="0" event="IncrementSelectedIndex"/>
+					</Controller>
+				</Animation>
+				
+				<Animation name="MouseWheelDecrement">
+					<Event event="OnMouseWheelIncrement" action="Play,Reset"/>
+					<Controller type="Event" end="Pause">
+						<Key type="Event" time="0" event="DecrementSelectedIndex"/>
+					</Controller>
+				</Animation>
+			</Frame>
+			
+			<Frame type="Control" name="BehaviorManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowBehaviorManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Behavior"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="EffectManager" template="CatalogManager/CatalogManagerSourceTarget">
+				<Visible val="{$parent/CatalogManagerList/ShowEffectManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/BehaviorManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/BehaviorManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Effect"/>
+				</Frame>
+				
+			</Frame>
+			<Frame type="Control" name="UnitManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowUnitManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/EffectManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/EffectManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Unit"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="UpgradeManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowUpgradeManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/UnitManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/UnitManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Upgrade"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="WeaponManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowWeaponManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/UpgradeManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/UpgradeManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Weapon"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="AbilityManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowAbilityManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/WeaponManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/WeaponManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Ability"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="AbilityOrderManager" template="CatalogManager/CatalogManagerSourceTarget">
+				<Visible val="{$parent/CatalogManagerList/ShowAbilityManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/AbilityManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/AbilityManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="AbilityOrder"/>
+				</Frame>
+				<Frame type="EditBox" name="BoxFilter" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+					<Text val="{$parent/$parent/AbilityManager/Item/@Text}"/>
+				</Frame>
+				</Frame>
+			<Frame type="Control" name="LightingManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowLightingManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/UpgradeManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/UpgradeManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Lighting"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="RaceManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowRaceManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/LightingManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/LightingManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Race"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="SkinManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowSkinManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/RaceManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/RaceManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Skin"/>
+				</Frame>
+			</Frame>
+		</Frame>
+		
+		<Frame type="Control" name="CheatManager" template="CatalogManager/CheatManager">
+			<Visible val="{$parent/DevToolsMenuContainer/CheatManagerButton/@Toggled}"/>
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Min" offset="0"/>
+			<Frame type="Label" name="Title">
+				<Text val="Cheat"/>
+			</Frame>
+		</Frame>
+		
+		<Frame type="Control" name="ActorMessageManager" template="CatalogManager/TestMap_PanelTemplateTitled">
+			<Visible val="{$parent/DevToolsMenuContainer/MiscButton/@Toggled}"/>
+			<CollapseLayout val="True"/>
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/MiscButton/HitTestFrame" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/MiscButton/HitTestFrame" pos="Min" offset="0"/>
+			<Height val="200"/>
+			<Width val="400"/>
+			<Frame type="Label" name="Title">
+				<Text val="ActorMessage"/>
+			</Frame>
+
+			<Frame type="EditBox" name="ActorMessage" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+				<Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+				<Width val="300"/>
+				<Height val="60"/>
+			</Frame>
+
+			<Frame type="Button" name="ActorMessageSendButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+				<Anchor side="Top" relative="$parent/ActorMessage" pos="Max" offset="5"/>
+				<Anchor side="Left" relative="$parent/ActorMessage" pos="Min" offset="0"/>
+				<Width val="200"/>
+				<Height val="60"/>
+				<Text val="Send"/>
+			</Frame>
+		</Frame>
+		
+		<Frame type="Control" name="CatalogValueManager" template="CatalogManager/CatalogValueManager">
+			<CollapseLayout val="True"/>
+			
+			<Frame type="Label" name="Title">
+				<Text val="CatalogValueManager"/>
+			</Frame>
+			<Visible val="{$parent/ActorMessageManager/@Visible}"/>
+			<Anchor side="Top" relative="$parent/ActorMessageManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/ActorMessageManager" pos="Min" offset="0"/>
+		</Frame>
+		
+	</Frame>
+	<Frame type="Frame" name="GameUI/UIContainer" file="GameUI">
+		
+		
+	</Frame>
+	
+</Desc>

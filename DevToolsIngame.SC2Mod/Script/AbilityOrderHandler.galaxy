@@ -1,0 +1,367 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/AbilityOrderManager";
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+static const string SRCBTN_PATH = "SetSourceUnit";
+static const string TGTBTN_PATH = "SetTargetUnit";
+static const string SRCUNIT_PATH = "Source";
+static const string TGTUNIT_PATH = "Target";
+
+
+struct AbilityOrderContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+    int sourceButton;
+    int targetButton;
+    int sourceUnitFrame;
+    int targetUnitFrame;
+    
+    unit source;
+    unit target;
+};
+
+AbilityOrderContainerStruct AbilityOrderContainer;
+
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+
+string AbilityOrderList_AbilClassGetName(int val){
+    return DataTableGetString(true,"AbilityOrderList_AbilClass."+IntToString(val));
+}
+
+string AbilityOrderList_AbilClassGetPrefix(int catalog, int index){
+    
+    if(DataTableValueExists(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(catalog)+":"+IntToString(index))){
+        return DataTableGetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(catalog)+":"+IntToString(index));
+    }
+    else{
+        return DataTableGetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(catalog))+IntToString(index+1);
+    }
+}
+
+int AbilityOrderList_AbilClassGetCount(int val){
+    return DataTableGetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(val));
+}
+
+
+void AbilityOrderList_AddAbilityOrderItems(string entry, int player){
+    int j;
+    int abilClass = AbilityClass(entry);
+    string abilCmdPrefix;
+    string suffix;
+    string subEntry;
+    for(j=0;j<AbilityOrderList_AbilClassGetCount(abilClass);j+=1){
+        abilCmdPrefix = AbilityOrderList_AbilClassGetPrefix(abilClass,j);
+        suffix = abilCmdPrefix;
+        subEntry = entry+":"+suffix;
+        if(CatalogFieldExists(CatalogEntryScope(c_gameCatalogAbil,entry),"CmdButtonArray")){
+            subEntry += "("+CatalogFieldValueGet(c_gameCatalogAbil,entry,"CmdButtonArray["+IntToString(j)+"].DefaultButtonFace",player)+")";
+        }
+        else if (CatalogFieldExists(CatalogEntryScope(c_gameCatalogAbil,entry),"InfoArray")){
+            subEntry += "("+CatalogFieldValueGet(c_gameCatalogAbil,entry,"InfoArray["+IntToString(j)+"].Button.DefaultButtonFace",player)+")";
+        }
+        //print(CatalogFieldValueGet(c_gameCatalogAbil,entry,"CmdButtonArray["+IntToString(j)+"].DefaultButtonFace",1));
+        ItemListAdd(ItemList,subEntry);
+        DataTableSetString(true,"AbilityOrderList.AbilRecord."+subEntry,entry);
+        DataTableSetInt(true,"AbilityOrderList.AbilRecord.Cmd."+subEntry,j);
+    }
+}
+
+
+bool AbilityOrderListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+    int catalog =c_gameCatalogAbil;
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+    ItemListClear(ItemList);
+    if(CatalogEntryIsValid(catalog,val)){
+        AbilityOrderList_AddAbilityOrderItems(val, player);
+        ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+    }
+    else{return false;}
+	return true;
+}
+
+
+bool AbilityOrderListBoxSelectionChanged(bool a, bool b){
+	
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void AbilityOrderListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	DialogControlSetPropertyAsString(AbilityOrderContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+
+void AbilityOrderList_AbilClassInit(){
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbil),c_classIdCAbilName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilProgress),c_classIdCAbilProgressName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilEffect),c_classIdCAbilEffectName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilQueueable),c_classIdCAbilQueueableName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilRedirect),c_classIdCAbilRedirectName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilArmMagazine),c_classIdCAbilArmMagazineName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilAttack),c_classIdCAbilAttackName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilAugment),c_classIdCAbilAugmentName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilAttackModifier),c_classIdCAbilAttackModifierName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilBattery),c_classIdCAbilBatteryName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilBeacon),c_classIdCAbilBeaconName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilBehavior),c_classIdCAbilBehaviorName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilBuild),c_classIdCAbilBuildName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilBuildable),c_classIdCAbilBuildableName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilEffectInstant),c_classIdCAbilEffectInstantName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilEffectTarget),c_classIdCAbilEffectTargetName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilHarvest),c_classIdCAbilHarvestName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilInteract),c_classIdCAbilInteractName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilInventory),c_classIdCAbilInventoryName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilLearn),c_classIdCAbilLearnName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilMerge),c_classIdCAbilMergeName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilMergeable),c_classIdCAbilMergeableName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilMorph),c_classIdCAbilMorphName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilMorphPlacement),c_classIdCAbilMorphPlacementName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilMove),c_classIdCAbilMoveName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilPawn),c_classIdCAbilPawnName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilQueue),c_classIdCAbilQueueName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilRally),c_classIdCAbilRallyName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilRedirectInstant),c_classIdCAbilRedirectInstantName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilRedirectTarget),c_classIdCAbilRedirectTargetName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilResearch),c_classIdCAbilResearchName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilRevive),c_classIdCAbilReviveName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilSpecialize),c_classIdCAbilSpecializeName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilStop),c_classIdCAbilStopName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilTrain),c_classIdCAbilTrainName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilTransport),c_classIdCAbilTransportName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilWarpable),c_classIdCAbilWarpableName);
+    DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilWarpTrain),c_classIdCAbilWarpTrainName);
+
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbil),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilArmMagazine),"Ammo");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAttack),"Execute/Towards/Barrage");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAttackModifier),"Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAugment),"Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBattery),"Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBeacon),"Move");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBehavior),"On/Off");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilBehavior)+":0","On");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilBehavior)+":1","Off");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBuild),"Build");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilBuild)+":30","Halt");    
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBuildable),"Cancel/Halt");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilEffect),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilEffectInstant),"Execute/Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilEffectInstant)+":0","Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilEffectInstant)+":1","Cancel");   
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilEffectTarget),"Execute/Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilEffectTarget)+":0","Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilEffectTarget)+":1","Cancel");   
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilHarvest),"Gather/Return/Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilInteract),"Designate");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilInventory),"Drop/Move/Take/ItemInstant/ItemTarget/ItemCancel/PawnInstant/ItemTogOn/ItemTogOff");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilLearn),"Learn");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMerge),"SelectedUnits/WithTarget");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMergeable),"Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMorph),"Execute/Cancel/Unmorph");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMorphPlacement),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMove),"Move/Patrol/HoldPos/AcquireMove/Turn");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":0","Move");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":1","Patrol");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":2","HoldPos");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":3","AcquireMove");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":4","Turn");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilPawn),"Pawn");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilProgress),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilQueue),"CancelLast/CancelSlot");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilQueueable),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilRally),"Rally");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilRedirect),"");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilRedirectInstant),"Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilRedirectTarget),"Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilResearch),"Research");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilRevive),"Revive");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":20","ReviveAtTarget1");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":21","ReviveAtTarget2");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":22","ReviveAtTarget3");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":23","ReviveAtTarget4");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":24","ReviveAtTarget5");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":25","ReviveAtTarget6");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":26","ReviveAtTarget7");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":27","ReviveAtTarget8");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":28","ReviveAtTarget9");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilRevive)+":29","ReviveAtTarget10");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilSpecialize),"Specialize");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilStop),"Stop/HoldFire/Cheer/Dance/Tease/RequestPickup");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":0","Stop");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":1","HoldFire");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":2","Cheer");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":3","Dance");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":4","Tease");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilStop)+":5","RequestPickup");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilTrain),"Train");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilTransport),"Load/UnloadAll/UnloadAt/UnloadUnit/LoadAll");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilTransport)+":0","Load");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilTransport)+":1","UnloadAll");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilTransport)+":2","UnloadAt");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilTransport)+":3","UnloadUnit");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilTransport)+":4","LoadAll");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilWarpable),"Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilWarpTrain),"Train");
+
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbil),0);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilArmMagazine),20);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAttack),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAttackModifier),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAugment),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBattery),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBeacon),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBehavior),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBuild),31);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBuildable),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilEffect),0);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilEffectInstant),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilEffectTarget),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilHarvest),3);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilInteract),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilInventory),9);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilLearn),20);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilMerge),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilMergeable),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilMorph),3);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilMorphPlacement),3);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilMove),5);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilPawn),20);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilProgress),0);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilQueue),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilQueueable),0);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilRally),4);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilRedirect),0);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilRedirectInstant),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilRedirectTarget),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilResearch),30);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilRevive),30);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilSpecialize),20);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilStop),6);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilTrain),30);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilTransport),4);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilWarpable),1);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilWarpTrain),20);
+}
+
+
+
+
+
+static unitgroup AbilityOrderContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string AbilityOrderContainerAbilityOrder(string val){
+    return DataTableGetString(true,"AbilityOrderList.AbilRecord."+val);
+    
+}
+
+
+static int AbilityOrderContainerAbilityOrderCmd(string val){
+    return DataTableGetInt(true,"AbilityOrderList.AbilRecord.Cmd."+val);
+    
+}
+
+bool AbilityOrderContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(AbilityOrderContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    int cmdIndex = AbilityOrderContainerAbilityOrderCmd(val);
+    string AbilityOrder = AbilityOrderContainerAbilityOrder(val);
+    unitgroup ug = AbilityOrderContainerTarget();
+    abilcmd cmd;
+    order o;
+    unit u;
+    int i;
+    if(EventDialogControl()==AbilityOrderContainer.addButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            if(AbilityOrderContainer.source==null){
+                AbilityOrderContainer.source = u;
+            }
+            if(AbilityOrderContainer.target==null){
+                AbilityOrderContainer.target = u;
+            }
+            cmd = AbilityCommand(AbilityOrder,cmdIndex);
+            if(AbilityCommandGetAction(cmd)==c_cmdActionNone){
+                o = Order(cmd);
+            }
+            if(AbilityCommandGetAction(cmd)==c_cmdActionInstant){
+                o = Order(cmd);
+            }
+            if(AbilityCommandGetAction(cmd)==c_cmdActionTarget){
+                o = OrderTargetingUnit(cmd,AbilityOrderContainer.target);
+            }
+            UnitIssueOrder(AbilityOrderContainer.source,o,c_orderQueueReplace);
+            print("Ordering ["+AbilityOrder+"] from unit "+UnitGetType(AbilityOrderContainer.source)+" to unit "+UnitGetType(AbilityOrderContainer.target));
+        }
+    }
+    else if(EventDialogControl()==AbilityOrderContainer.removeButton){
+            for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            //print("Removing behavior ["+AbilityOrder+"] to unit "+UnitGetType(u));
+        }
+    }
+    else if(EventDialogControl()==AbilityOrderContainer.sourceButton){
+        u = UnitGroupUnit(ug,1);
+        AbilityOrderContainer.source = u;
+        DialogControlSetPropertyAsUnit(AbilityOrderContainer.sourceUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
+    }
+    else if(EventDialogControl()==AbilityOrderContainer.targetButton){
+        u = UnitGroupUnit(ug,1);
+        AbilityOrderContainer.target = u;
+        DialogControlSetPropertyAsUnit(AbilityOrderContainer.targetUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
+    }
+    return trigRan;
+}
+
+
+void AbilityOrderList_Init(){
+    int i;
+    string entry;
+    
+    
+    int catalog =c_gameCatalogAbil;
+    int abilClass;
+    for(i=1;i<CatalogEntryCount(catalog);i+=1){
+        if(i<65535){
+            entry = CatalogEntryGet(catalog,i);
+            //AbilityOrderList_AddAbilityOrderItems(entry);
+        }
+	}
+};
+
+void AbilityOrderHandler_Init(){
+    trigger t;
+    playergroup pg = PlayerGroupAll();
+    AbilityOrderContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    AbilityOrderContainer.messageBox = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    AbilityOrderContainer.addButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    AbilityOrderContainer.removeButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+    AbilityOrderContainer.sourceButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,SRCBTN_PATH);
+    AbilityOrderContainer.targetButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,TGTBTN_PATH);
+    AbilityOrderContainer.sourceUnitFrame = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeUnitStatus,SRCUNIT_PATH);
+    AbilityOrderContainer.targetUnitFrame = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeUnitStatus,TGTUNIT_PATH);
+ 
+    t = TriggerCreate("AbilityOrderContainerSendHandler");
+    TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.removeButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.sourceButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.targetButton,c_triggerControlEventTypeClick);
+    
+    AbilityOrderList_AbilClassInit();   
+    AbilityOrderList_Init();
+    
+    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityOrderListBox", AbilityOrderListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TriggerData>
+    <Library Id="7C0075CB">
+        <Root>
+            <Item Type="CustomScript" Library="7C0075CB" Id="3A7A41F3"/>
+        </Root>
+        <Element Type="CustomScript" Id="3A7A41F3">
+            <ScriptCode>
+                include &quot;TriggerLibs/NativeLib&quot;
+                include &quot;Script/DevToolsMain&quot;
+                void TestMap_main(){
+                    DevToolsMain_Init();
+                }
+            </ScriptCode>
+            <InitFunc>TestMap_main</InitFunc>
+        </Element>
+    </Library>
+</TriggerData>

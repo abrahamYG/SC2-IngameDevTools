@@ -1,0 +1,218 @@
+
+const int ITEM_LIST_MAX = 60000;
+//static string[MAX_ITEM_LIST] ItemList;
+//static int ItemList.count = 0;
+//static int ItemList.current = 0;
+
+struct ItemListStruct{
+	string id;
+    string[ITEM_LIST_MAX] list;
+    int count;
+    int current;
+};
+
+typedef structref<ItemListStruct> ItemListStructRef;
+void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
+typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
+
+
+struct ListBoxFilterStruct{
+    string id;
+    int panel;
+    int editbox;
+    int button;
+    int list;
+    ItemListSetActiveCallback setActive;
+
+};
+typedef structref<ListBoxFilterStruct> ListBoxFilterStructRef;
+
+
+
+struct ItemListContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+};
+
+typedef structref<ItemListContainerStruct> ItemListContainerStructRef;
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+
+void ItemListContainer_InitStandard(ItemListContainerStructRef ItemListContainer, string dlgPath, string triggerName){
+    trigger t;
+    ItemListContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,dlgPath);
+    ItemListContainer.messageBox = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    ItemListContainer.addButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+    t = TriggerCreate(triggerName);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
+}
+
+void ItemListClear(ItemListStructRef itemList){
+	int i =0;
+	for(i=0;i<itemList.count;i+=1){
+		itemList.list[i] = "";
+	}
+	itemList.count=0;
+	itemList.current = -1;
+}
+
+int ItemListAdd(ItemListStructRef itemList, string itemId){
+	if(itemList.count<ITEM_LIST_MAX){
+		itemList.list[itemList.count] = itemId;
+		itemList.count+=1;
+		return itemList.count;
+	}
+	else{return -1;}
+}
+
+int ItemListFind(ItemListStructRef itemList, string itemId){
+	int i;
+	int index = -1;
+	for(i=0;i<itemList.count;i+=1){
+		if(itemList.list[i]==itemId){index=i;break;}
+	}
+	return index;
+}
+
+
+int ItemListGetActive(ItemListStructRef itemList, int player){
+    return DataTableGetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"");
+	//return 0;
+}
+
+void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveCallback callback, int player){
+    string itemId;
+
+	if(index==itemList.count){return;}
+	else if(index>=itemList.count){index=0;}
+	else if(index<0){index=itemList.count-1;}
+
+	//itemList.current = index;
+	DataTableSetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"",index);
+	itemId = itemList.list[index];
+    callback(itemList,index,PlayerGroupSingle(player));
+}
+
+
+bool ItemListCatalogFilterDef(int catalog, string entry){
+	return true;
+}
+typedef funcref<ItemListCatalogFilterDef> ItemListCatalogFilterFunc;
+
+bool ItemListCatalogFilter(int catalog, string entry){return true;}
+
+void ItemListInitFromCatalog(ItemListStructRef itemList, int catalog, ItemListCatalogFilterFunc filterFunc){
+    int i;
+    string entry;
+    int count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
+    for(i=1;i<=count;i+=1){
+        entry = CatalogEntryGet(catalog,i);
+        if(filterFunc(catalog,entry)){
+            ItemListAdd(itemList,entry);
+        }
+	}
+}
+
+
+
+int ItemList_FilterListAddItem(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int index, playergroup pg){
+    int listItem = 0;
+	int player;
+	int i;
+	string key;
+	DialogControlAddItem(listBoxFilter.list,pg,StringToText(itemList.list[index]));
+	for(i=1;i<=PlayerGroupCount(pg);i+=1){
+		player = PlayerGroupPlayer(pg,i);
+    	listItem = DialogControlGetItemCount(listBoxFilter.list,player);
+		key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+		console(key);
+		console(itemList.list[index]);
+    	DataTableSetString(true,key,itemList.list[index]);
+	}
+    return listItem;
+}
+
+void ItemList_FilterListRebuild(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, string filter,playergroup pg){
+	//string val = DialogControlGetPropertyAsString(BoxFilter,c_triggerControlPropertyEditText,EventPlayer());
+	int i; int j;
+	int listItem = 0;
+	data_split_t dsplit;
+    
+    split_string(dsplit, filter, ",");
+	DialogControlRemoveAllItems(listBoxFilter.list,pg);
+	for(i=0;i<itemList.count;i+=1){
+        if(filter==""){
+            ItemList_FilterListAddItem(itemList,listBoxFilter,i,pg);
+        }
+		else if(dsplit.count>0){
+			for(j=0;j<dsplit.count;j+=1){
+				if(StringFind(itemList.list[i],dsplit.data[j],false)>0){
+					ItemList_FilterListAddItem(itemList,listBoxFilter,i,pg);
+				}
+			}
+		}
+		else if(StringFind(itemList.list[i],filter,false)>0){
+			ItemList_FilterListAddItem(itemList,listBoxFilter,i,pg);
+		}
+	}
+
+
+}
+
+
+static const string FILTERBOX_PATH = "BoxFilter";
+static const string FILTERBTN_PATH = "ButtonFilter";
+static const string FILTERLIST_PATH = "ListFilter";
+
+
+
+
+void ItemList_FilterListHookup(ListBoxFilterStructRef listBoxFilter, string path){
+	listBoxFilter.panel = DialogControlHookupStandard(c_triggerControlTypePanel,path);
+    listBoxFilter.list = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeListBox,FILTERLIST_PATH);
+    listBoxFilter.editbox = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeEditBox,FILTERBOX_PATH);
+    listBoxFilter.button = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeButton,FILTERBTN_PATH);
+}
+
+
+void ItemList_FilterListInitStandard(ListBoxFilterStructRef Filter, string id, ItemListSetActiveCallback setActiveFunc, string dlgPath) {
+    trigger t;
+    Filter.id = id;
+    Filter.setActive = setActiveFunc;
+    ItemList_FilterListHookup(Filter,dlgPath);
+	t = TriggerCreate(id+"FilterQuery");
+	TriggerAddEventDialogControl(t,c_playerAny,Filter.editbox,c_triggerControlEventTypeTextChanged);
+
+	t = TriggerCreate(id+"SelectionChanged");
+	TriggerAddEventDialogControl(t,c_playerAny,Filter.list,c_triggerControlEventTypeSelectionChanged);
+}
+
+bool ItemList_FilterBoxQuery(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter){
+	int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(listBoxFilter.editbox,c_triggerControlPropertyEditText,player);
+	ItemList_FilterListRebuild(itemList,listBoxFilter,val,pg);
+	return true;
+}
+bool ItemList_FilterBoxSelectionChanged(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int player){
+	int listItem = DialogControlGetSelectedItem(listBoxFilter.list,player);
+	string val;
+	int index;
+	string key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+	console(key);
+    if(DataTableValueExists(true,key)){
+		val=DataTableGetString(true,key);
+		console(val);
+		index = ItemListFind(itemList,val);
+		if(index>=0){
+			ItemListSetActive(itemList,index,listBoxFilter.setActive,player);
+			return true;
+		}
+	}
+	return false;
+}

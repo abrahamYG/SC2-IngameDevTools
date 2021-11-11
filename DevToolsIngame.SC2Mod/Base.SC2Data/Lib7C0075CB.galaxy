@@ -1,0 +1,36 @@
+include "TriggerLibs/natives"
+
+include "Lib7C0075CB_h"
+
+//--------------------------------------------------------------------------------------------------
+// Library: DataTestModule
+//--------------------------------------------------------------------------------------------------
+// Custom Script
+//--------------------------------------------------------------------------------------------------
+// Custom Script: DataTesModuleInit
+//--------------------------------------------------------------------------------------------------
+include "TriggerLibs/NativeLib"
+include "Script/DevToolsMain"
+void TestMap_main(){
+    DevToolsMain_Init();
+}
+
+void lib7C0075CB_InitCustomScript () {
+    TestMap_main();
+}
+
+//--------------------------------------------------------------------------------------------------
+// Library Initialization
+//--------------------------------------------------------------------------------------------------
+bool lib7C0075CB_InitLib_completed = false;
+
+void lib7C0075CB_InitLib () {
+    if (lib7C0075CB_InitLib_completed) {
+        return;
+    }
+
+    lib7C0075CB_InitLib_completed = true;
+
+    lib7C0075CB_InitCustomScript();
+}
+

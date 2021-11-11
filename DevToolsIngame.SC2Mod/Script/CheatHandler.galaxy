@@ -1,0 +1,91 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CheatManager";
+static const string SHOWMAPBUTTON_PATH = "ShowMap";
+static const string TECHTREEBUTTON_PATH = "Techtree";
+static const string FASTBUILDBUTTON_PATH = "FastBuild";
+static const string FOODBUTTON_PATH = "Food";
+static const string RESOURCEBUTTON_PATH = "Resource";
+
+struct CheatContainerStruct{
+    int panel;
+    int showMapButton;
+    int techtreeButton;
+    int fastBuildButton;
+    int foodButton;
+    int resourceButton;
+};
+
+CheatContainerStruct CheatContainer;
+
+static unitgroup CheatContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string CheatContainerCheat(string val){
+    return val;
+}
+
+bool CheatContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    int player = EventPlayer();
+    int dialog = EventDialogControl();
+    bool toggled = DialogControlGetPropertyAsBool(dialog,c_triggerControlPropertyToggled,player);
+    if(dialog==CheatContainer.showMapButton){
+        toggled = VisIsEnabled(c_visTypeMask) && VisIsEnabled(c_visTypeFog);
+        VisEnable(c_visTypeMask,!toggled);
+        VisEnable(c_visTypeFog,!toggled);
+    }
+    else if(dialog==CheatContainer.techtreeButton){
+        toggled = TechTreeRequirementsEnabled(player);
+        TechTreeRequirementsEnable(player,!toggled);
+    } 
+    else if(dialog==CheatContainer.fastBuildButton){
+        toggled = TechTreeRequirementsEnabled(player);
+        TechTreeRequirementsEnable(player,!toggled);
+        ConsoleCommand("fastbuild",true,true);
+    } 
+    else if(dialog==CheatContainer.foodButton){
+        toggled = PlayerGetState(player,c_playerStateFoodIgnored);
+        PlayerSetState(player,c_playerStateFoodIgnored,!toggled);
+        toggled = !toggled;
+    }
+    else if(dialog==CheatContainer.resourceButton){
+        toggled = PlayerGetState(player,c_playerStateMineralCostIgnored) &&
+        PlayerGetState(player,c_playerStateVespeneCostIgnored) &&
+        PlayerGetState(player,c_playerStateTerrazineCostIgnored) &&
+        PlayerGetState(player,c_playerStateCustomCostIgnored);
+        PlayerSetState(player,c_playerStateMineralCostIgnored,!toggled);
+        PlayerSetState(player,c_playerStateVespeneCostIgnored,!toggled);
+        PlayerSetState(player,c_playerStateTerrazineCostIgnored,!toggled);
+        PlayerSetState(player,c_playerStateCustomCostIgnored,!toggled);
+        toggled = !toggled;
+    }
+    DialogControlSetPropertyAsBool(dialog,c_triggerControlPropertyToggled,PlayerGroupAll(),toggled);
+    return trigRan;
+}
+
+void CheatHandler_Init(){
+    trigger t;
+    CheatContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    CheatContainer.showMapButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,SHOWMAPBUTTON_PATH);
+    CheatContainer.techtreeButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,TECHTREEBUTTON_PATH);
+    CheatContainer.fastBuildButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,FASTBUILDBUTTON_PATH);
+    CheatContainer.foodButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,FOODBUTTON_PATH);
+    CheatContainer.resourceButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,RESOURCEBUTTON_PATH);
+    DialogControlSetPropertyAsBool(CheatContainer.showMapButton,c_triggerControlPropertyToggled,PlayerGroupAll(),false);
+    DialogControlSetPropertyAsBool(CheatContainer.techtreeButton,c_triggerControlPropertyToggled,PlayerGroupAll(),false);
+    DialogControlSetPropertyAsBool(CheatContainer.fastBuildButton,c_triggerControlPropertyToggled,PlayerGroupAll(),false);
+    DialogControlSetPropertyAsBool(CheatContainer.foodButton,c_triggerControlPropertyToggled,PlayerGroupAll(),false);
+    DialogControlSetPropertyAsBool(CheatContainer.resourceButton,c_triggerControlPropertyToggled,PlayerGroupAll(),false);
+
+    t = TriggerCreate("CheatContainerSendHandler");
+    TriggerAddEventDialogControl(t,c_playerAny,CheatContainer.showMapButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,CheatContainer.techtreeButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,CheatContainer.fastBuildButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,CheatContainer.foodButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,CheatContainer.resourceButton,c_triggerControlEventTypeClick);
+}

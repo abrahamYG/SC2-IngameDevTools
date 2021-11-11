@@ -1,0 +1,13 @@
+include "Script/debug_h";
+
+void print(string s){
+	TriggerDebugOutput(1,StringToText(s),true);
+}
+
+void printT(text t){
+	TriggerDebugOutput(1,t,true);
+}
+
+void console(string s){
+	TriggerDebugOutput(1,StringToText(s),false);
+}

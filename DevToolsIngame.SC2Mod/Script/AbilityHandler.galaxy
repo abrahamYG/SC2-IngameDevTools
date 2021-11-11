@@ -1,0 +1,71 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/AbilityManager";
+
+ItemListContainerStruct AbilityContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool AbilityListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,player);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool AbilityListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void AbilityListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
+    DialogControlSetPropertyAsString(AbilityContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+
+static unitgroup AbilityContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string AbilityContainerAbility(string val){
+    return val;
+    
+}
+
+bool AbilityContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(AbilityContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string Ability = AbilityContainerAbility(val);
+    unitgroup ug = AbilityContainerTarget();
+    unit u;
+    int i;
+    if(EventDialogControl()==AbilityContainer.addButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            UnitAbilityAdd(u,Ability);
+            console("Adding Ability ["+Ability+"] to unit "+UnitGetType(u));
+        }
+    }
+    else if(EventDialogControl()==AbilityContainer.removeButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            UnitAbilityRemove(u,Ability);
+            console("Removing Ability ["+Ability+"] to unit "+UnitGetType(u));
+        }
+        
+    }
+    return trigRan;
+}
+
+void AbilityHandler_Init(){
+    playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(AbilityContainer, CONTAINERDLG_PATH, "AbilityContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogAbil, ItemListCatalogFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityListBox", AbilityListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+
+}

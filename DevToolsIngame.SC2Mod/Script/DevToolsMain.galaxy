@@ -1,0 +1,36 @@
+include "Script/debug";
+include "Script/ActorMessageHandler";
+include "Script/BehaviorHandler";
+include "Script/EffectHandler";
+include "Script/UnitHandler";
+include "Script/UpgradeHandler";
+include "Script/WeaponHandler";
+include "Script/AbilityHandler";
+include "Script/AbilityOrderHandler";
+include "Script/CatalogValueHandler";
+include "Script/LightingHandler";
+include "Script/RaceHandler";
+include "Script/SkinHandler";
+include "Script/CheatHandler";
+include "Script/DataEditorHandler";
+include "Script/PortView";
+
+
+void DevToolsMain_Init(){
+    
+    ActorMessageHandler_Init();
+    CatalogValueHandler_Init();
+    AbilityHandler_Init();
+    AbilityOrderHandler_Init();
+    BehaviorHandler_Init();
+    EffectHandler_Init();
+    LightingHandler_Init();
+    UnitHandler_Init();
+    UpgradeHandler_Init();
+    WeaponHandler_Init();
+    SkinHandler_Init();
+    RaceHandler_Init();
+    CheatHandler_Init();
+    DataEditorHandler_Init();
+    PortView_Init();
+}

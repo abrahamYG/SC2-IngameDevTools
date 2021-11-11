@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Label" name="AttributeNameLabel">
+        <Style val="BattlenetStandardButton"/>
+    </Frame>
+    <Frame type="Frame" name="AttributeRow">
+        <Height val="70"/>
+        <Frame type="Label" name="Name" template="DataEditor/AttributeNameLabel">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Width val="150"/>
+            <Height val="{$parent/@Height}"/>
+        </Frame>
+        <Frame type="EditBox" name="Value" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Left" relative="$parent/Name" pos="Max" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Width val="300"/>
+            <Height val="{$parent/@Height}"/>
+        </Frame>
+    </Frame>
+    <Frame type="Frame" Name="MainWindow" template="CatalogManager/CatalogManager_PanelTemplate">
+        <Frame type="Image" name="BG">
+            <Anchor relative="$parent" offset="-4"/>
+            <Color val="000000"/>
+            <Alpha val="200"/>
+        </Frame>
+        <Frame type="EditBox" name="EntryID" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+            <Anchor side="Top" relative="$parent" pos="Max" offset="100"/>
+            <Anchor side="Left" relative="$parent" pos="Max" offset="100"/>
+            
+        </Frame>
+        <Frame type="Frame" name="NavList">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="10"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Width val="400"/>
+            <Frame type="EditBox" name="BoxFilter" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Width val="200"/>
+                <Height val="60"/>
+            </Frame>
+            <Frame type="Button" name="ButtonFilter" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Width val="140"/>
+                <Height val="60"/>
+                <Text val="Filter"/>
+            </Frame>
+            <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+                <Anchor side="Bottom" relative="$parent" pos="Max" offset="-30"/>
+            </Frame>
+        </Frame>
+        <Frame type="Frame" name="UnitModelContainer">
+            <Anchor side="Top" relative="$parent/NavList" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent/NavList" pos="Max" offset="0"/>
+            <Width val="400"/>
+            <Height val="400"/>
+            <Frame type="UnitModelFrame" name="UnitModelFrame" template="StandardUnitModelTemplates/UnitModelFrameBaseTemplate">
+                <Anchor side="Top" relative="$parent" pos="-15%" offset="0"/>
+                <Anchor side="Bottom" relative="$parent" pos="115%" offset="0"/>
+                <UnitLink val="{$parent/$parent/EntryID/@Text}"/>
+                <TeamColorIndex val="6"/>
+        
+                <Frame type="Model" name="Model">
+                    <Anchor relative="$parent"/>
+                    <UseAlternateTime val="true"/>
+                    <UseAspectScaling val="false"/>
+                </Frame>
+            </Frame>
+        </Frame>
+        <Frame type="Image" name="UnitModelContainerBorder">
+            <Anchor side="Top" relative="$parent/UnitModelContainer" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/UnitModelContainer" pos="Max" offset="6"/>
+            <Anchor side="Left" relative="$parent/UnitModelContainer" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/UnitModelContainer" pos="Max" offset="6"/>
+            <Texture val="@UI/Glues_Battlenet_StandardButtons_Small_Border_Inner"/>
+            <TextureType val="NineSlice"/>
+            <LayerColor val="##StandardBorder"/>
+            <Alpha val="50"/>
+        </Frame>
+        <Frame type="Frame" name="PropertiesEditor">
+            <Anchor side="Top" relative="$parent/UnitModelContainer" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/NavList" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/UnitModelContainer" pos="Max" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+            <Frame type="Image" name="Border">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Texture val="@UI/Glues_Battlenet_StandardButtons_Small_Border_Inner"/>
+                <TextureType val="NineSlice"/>
+                <LayerColor val="##StandardBorder"/>
+                <Alpha val="50"/>
+            </Frame>
+            <Frame type="Frame" name="Name" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="Name"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="Description" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/Name" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="Description"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="Sight" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/Description" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="Sight"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="Food" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/Sight" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="Food"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="LifeStart" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/Food" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="LifeStart"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="LifeMax" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/LifeStart" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="LifeMax"/>
+                </Frame>
+            </Frame>
+            
+            <Frame type="Frame" name="Speed" template="DataEditor/AttributeRow">
+                <Anchor side="Top" relative="$parent/LifeMax" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Frame type="Label" name="Name">
+                    <Text val="Speed"/>
+                </Frame>
+            </Frame>
+        </Frame>
+        
+        <Frame type="Button" name="Apply" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+            <Anchor side="Top" relative="$parent/UnitModelContainer" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/UnitModelContainer" pos="Min" offset="0"/>
+            <Width val="140"/>
+            <Height val="60"/>
+            <Text val="Apply"/>
+        </Frame>
+    </Frame>
+</Desc>

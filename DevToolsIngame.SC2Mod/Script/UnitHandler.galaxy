@@ -1,0 +1,84 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/UnitManager";
+
+ItemListContainerStruct UnitContainer;
+static ItemListStruct ItemList;
+static ItemListStruct PlayerList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool UnitListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+
+bool UnitListBoxSelectionChanged(bool a, bool b){
+	int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, player);
+}
+
+void UnitListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
+    DialogControlSetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+static unitgroup UnitContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+}
+
+static string UnitContainerUnit(string val){
+    return val;
+}
+
+static point UnitContainerPoint(){
+    return CameraGetTarget(EventPlayer());
+}
+
+bool UnitContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string unitType = UnitContainerUnit(val);
+    unitgroup ug = UnitContainerTarget();
+    unit u;
+    int i;
+    int unitcount = 1;
+    point p = UnitContainerPoint();
+    if(EventDialogControl()==UnitContainer.addButton){
+        ug = UnitCreate(unitcount,unitType,0,EventPlayer(),p,270.0);
+    }
+    else if(EventDialogControl()==UnitContainer.removeButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            if(UnitGetType(u)==unitType){
+                UnitKill(u);
+            }
+        }
+    }
+    return trigRan;
+}
+
+void PlayerList_Init(){
+    int i;
+    string entry;
+    playergroup pg =PlayerGroupActive();
+    int count = PlayerGroupCount(pg);
+    for(i=1;i<=count;i+=1){
+        
+        ItemListAdd(PlayerList,entry);
+	}
+};
+
+
+void UnitHandler_Init(){
+    playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ItemListCatalogFilter);
+	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

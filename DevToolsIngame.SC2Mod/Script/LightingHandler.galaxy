@@ -1,0 +1,63 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/LightingManager";
+ItemListContainerStruct LightingContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool LightingListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool LightingListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void LightingListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	DialogControlSetPropertyAsString(LightingContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+static unitgroup LightingContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+}
+
+static string LightingContainerLighting(string val){
+    return val;
+}
+
+bool LightingContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    int player = EventPlayer();
+    string val = DialogControlGetPropertyAsString(LightingContainer.messageBox,c_triggerControlPropertyEditText,player);
+    string Lighting = LightingContainerLighting(val);
+    int i;
+    if(EventDialogControl()==LightingContainer.addButton){
+        PlayerSetLighting(player,Lighting,0.5);
+        console("Adding Lighting ["+Lighting+"] to player "+IntToString(player));
+    }
+    else if(EventDialogControl()==LightingContainer.removeButton){
+        //print("Removing Lighting ["+Lighting+"] to unit "+UnitGetType(u));
+    }
+    return trigRan;
+}
+
+
+bool LightingList_IsTilesetFilter(int catalog, string entry){
+    return CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny) =="LightGroup:Tilesets";
+}
+
+
+void LightingHandler_Init(){
+	playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogLight, LightingList_IsTilesetFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

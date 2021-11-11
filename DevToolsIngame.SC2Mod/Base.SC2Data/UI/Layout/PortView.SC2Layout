@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+	<Frame type="Portrait" name="PortraitTemplateFull">
+		<Width val="791"/>
+		<Height val="1200"/>
+	</Frame>
+	<Frame type="Button" name="NavButtonTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+		<Width val="60"/>
+		<Height val="60"/>
+	</Frame>
+	<Frame type="ToggleControl" name="PortViewerContainer">
+		
+		<Frame type="Frame" name="PortraitContainer">
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+			<Width val="791"/>
+			<Height val="1200"/>
+		</Frame>
+		<Frame type="Frame" name="ControlsContainer">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/PortraitContainer" pos="Max" offset="10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Frame type="Label" name="PortId" template="TriggerDialogFrame/TriggerControlLabelTemplate">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+				<Width val="300"/>
+				<Height val="20"/>
+				<Text val="Port Id"/>
+			</Frame>
+			<Frame type="Button" name="ButtonPrev" template="PortView/NavButtonTemplate">
+				<Anchor side="Top" relative="$parent/PortId" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent/PortId" pos="Min" offset="0"/>
+			
+				<Text val="&lt;"/>
+			</Frame>
+			<Frame type="Button" name="ButtonNext" template="PortView/NavButtonTemplate">
+				<Anchor side="Top" relative="$parent/ButtonPrev" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent/ButtonPrev" pos="Max" offset="0"/>
+				<Text val="&gt;"/>
+			</Frame>
+			<Frame type="EditBox" name="PortIndex" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+				<Anchor side="Top" relative="$parent/ButtonNext" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent/ButtonNext" pos="Max" offset="0"/>
+				<Width val="60"/>
+				<Height val="60"/>
+			</Frame>
+
+			<Frame type="EditBox" name="BoxSearch" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+				<Anchor side="Top" relative="$parent/ButtonPrev" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent/ButtonPrev" pos="Min" offset="0"/>
+				<Width val="200"/>
+				<Height val="50"/>
+				<CollapseLayout val="True"/>
+				<Visible val="False"/>
+			</Frame>
+			<Frame type="Button" name="ButtonSearch" template="PortView/NavButtonTemplate">
+				<Anchor side="Top" relative="$parent/BoxSearch" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent/BoxSearch" pos="Max" offset="0"/>
+				<Text val="Search"/>
+				<Width val="120"/>
+				<CollapseLayout val="True"/>
+				<Visible val="False"/>
+			</Frame>
+
+			<Frame type="EditBox" name="BoxFilter" template="StandardTemplates/StandardEditBoxTemplate">
+				<Anchor side="Top" relative="$parent/BoxSearch" pos="Max" offset="10"/>
+				<Anchor side="Left" relative="$parent/BoxSearch" pos="Min" offset="0"/>
+				<Width val="200"/>
+				<Height val="50"/>
+			</Frame>
+			<Frame type="Button" name="ButtonFilter" template="PortView/NavButtonTemplate">
+				<Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+				<Text val="Filter"/>
+				<Width val="120"/>
+				
+			</Frame>
+			
+			<Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+				<Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+				<Width val="320"/>
+				<Height val="200"/>
+			</Frame>
+		</Frame>
+	</Frame>
+	
+</Desc>

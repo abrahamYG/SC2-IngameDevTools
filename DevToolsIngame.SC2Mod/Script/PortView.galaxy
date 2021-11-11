@@ -1,0 +1,244 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/PortViewerContainer";
+
+ItemListContainerStruct PortraitContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+const int MAX_PORT_LIST = 1500;
+string[MAX_PORT_LIST] PortList;
+int PortListCount = 0;
+int PortListCurrent = 0;
+
+const int PORT_W = 791;//725;//552;
+const int PORT_H = 1200;//1100;//837;
+actorscope AS;
+actor Actor;
+playergroup PG;
+
+
+void PortListSetActive(int index);
+
+int PortListAdd(string portId){
+	if(PortListCount<MAX_PORT_LIST){
+		PortList[PortListCount] = portId;
+		PortListCount+=1;
+		return PortListCount;
+	}
+	else{return -1;}
+}
+
+int PortListFind(string portId){
+	int i;
+	int index = -1;
+	for(i=0;i<PortListCount;i+=1){
+		if(PortList[i]==portId){index=i;break;}
+	}
+	return index;
+}
+
+
+
+int Portrait;
+int Label;
+int ButtonNext;
+int ButtonPrev;
+int EditBoxIndex;
+
+int EditBoxSearch;
+int ButtonSearch;
+
+int PortContainer;
+int PortFrame = -1;
+
+int BoxFilter;
+int ButtonFilter;
+int ListFilter;
+
+bool ButtonSetPortIndex(bool a, bool b){
+	int button = EventDialogControl();
+	if(button==ButtonNext){PortListSetActive(PortListCurrent+1);}
+	else if(button==ButtonPrev){PortListSetActive(PortListCurrent-1);}
+	return true;
+}
+
+bool EditBoxSetPortIndex(bool a, bool b){
+	int editbox = EventDialogControl();
+	string valStr = DialogControlGetPropertyAsString(editbox,c_triggerControlPropertyEditText,EventPlayer());
+	int val = StringToInt(valStr);
+	PortListSetActive(val);
+	return true;
+}
+
+bool SearchBoxSetIndex(bool a, bool b){
+	string val = DialogControlGetPropertyAsString(EditBoxSearch,c_triggerControlPropertyEditText,EventPlayer());
+	int index = PortListFind(val);
+	if(index>=0){PortListSetActive(index);}
+	else{print("Search query not found: "+val);}
+	return true;
+}
+
+int RebuildPortrait(){
+	int p;
+	if(PortFrame>-1){
+		DialogControlDestroy(PortFrame);
+	}
+	PortFrame = DialogControlCreateInPanelFromTemplate(PortContainer,c_triggerControlTypePortrait,"PortView/PortraitTemplateFull");
+	p = PortraitGetTriggerControl(PortFrame);
+	PortraitSetBorderVisible(p,false);
+	return p;
+}
+
+void RebuildList(string filter){
+	//string val = DialogControlGetPropertyAsString(BoxFilter,c_triggerControlPropertyEditText,EventPlayer());
+	int i; int j;
+	int listItem = 0;
+	data_split_t dsplit;
+    split_string(dsplit, filter, ",");
+	DialogControlRemoveAllItems(ListFilter,PG);
+	if(filter==""){
+		for(i=0;i<PortListCount;i+=1){
+			DialogControlAddItem(ListFilter,PG,StringToText(PortList[i]));
+			listItem = DialogControlGetItemCount(ListFilter,1);
+			DataTableSetString(true,"Selected"+IntToString(listItem),PortList[i]);
+		}
+	}
+	else{
+		for(i=0;i<PortListCount;i+=1){
+			if(dsplit.count>0){
+				for(j=0;j<dsplit.count;j+=1){
+					if(StringFind(PortList[i],dsplit.data[j],false)>0){
+						DialogControlAddItem(ListFilter,PG,StringToText(PortList[i]));
+						listItem = DialogControlGetItemCount(ListFilter,1);
+						DataTableSetString(true,"Selected"+IntToString(listItem),PortList[i]);
+					}
+				}
+			}
+			else if(StringFind(PortList[i],filter,false)>0){
+				DialogControlAddItem(ListFilter,PG,StringToText(PortList[i]));
+				listItem= DialogControlGetItemCount(ListFilter,1);
+				DataTableSetString(true,"Selected"+IntToString(listItem),PortList[i]);
+			}
+		}
+	}
+
+}
+
+bool ListBoxFilterQuery(bool a, bool b){
+	string val = DialogControlGetPropertyAsString(BoxFilter,c_triggerControlPropertyEditText,EventPlayer());
+	RebuildList(val);
+	return true;
+}
+
+
+bool ListBoxSelectionChanged(bool a, bool b){
+	int listItem = DialogControlGetSelectedItem(ListFilter,EventPlayer());
+	string val;
+	int index;
+	if(DataTableValueExists(true,"Selected"+IntToString(listItem))){
+		val=DataTableGetString(true,"Selected"+IntToString(listItem));
+		index = PortListFind(val);
+		if(index>=0){PortListSetActive(index);}
+	}
+	return true;
+}
+
+
+void PortListInitUI(){
+	int xBase=800-(PORT_W/2);
+	int x = xBase;
+	int y=0;
+	int panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+	trigger t;
+	
+	PortContainer = DialogControlHookup(panel, c_triggerControlTypePanel,"PortraitContainer");
+	Portrait = RebuildPortrait();
+	AS = ActorScopeFromPortrait(Portrait);
+	
+	Label = DialogControlHookup(panel,c_triggerControlTypeLabel,"ControlsContainer/PortId");//DialogControlCreateInPanel(panel,c_triggerControlTypeLabel);
+	ButtonPrev = DialogControlHookup(panel,c_triggerControlTypeButton,"ControlsContainer/ButtonPrev");//DialogControlCreateInPanel(panel,c_triggerControlTypeButton);
+	ButtonNext = DialogControlHookup(panel,c_triggerControlTypeButton,"ControlsContainer/ButtonNext");//DialogControlCreateInPanel(panel,c_triggerControlTypeButton);
+	EditBoxIndex = DialogControlHookup(panel,c_triggerControlTypeEditBox,"ControlsContainer/PortIndex");//DialogControlCreateInPanel(panel,c_triggerControlTypeEditBox);
+	EditBoxSearch = DialogControlHookup(panel,c_triggerControlTypeEditBox,"ControlsContainer/BoxSearch");// DialogControlCreateInPanel(panel,c_triggerControlTypeEditBox);
+	ButtonSearch = DialogControlHookup(panel,c_triggerControlTypeButton,"ControlsContainer/ButtonSearch");//DialogControlCreateInPanel(panel,c_triggerControlTypeButton);
+	BoxFilter = DialogControlHookup(panel,c_triggerControlTypeEditBox,"ControlsContainer/BoxFilter");
+	ButtonFilter = DialogControlHookup(panel,c_triggerControlTypeButton,"ControlsContainer/ButtonFilter");
+	ListFilter = DialogControlHookup(panel,c_triggerControlTypeListBox,"ControlsContainer/ListFilter");
+
+	t = TriggerCreate("ButtonSetPortIndex");
+	TriggerAddEventDialogControl(t,1,ButtonNext,c_triggerControlEventTypeClick);
+	TriggerAddEventDialogControl(t,1,ButtonPrev,c_triggerControlEventTypeClick);
+
+	t = TriggerCreate("EditBoxSetPortIndex");
+	TriggerAddEventDialogControl(t,1,EditBoxIndex,c_triggerControlEventTypeTextChanged);
+
+	t = TriggerCreate("SearchBoxSetIndex");
+	TriggerAddEventDialogControl(t,1,ButtonSearch,c_triggerControlEventTypeClick);
+
+	t = TriggerCreate("ListBoxFilterQuery");
+	TriggerAddEventDialogControl(t,1,ButtonFilter,c_triggerControlEventTypeClick);
+
+	t = TriggerCreate("ListBoxSelectionChanged");
+	TriggerAddEventDialogControl(t,1,ListFilter,c_triggerControlEventTypeSelectionChanged);
+	
+
+	PortListSetActive(PortListFind("MarinePortrait"));
+	RebuildList("");
+}
+
+void PortListSetActive(int index){
+	string portId;
+	string portActor = "PortraitActorDummy";
+
+	if(index==PortListCount){return;}
+	else if(index>=PortListCount){index=0;}
+	else if(index<0){index=PortListCount-1;}
+
+	PortListCurrent = index;
+	portId = PortList[index];
+
+	if(CatalogEntryIsValid(c_gameCatalogActor,portId)){
+		portActor = portId;
+	}
+	Portrait = RebuildPortrait();
+	PortraitSetModel(Portrait,portId,false);
+	PortraitSetActor(Portrait,portActor);
+	DialogControlSetPropertyAsText(Label,c_triggerControlPropertyText,PG,StringToText(portId));
+	DialogControlSetPropertyAsString(EditBoxIndex,c_triggerControlPropertyEditText,PG,IntToString(index));
+	DialogControlSetPropertyAsString(EditBoxSearch,c_triggerControlPropertyEditText,PG,portId);
+}
+
+
+
+bool PortraitList_IsPortrait(int catalog, string entry){
+    return (StringFind(entry,"Portrait",false) >= 0);
+}
+
+void PortView_Init(){
+	int i = 0;
+	int status;
+	int count = CatalogEntryCount(c_gameCatalogModel);
+	string entry;
+	trigger t;
+	PG = PlayerGroupActive();
+	for(i=1;i<=count;i+=1){
+		entry = CatalogEntryGet(c_gameCatalogModel,i);
+		if(entry!="" && (StringFind(entry,"Portrait",false) >= 0)){
+			PortListAdd(entry);
+		}
+		
+	}
+	PortListInitUI();
+	//ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
+    //ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, CONTAINERDLG_PATH);
+	//ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+	//UISetWorldVisible(PG,false);
+	//libNtve_gf_HideGameUI(false,PG);
+	
+	
+
+}

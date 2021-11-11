@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    
+    <Frame type="Button" name="MenuItemTemplate" template="ScreenNavigationSC2/ScreenNavigationButtonTemplate">
+        <Toggleable val="True"/>
+    </Frame>
+    <Frame type="Frame" name="NavigationContainer">
+        <Height val="80"/>
+
+        <Animation name="HideNav">
+            <Event event="HideNav" action="DirectionForward" frame="$parent"/>
+            <Event event="HideNav" action="Play" frame="$parent"/>
+            <Event event="ShowNav" action="DirectionReverse" frame="$parent"/>
+            <Event event="ShowNav" action="Play" frame="$parent"/>
+            <Event event="ToonOnline" action="DirectionReverse" frame="$parent"/>
+            <Event event="ToonOnline" action="Play" frame="$parent"/>
+
+            <Controller type="Fade" end="Pause">
+                <Key type="Curve" time="0.0" value="255" out="Auto"/>
+                <Key type="Curve" time="0.25" value="0" out="Auto"/>
+            </Controller>
+
+            <Controller type="Anchor" end="Pause" side="Top" relative="true">
+                <Key type="Curve" time="0.0" value="0" out="Auto"/>
+                <Key type="Curve" time="0.25" value="-30" out="Auto"/>
+            </Controller>
+
+            <Controller name="Visibility" type="Visibility" end="Pause" frame="$this/NavigationBlockFrame">
+                <Key type="Bool" time="0" value="false"/>
+                <Key type="Bool" time=".001" value="true"/>
+            </Controller>
+        </Animation>
+        
+        <Frame type="BlurFrame" name="BlurEffect">
+            <Anchor relative="$parent/Background"/>
+            <BlurAmount val=".3"/>
+
+            <Frame type="Image" name="LowImage">
+                <Anchor relative="$parent"/>
+                <Color val="0,0,0"/>
+                <Alpha val="150"/>
+            </Frame>
+        </Frame>
+
+        <Frame type="Image" name="Background">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Height val="72"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_Bg"/>
+            <TextureType val="Normal"/>
+            <Tiled val="False"/>
+        </Frame>
+        
+        <Frame type="Image" name="BackgroundHexShimmer">
+            <Anchor side="Top" relative="$parent/Background" pos="Min" offset="4"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/Background" pos="Max" offset="-4"/>
+            <LayerCount val="2"/>
+            
+            <Texture val="@UI/Glues_Battlenet_TopNav_HexPattern" layer="0"/>
+            <TextureType val="Normal" layer="0"/>
+            <Tiled val="true" layer="0"/>
+            <AlphaLayer val="true" layer="0"/>
+            
+            <Texture val="@UI/Glues_Battlenet_TopNav_HexShimmer" layer="1"/>
+            <TextureCoords top="0" left="0" bottom="1" right="1" layer="1"/>
+            <Alpha val="175" layer="1"/>
+            
+            <Animation name="Shimmer">
+                <Event event="OnShown" action="DirectionForward" frame="$parent"/>
+                <Event event="OnShown" action="Play" frame="$parent"/>
+         
+                <Controller type="LayerUV" layer="1" side="Right" relative="False" sidelock="True" end="Loop" >
+                    <Key type="Curve" time="0" value="1" out="linear"/>
+                    <Key type="Curve" time="8" value="0" in="linear"/>
+                </Controller>
+                
+                <Controller type="Fade" end="Loop">
+                    <Key type="Curve" time="0" value="0"/>
+                    <Key type="Curve" time="1" value="100"/>
+                    <Key type="Curve" time="3" value="200"/>
+                    <Key type="Curve" time="4" value="255"/>
+                    <Key type="Curve" time="6" value="200"/>
+                    <Key type="Curve" time="8" value="0"/>
+                </Controller>
+            </Animation>
+        </Frame>
+        
+        <Frame type="Image" name="TopLineHighlightAnim">
+            <Anchor side="Top" relative="$parent/Background" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_TopHighlightAnim"/>
+            
+            <Animation name="Highlight">
+                <Event event="OnShown" action="DirectionForward" frame="$parent"/>
+                <Event event="OnShown" action="Play" frame="$parent"/>
+                
+                <Controller type="Fade" end="Loop">
+                    <Key type="Curve" time="0" value="0"/>
+                    <Key type="Curve" time="1" value="255"/>
+                    <Key type="Curve" time="7" value="255"/>
+                    <Key type="Curve" time="8" value="0"/>
+                </Controller>
+                
+                <Controller type="Anchor" end="Loop" side="Left" relative="true">
+                    <Key type="Curve" time="0" value="0" out="linear"/>
+                    <Key type="Curve" time="8" value="1920" out="linear"/>
+                </Controller>
+            </Animation>
+        </Frame>
+        
+        <Frame type="Image" name="BottomLineHighlightAnim">
+            <Anchor side="Bottom" relative="$parent/Background" pos="Max" offset="2"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_BottomHighlightAnim"/>
+            
+            <Animation name="Highlight">
+                <Event event="OnShown" action="DirectionForward" frame="$parent"/>
+                <Event event="OnShown" action="Play" frame="$parent"/>
+                
+                <Controller type="Fade" end="Loop">
+                    <Key type="Curve" time="0" value="0"/>
+                    <Key type="Curve" time="2" value="0"/>
+                    <Key type="Curve" time="4.5" value="255"/>
+                    <Key type="Curve" time="6" value="255"/>
+                    <Key type="Curve" time="8" value="0"/>
+                </Controller>
+                
+                <Controller type="Anchor" end="Loop" side="Left" relative="true">
+                    <Key type="Curve" time="0" value="0" out="linear"/>
+                    <Key type="Curve" time="2" value="0" out="linear"/>
+                    <Key type="Curve" time="8" value="1920" out="linear"/>
+                </Controller>
+            </Animation>
+        </Frame>
+                
+        <Frame type="Image" name="ButtonDivider1">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Left" relative="$parent/CatalogManagerButton/HitTestFrame" pos="Max" offset="#StandardNavigation_Mainnav_Divider_Spacing_Horizontal"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_ButtonDivider"/>
+        </Frame>
+        
+        <Frame type="Image" name="ButtonDivider2">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Left" relative="$parent/CheatManagerButton/HitTestFrame" pos="Max" offset="#StandardNavigation_Mainnav_Divider_Spacing_Horizontal"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_ButtonDivider"/>
+        </Frame>
+        
+        <Frame type="Image" name="ButtonDivider3">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Left" relative="$parent/DataEditorButton/HitTestFrame" pos="Max" offset="#StandardNavigation_Mainnav_Divider_Spacing_Horizontal"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_ButtonDivider"/>
+        </Frame>
+        
+        <Frame type="Image" name="ButtonDivider4">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Left" relative="$parent/MiscButton/HitTestFrame" pos="Max" offset="#StandardNavigation_Mainnav_Divider_Spacing_Horizontal"/>
+            <Texture val="@UI/Glues_Battlenet_TopNav_ButtonDivider"/>
+        </Frame>
+
+        <Frame type="Button" name="BackButton" template="StandardBattlenetTemplates/BattlenetStandardBackButtonTemplate">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Visible val="False"/>
+        </Frame>
+
+        <Frame type="Button" name="CatalogManagerButton" template="DevTools_MenuBar/MenuItemTemplate">
+            <Text val="Catalog Manager"/>
+            <Shortcut val="@UI/ScreenNavigation2_Hotkey"/>
+            
+            <Frame type="Frame" name="HitTestFrame">
+                <Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/$parent" pos="Min" offset="0"/>
+            </Frame>
+            
+        </Frame>
+
+        <Frame type="Button" name="CheatManagerButton" template="DevTools_MenuBar/MenuItemTemplate">
+            <Text val="Cheat Manager"/>
+            <Shortcut val="@UI/ScreenNavigation3_Hotkey"/>
+            <AcceptsMouseTooltip val="True"/>
+            <Frame type="Frame" name="HitTestFrame">
+                <Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/$parent/CatalogManagerButton/HitTestFrame" pos="Max" offset="0"/>
+            </Frame>
+        </Frame>
+
+        <Frame type="Button" name="DataEditorButton" template="DevTools_MenuBar/MenuItemTemplate">
+            <Text val="DataEditor"/>
+            <Shortcut val="@UI/ScreenNavigation4_Hotkey"/>
+            
+            <Frame type="Frame" name="HitTestFrame">
+                <Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/$parent/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
+            </Frame>
+        </Frame>
+
+        <Frame type="Button" name="MiscButton" template="DevTools_MenuBar/MenuItemTemplate">
+            <Text val="Misc"/>
+            <Shortcut val="@UI/ScreenNavigation5_Hotkey"/>
+            
+            <Frame type="Frame" name="HitTestFrame">
+                <Anchor side="Top" relative="$parent/$parent" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/$parent/DataEditorButton/HitTestFrame" pos="Max" offset="0"/>
+            </Frame>
+            
+        </Frame>
+        <Frame type="Frame" name="NavigationBlockFrame">
+            <Anchor relative="$parent/Background"/>
+            <AcceptsMouse val="true"/>
+            <Visible val="false"/>
+        </Frame>
+    </Frame>
+</Desc>

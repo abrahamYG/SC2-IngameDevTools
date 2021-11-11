@@ -1,0 +1,96 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/UpgradeManager";
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+
+struct UpgradeContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+};
+
+ItemListContainerStruct UpgradeContainer;
+
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+
+
+
+bool UpgradeListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+
+bool UpgradeListBoxSelectionChanged(bool a, bool b){
+	
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void UpgradeListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	DialogControlSetPropertyAsString(UpgradeContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+}
+
+void UpgradeListInitUI(){
+	
+	playergroup pg = PlayerGroupAll();
+    ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+
+}
+
+void UpgradeList_Init(){
+    ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
+    UpgradeListInitUI();
+};
+
+
+
+static unitgroup UpgradeContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+    
+}
+
+static string UpgradeContainerUpgrade(string val){
+    return val;
+    
+}
+
+bool UpgradeContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(UpgradeContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string UpgradeType = UpgradeContainerUpgrade(val);
+    unitgroup ug = UpgradeContainerTarget();
+    int i;
+    if(EventDialogControl()==UpgradeContainer.addButton){
+        TechTreeUpgradeAddLevel(EventPlayer(),val,1);
+    }
+    else if(EventDialogControl()==UpgradeContainer.removeButton){
+        TechTreeUpgradeAddLevel(EventPlayer(),val,-1);
+    }
+    return trigRan;
+}
+
+void UpgradeHandler_Init(){
+    //trigger t;
+    //UpgradeContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    //UpgradeContainer.messageBox = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    //UpgradeContainer.addButton = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    //UpgradeContainer.removeButton = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+    //t = TriggerCreate("UpgradeContainerSendHandler");
+    //TriggerAddEventDialogControl(t,c_playerAny,UpgradeContainer.addButton,c_triggerControlEventTypeClick);
+    //TriggerAddEventDialogControl(t,c_playerAny,UpgradeContainer.removeButton,c_triggerControlEventTypeClick);
+    
+    ItemListContainer_InitStandard(UpgradeContainer, CONTAINERDLG_PATH, "UpgradeContainerSendHandler");
+    UpgradeList_Init();
+}

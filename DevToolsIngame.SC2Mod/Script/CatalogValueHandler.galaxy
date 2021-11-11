@@ -1,0 +1,313 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogValueManager";
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+static const string TYPEPULLDOWN_PATH = "Type";
+static const string ENTRYBOX_PATH = "Entry";
+static const string FIELDBOX_PATH = "Field";
+static const string VALUEBOX_PATH = "Value";
+static const string APPLYBUTTON_PATH = "Apply";
+static const string GETBUTTON_PATH = "Get";
+
+
+struct CatalogValueContainerStruct{
+    int panel;
+    int typePull;
+    int entryBox;
+    int fieldBox;
+    int valueBox;
+    int applyBtn;
+    int getBtn;
+};
+
+CatalogValueContainerStruct CatalogValueContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+bool CatalogValueListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void CatalogValueListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+    //itemList.current = index;
+	
+}
+
+void CatalogValueListInitUI(){
+	trigger t;
+	playergroup pg = PlayerGroupAll();
+    ListBoxFilter.id = "CatalogValueList";
+    ListBoxFilter.setActive = CatalogValueListBoxSetActive;
+    ListBoxFilter.panel = CatalogValueContainer.panel;
+    ListBoxFilter.list = CatalogValueContainer.typePull;
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+	t = TriggerCreate("CatalogValueListBoxSelectionChanged");
+	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
+
+}
+
+void CatalogValueList_Init(){
+    DataTableSetInt(true,"Catalog.Abil",c_gameCatalogAbil);
+    DataTableSetInt(true,"Catalog.Achievement",c_gameCatalogAchievement);
+    DataTableSetInt(true,"Catalog.AchievementTerm",c_gameCatalogAchievementTerm);
+    DataTableSetInt(true,"Catalog.Actor",c_gameCatalogActor);
+    DataTableSetInt(true,"Catalog.ActorSupport",c_gameCatalogActorSupport);
+    DataTableSetInt(true,"Catalog.Alert",c_gameCatalogAlert);
+    DataTableSetInt(true,"Catalog.ArmyCategory",c_gameCatalogArmyCategory);
+    DataTableSetInt(true,"Catalog.ArmyUnit",c_gameCatalogArmyUnit);
+    DataTableSetInt(true,"Catalog.ArmyUpgrade",c_gameCatalogArmyUpgrade);
+    DataTableSetInt(true,"Catalog.Artifact",c_gameCatalogArtifact);
+    DataTableSetInt(true,"Catalog.ArtifactSlot",c_gameCatalogArtifactSlot);
+    DataTableSetInt(true,"Catalog.AttachMethod",c_gameCatalogAttachMethod);
+    DataTableSetInt(true,"Catalog.BankCondition",c_gameCatalogBankCondition);
+    DataTableSetInt(true,"Catalog.Beam",c_gameCatalogBeam);
+    DataTableSetInt(true,"Catalog.Behavior",c_gameCatalogBehavior);
+    DataTableSetInt(true,"Catalog.Bundle",c_gameCatalogBundle);
+    DataTableSetInt(true,"Catalog.Boost",c_gameCatalogBoost);
+    DataTableSetInt(true,"Catalog.Button",c_gameCatalogButton);
+    DataTableSetInt(true,"Catalog.Camera",c_gameCatalogCamera);
+    DataTableSetInt(true,"Catalog.Campaign",c_gameCatalogCampaign);
+    DataTableSetInt(true,"Catalog.Character",c_gameCatalogCharacter);
+    DataTableSetInt(true,"Catalog.Cliff",c_gameCatalogCliff);
+    DataTableSetInt(true,"Catalog.CliffMesh",c_gameCatalogCliffMesh);
+    DataTableSetInt(true,"Catalog.ColorStyle",c_gameCatalogColorStyle);
+    DataTableSetInt(true,"Catalog.Commander",c_gameCatalogCommander);
+    DataTableSetInt(true,"Catalog.Config",c_gameCatalogConfig);
+    DataTableSetInt(true,"Catalog.ConsoleSkin",c_gameCatalogConsoleSkin);
+    DataTableSetInt(true,"Catalog.Conversation",c_gameCatalogConversation);
+    DataTableSetInt(true,"Catalog.ConversationState",c_gameCatalogConversationState);
+    DataTableSetInt(true,"Catalog.Cursor",c_gameCatalogCursor);
+    DataTableSetInt(true,"Catalog.DecalPack",c_gameCatalogDecalPack);
+    DataTableSetInt(true,"Catalog.DSP",c_gameCatalogDSP);
+    DataTableSetInt(true,"Catalog.Effect",c_gameCatalogEffect);
+    DataTableSetInt(true,"Catalog.Emoticon",c_gameCatalogEmoticon);
+    DataTableSetInt(true,"Catalog.EmoticonPack",c_gameCatalogEmoticonPack);
+    DataTableSetInt(true,"Catalog.Error",c_gameCatalogError);
+    DataTableSetInt(true,"Catalog.Footprint",c_gameCatalogFootprint);
+    DataTableSetInt(true,"Catalog.FoW",c_gameCatalogFoW);
+    DataTableSetInt(true,"Catalog.Game",c_gameCatalogGame);
+    DataTableSetInt(true,"Catalog.GameUI",c_gameCatalogGameUI);
+    DataTableSetInt(true,"Catalog.Herd",c_gameCatalogHerd);
+    DataTableSetInt(true,"Catalog.HerdNode",c_gameCatalogHerdNode);
+    DataTableSetInt(true,"Catalog.Hero",c_gameCatalogHero);
+    DataTableSetInt(true,"Catalog.HeroAbil",c_gameCatalogHeroAbil);
+    DataTableSetInt(true,"Catalog.HeroStat",c_gameCatalogHeroStat);
+    DataTableSetInt(true,"Catalog.Item",c_gameCatalogItem);
+    DataTableSetInt(true,"Catalog.ItemClass",c_gameCatalogItemClass);
+    DataTableSetInt(true,"Catalog.ItemContainer",c_gameCatalogItemContainer);
+    DataTableSetInt(true,"Catalog.Kinetic",c_gameCatalogKinetic);
+    DataTableSetInt(true,"Catalog.LensFlareSet",c_gameCatalogLensFlareSet);
+    DataTableSetInt(true,"Catalog.Light",c_gameCatalogLight);
+    DataTableSetInt(true,"Catalog.Location",c_gameCatalogLocation);
+    DataTableSetInt(true,"Catalog.Loot",c_gameCatalogLoot);
+    DataTableSetInt(true,"Catalog.Map",c_gameCatalogMap);
+    DataTableSetInt(true,"Catalog.Model",c_gameCatalogModel);
+    DataTableSetInt(true,"Catalog.Mount",c_gameCatalogMount);
+    DataTableSetInt(true,"Catalog.Mover",c_gameCatalogMover);
+    DataTableSetInt(true,"Catalog.Objective",c_gameCatalogObjective);
+    DataTableSetInt(true,"Catalog.PhysicsMaterial",c_gameCatalogPhysicsMaterial);
+    DataTableSetInt(true,"Catalog.Ping",c_gameCatalogPing);
+    DataTableSetInt(true,"Catalog.PortraitPack",c_gameCatalogPortraitPack);
+    DataTableSetInt(true,"Catalog.Preload",c_gameCatalogPreload);
+    DataTableSetInt(true,"Catalog.PremiumMap",c_gameCatalogPremiumMap);
+    DataTableSetInt(true,"Catalog.Race",c_gameCatalogRace);
+    DataTableSetInt(true,"Catalog.RaceBannerPack",c_gameCatalogRaceBannerPack);
+    DataTableSetInt(true,"Catalog.Requirement",c_gameCatalogRequirement);
+    DataTableSetInt(true,"Catalog.RequirementNode",c_gameCatalogRequirementNode);
+    DataTableSetInt(true,"Catalog.Reverb",c_gameCatalogReverb);
+    DataTableSetInt(true,"Catalog.Reward",c_gameCatalogReward);
+    DataTableSetInt(true,"Catalog.ScoreResult",c_gameCatalogScoreResult);
+    DataTableSetInt(true,"Catalog.ScoreValue",c_gameCatalogScoreValue);
+    DataTableSetInt(true,"Catalog.Shape",c_gameCatalogShape);
+    DataTableSetInt(true,"Catalog.Skin",c_gameCatalogSkin);
+    DataTableSetInt(true,"Catalog.SkinPack",c_gameCatalogSkinPack);
+    DataTableSetInt(true,"Catalog.Sound",c_gameCatalogSound);
+    DataTableSetInt(true,"Catalog.SoundExclusivity",c_gameCatalogSoundExclusivity);
+    DataTableSetInt(true,"Catalog.SoundMixSnapshot",c_gameCatalogSoundMixSnapshot);
+    DataTableSetInt(true,"Catalog.Soundtrack",c_gameCatalogSoundtrack);
+    DataTableSetInt(true,"Catalog.Spray",c_gameCatalogSpray);
+    DataTableSetInt(true,"Catalog.SprayPack",c_gameCatalogSprayPack);
+    DataTableSetInt(true,"Catalog.TacCooldown",c_gameCatalogTacCooldown);
+    DataTableSetInt(true,"Catalog.Tactical",c_gameCatalogTactical);
+    DataTableSetInt(true,"Catalog.Talent",c_gameCatalogTalent);
+    DataTableSetInt(true,"Catalog.TalentProfile",c_gameCatalogTalentProfile);
+    DataTableSetInt(true,"Catalog.TargetFind",c_gameCatalogTargetFind);
+    DataTableSetInt(true,"Catalog.TargetSort",c_gameCatalogTargetSort);
+    DataTableSetInt(true,"Catalog.Terrain",c_gameCatalogTerrain);
+    DataTableSetInt(true,"Catalog.TerrainObject",c_gameCatalogTerrainObject);
+    DataTableSetInt(true,"Catalog.TerrainTex",c_gameCatalogTerrainTex);
+    DataTableSetInt(true,"Catalog.Texture",c_gameCatalogTexture);
+    DataTableSetInt(true,"Catalog.TextureSheet",c_gameCatalogTextureSheet);
+    DataTableSetInt(true,"Catalog.Tile",c_gameCatalogTile);
+    DataTableSetInt(true,"Catalog.Trophy",c_gameCatalogTrophy);
+    DataTableSetInt(true,"Catalog.Turret",c_gameCatalogTurret);
+    DataTableSetInt(true,"Catalog.Unit",c_gameCatalogUnit);
+    DataTableSetInt(true,"Catalog.Upgrade",c_gameCatalogUpgrade);
+    DataTableSetInt(true,"Catalog.User",c_gameCatalogUser);
+    DataTableSetInt(true,"Catalog.Validator",c_gameCatalogValidator);
+    DataTableSetInt(true,"Catalog.VoiceOver",c_gameCatalogVoiceOver);
+    DataTableSetInt(true,"Catalog.VoicePack",c_gameCatalogVoicePack);
+    DataTableSetInt(true,"Catalog.WarChest",c_gameCatalogWarChest);
+    DataTableSetInt(true,"Catalog.WarChestSeason",c_gameCatalogWarChestSeason);
+    DataTableSetInt(true,"Catalog.Water",c_gameCatalogWater);
+    DataTableSetInt(true,"Catalog.Weapon",c_gameCatalogWeapon);
+    DataTableSetInt(true,"Catalog.StimPack",c_gameCatalogStimPack);
+    DataTableSetInt(true,"Catalog.Accumulator",c_gameCatalogAccumulator);
+    DataTableSetInt(true,"Catalog.PlayerResponse",c_gameCatalogPlayerResponse);
+    DataTableSetInt(true,"Catalog.DataCollection",c_gameCatalogDataCollection);
+    DataTableSetInt(true,"Catalog.DataCollectionPattern",c_gameCatalogDataCollectionPattern);
+    ItemListAdd(ItemList,"Abil");
+    ItemListAdd(ItemList,"Achievement");
+    ItemListAdd(ItemList,"AchievementTerm");
+    ItemListAdd(ItemList,"Actor");
+    ItemListAdd(ItemList,"ActorSupport");
+    ItemListAdd(ItemList,"Alert");
+    ItemListAdd(ItemList,"ArmyCategory");
+    ItemListAdd(ItemList,"ArmyUnit");
+    ItemListAdd(ItemList,"ArmyUpgrade");
+    ItemListAdd(ItemList,"Artifact");
+    ItemListAdd(ItemList,"ArtifactSlot");
+    ItemListAdd(ItemList,"AttachMethod");
+    ItemListAdd(ItemList,"BankCondition");
+    ItemListAdd(ItemList,"Beam");
+    ItemListAdd(ItemList,"Behavior");
+    ItemListAdd(ItemList,"Bundle");
+    ItemListAdd(ItemList,"Boost");
+    ItemListAdd(ItemList,"Button");
+    ItemListAdd(ItemList,"Camera");
+    ItemListAdd(ItemList,"Campaign");
+    ItemListAdd(ItemList,"Character");
+    ItemListAdd(ItemList,"Cliff");
+    ItemListAdd(ItemList,"CliffMesh");
+    ItemListAdd(ItemList,"ColorStyle");
+    ItemListAdd(ItemList,"Commander");
+    ItemListAdd(ItemList,"Config");
+    ItemListAdd(ItemList,"ConsoleSkin");
+    ItemListAdd(ItemList,"Conversation");
+    ItemListAdd(ItemList,"ConversationState");
+    ItemListAdd(ItemList,"Cursor");
+    ItemListAdd(ItemList,"DecalPack");
+    ItemListAdd(ItemList,"DSP");
+    ItemListAdd(ItemList,"Effect");
+    ItemListAdd(ItemList,"Emoticon");
+    ItemListAdd(ItemList,"EmoticonPack");
+    ItemListAdd(ItemList,"Error");
+    ItemListAdd(ItemList,"Footprint");
+    ItemListAdd(ItemList,"FoW");
+    ItemListAdd(ItemList,"Game");
+    ItemListAdd(ItemList,"GameUI");
+    ItemListAdd(ItemList,"Herd");
+    ItemListAdd(ItemList,"HerdNode");
+    ItemListAdd(ItemList,"Hero");
+    ItemListAdd(ItemList,"HeroAbil");
+    ItemListAdd(ItemList,"HeroStat");
+    ItemListAdd(ItemList,"Item");
+    ItemListAdd(ItemList,"ItemClass");
+    ItemListAdd(ItemList,"ItemContainer");
+    ItemListAdd(ItemList,"Kinetic");
+    ItemListAdd(ItemList,"LensFlareSet");
+    ItemListAdd(ItemList,"Light");
+    ItemListAdd(ItemList,"Location");
+    ItemListAdd(ItemList,"Loot");
+    ItemListAdd(ItemList,"Map");
+    ItemListAdd(ItemList,"Model");
+    ItemListAdd(ItemList,"Mount");
+    ItemListAdd(ItemList,"Mover");
+    ItemListAdd(ItemList,"Objective");
+    ItemListAdd(ItemList,"PhysicsMaterial");
+    ItemListAdd(ItemList,"Ping");
+    ItemListAdd(ItemList,"PortraitPack");
+    ItemListAdd(ItemList,"Preload");
+    ItemListAdd(ItemList,"PremiumMap");
+    ItemListAdd(ItemList,"Race");
+    ItemListAdd(ItemList,"RaceBannerPack");
+    ItemListAdd(ItemList,"Requirement");
+    ItemListAdd(ItemList,"RequirementNode");
+    ItemListAdd(ItemList,"Reverb");
+    ItemListAdd(ItemList,"Reward");
+    ItemListAdd(ItemList,"ScoreResult");
+    ItemListAdd(ItemList,"ScoreValue");
+    ItemListAdd(ItemList,"Shape");
+    ItemListAdd(ItemList,"Skin");
+    ItemListAdd(ItemList,"SkinPack");
+    ItemListAdd(ItemList,"Sound");
+    ItemListAdd(ItemList,"SoundExclusivity");
+    ItemListAdd(ItemList,"SoundMixSnapshot");
+    ItemListAdd(ItemList,"Soundtrack");
+    ItemListAdd(ItemList,"Spray");
+    ItemListAdd(ItemList,"SprayPack");
+    ItemListAdd(ItemList,"TacCooldown");
+    ItemListAdd(ItemList,"Tactical");
+    ItemListAdd(ItemList,"Talent");
+    ItemListAdd(ItemList,"TalentProfile");
+    ItemListAdd(ItemList,"TargetFind");
+    ItemListAdd(ItemList,"TargetSort");
+    ItemListAdd(ItemList,"Terrain");
+    ItemListAdd(ItemList,"TerrainObject");
+    ItemListAdd(ItemList,"TerrainTex");
+    ItemListAdd(ItemList,"Texture");
+    ItemListAdd(ItemList,"TextureSheet");
+    ItemListAdd(ItemList,"Tile");
+    ItemListAdd(ItemList,"Trophy");
+    ItemListAdd(ItemList,"Turret");
+    ItemListAdd(ItemList,"Unit");
+    ItemListAdd(ItemList,"Upgrade");
+    ItemListAdd(ItemList,"User");
+    ItemListAdd(ItemList,"Validator");
+    ItemListAdd(ItemList,"VoiceOver");
+    ItemListAdd(ItemList,"VoicePack");
+    ItemListAdd(ItemList,"WarChest");
+    ItemListAdd(ItemList,"WarChestSeason");
+    ItemListAdd(ItemList,"Water");
+    ItemListAdd(ItemList,"Weapon");
+    ItemListAdd(ItemList,"StimPack");
+    ItemListAdd(ItemList,"Accumulator");
+    ItemListAdd(ItemList,"PlayerResponse");
+    ItemListAdd(ItemList,"DataCollection");
+    ItemListAdd(ItemList,"DataCollectionPattern");
+    CatalogValueListInitUI();
+};
+
+
+static int CatalogValueContainerCatalogValue(string val){
+    return DataTableGetInt(true,"Catalog."+val);
+    
+}
+
+bool CatalogValueContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    int player = EventPlayer();
+    int type = DialogControlGetPropertyAsInt(CatalogValueContainer.typePull,c_triggerControlPropertySelectionIndex,player);
+    string entry = DialogControlGetPropertyAsString(CatalogValueContainer.entryBox,c_triggerControlPropertyEditText,player);
+    string field = DialogControlGetPropertyAsString(CatalogValueContainer.fieldBox,c_triggerControlPropertyEditText,player);
+    string value = DialogControlGetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,player);
+    int catalog = CatalogValueContainerCatalogValue(ItemList.list[ItemListGetActive(ItemList,player)]);
+    
+    if(EventDialogControl()==CatalogValueContainer.applyBtn){
+        CatalogFieldValueSet(catalog,entry,field,player,value);
+    }
+    else if(EventDialogControl()==CatalogValueContainer.getBtn){
+        value = CatalogFieldValueGet(catalog,entry,field,player);
+        DialogControlSetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,PlayerGroupSingle(player),value);
+    }
+    return trigRan;
+}
+
+void CatalogValueHandler_Init(){
+    trigger t;
+    CatalogValueContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    CatalogValueContainer.typePull = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
+    CatalogValueContainer.entryBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);
+    CatalogValueContainer.fieldBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,FIELDBOX_PATH);
+    CatalogValueContainer.valueBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,VALUEBOX_PATH);
+    CatalogValueContainer.applyBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,APPLYBUTTON_PATH);
+    CatalogValueContainer.getBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,GETBUTTON_PATH);
+    t = TriggerCreate("CatalogValueContainerSendHandler");
+    TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.applyBtn,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.getBtn,c_triggerControlEventTypeClick);
+    CatalogValueList_Init();
+}
