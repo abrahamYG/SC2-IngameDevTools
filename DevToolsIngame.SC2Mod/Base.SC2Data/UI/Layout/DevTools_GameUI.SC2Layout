@@ -128,9 +128,12 @@
 				<Anchor side="Right" relative="$parent/AbilityManager" pos="Min" offset="-10"/>
 				<Frame type="Label" name="Title">
 					<Text val="AbilityOrder"/>
+				
 				</Frame>
-				<Frame type="EditBox" name="BoxFilter" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
-					<Text val="{$parent/$parent/AbilityManager/Item/@Text}"/>
+				<Frame type="Frame" name="NavList">
+					<Frame type="EditBox" name="BoxFilter">
+						<Text val="{$parent/$parent/$parent/AbilityManager/Item/@Text}"/>
+					</Frame>
 				</Frame>
 				</Frame>
 			<Frame type="Control" name="LightingManager" template="CatalogManager/CatalogManager">
@@ -159,7 +162,7 @@
 			</Frame>
 		</Frame>
 		
-		<Frame type="Control" name="CheatManager" template="CatalogManager/CheatManager">
+		<Frame type="Control" name="CheatManager" template="CheatManager/CheatManager">
 			<Visible val="{$parent/DevToolsMenuContainer/CheatManagerButton/@Toggled}"/>
 			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Min" offset="0"/>

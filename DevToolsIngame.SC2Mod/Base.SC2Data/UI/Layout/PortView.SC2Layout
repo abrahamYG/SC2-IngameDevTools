@@ -85,6 +85,32 @@
 				<Width val="320"/>
 				<Height val="200"/>
 			</Frame>
+			<Frame type="Frame" name="NavList">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="10"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Width val="400"/>
+            <Frame type="EditBox" name="BoxFilter" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Width val="200"/>
+                <Height val="60"/>
+            </Frame>
+            <Frame type="Button" name="ButtonFilter" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Width val="140"/>
+                <Height val="60"/>
+                <Text val="Filter"/>
+            </Frame>
+            <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+                <Anchor side="Bottom" relative="$parent" pos="Max" offset="-30"/>
+            </Frame>
+        </Frame>
 		</Frame>
 	</Frame>
 	

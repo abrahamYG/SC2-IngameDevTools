@@ -362,6 +362,6 @@ void AbilityOrderHandler_Init(){
     AbilityOrderList_AbilClassInit();   
     AbilityOrderList_Init();
     
-    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityOrderListBox", AbilityOrderListBoxSetActive, CONTAINERDLG_PATH);
+    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityOrderListBox", AbilityOrderListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

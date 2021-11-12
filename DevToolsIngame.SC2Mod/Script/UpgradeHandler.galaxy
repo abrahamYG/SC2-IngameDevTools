@@ -41,21 +41,6 @@ void UpgradeListBoxSetActive(ItemListStructRef itemList, int index,playergroup p
 	DialogControlSetPropertyAsString(UpgradeContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
 }
 
-void UpgradeListInitUI(){
-	
-	playergroup pg = PlayerGroupAll();
-    ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, CONTAINERDLG_PATH);
-	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
-
-}
-
-void UpgradeList_Init(){
-    ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
-    UpgradeListInitUI();
-};
-
-
-
 static unitgroup UpgradeContainerTarget(){
     return UnitGroupSelected(EventPlayer());
     
@@ -82,15 +67,9 @@ bool UpgradeContainerSendHandler(bool a, bool b){
 }
 
 void UpgradeHandler_Init(){
-    //trigger t;
-    //UpgradeContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
-    //UpgradeContainer.messageBox = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
-    //UpgradeContainer.addButton = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
-    //UpgradeContainer.removeButton = DialogControlHookup(UpgradeContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
-    //t = TriggerCreate("UpgradeContainerSendHandler");
-    //TriggerAddEventDialogControl(t,c_playerAny,UpgradeContainer.addButton,c_triggerControlEventTypeClick);
-    //TriggerAddEventDialogControl(t,c_playerAny,UpgradeContainer.removeButton,c_triggerControlEventTypeClick);
-    
+    playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(UpgradeContainer, CONTAINERDLG_PATH, "UpgradeContainerSendHandler");
-    UpgradeList_Init();
+    ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

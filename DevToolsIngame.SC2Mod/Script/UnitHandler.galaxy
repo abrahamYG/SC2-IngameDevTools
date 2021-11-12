@@ -79,6 +79,6 @@ void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ItemListCatalogFilter);
-	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, CONTAINERDLG_PATH);
+	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

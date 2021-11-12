@@ -61,6 +61,6 @@ void WeaponHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(WeaponContainer, CONTAINERDLG_PATH, "WeaponContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogWeapon, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "WeaponListBox", WeaponListBoxSetActive, CONTAINERDLG_PATH);
+    ItemList_FilterListInitStandard(ListBoxFilter, "WeaponListBox", WeaponListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

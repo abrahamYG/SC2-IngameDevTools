@@ -3,10 +3,6 @@ include "Script/split_string";
 include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/PortViewerContainer";
 
-ItemListContainerStruct PortraitContainer;
-
-static ItemListStruct ItemList;
-static ListBoxFilterStruct ListBoxFilter;
 
 const int MAX_PORT_LIST = 1500;
 string[MAX_PORT_LIST] PortList;
@@ -213,10 +209,6 @@ void PortListSetActive(int index){
 
 
 
-bool PortraitList_IsPortrait(int catalog, string entry){
-    return (StringFind(entry,"Portrait",false) >= 0);
-}
-
 void PortView_Init(){
 	int i = 0;
 	int status;
@@ -233,7 +225,6 @@ void PortView_Init(){
 	}
 	PortListInitUI();
 	//ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
-    ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
     //ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, CONTAINERDLG_PATH);
 	//ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 	//UISetWorldVisible(PG,false);

@@ -58,6 +58,6 @@ void LightingHandler_Init(){
 	playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogLight, LightingList_IsTilesetFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, CONTAINERDLG_PATH);
+    ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

@@ -1,86 +1,35 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Desc>
 
-	<Frame type="Frame" name="CatalogManager_PanelTemplate">
-        <Frame type="Image" name="BG">
-            <Anchor relative="$parent" offset="-4"/>
-            <Color val="000000"/>
-            <Alpha val="100"/>
-        </Frame>
-        <Frame type="Image" name="Border">
-            <Anchor relative="$parent"/>
-            <Texture val="@UI/Glues_Battlenet_StandardButtons_Small_Border_Inner"/>
-            <TextureType val="NineSlice"/>
-            <Color val="3a66dd"/>
-        </Frame>
-		<Frame type="Frame" name="BackgroundContainer" template="StandardExtendedExperienceTemplates/ExtendedExperienceBackgroundContainerTemplate">
-            <Anchor side="Top" relative="$parent/BG" pos="Min" offset="0"/>
-            <Anchor side="Bottom" relative="$parent/BG" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent/BG" pos="Min" offset="0"/>
-            <Anchor side="Right" relative="$parent/BG" pos="Max" offset="0"/>
-			<Visible val="False"/>
-        </Frame>
+	<Frame type="Frame" name="CatalogManager_PanelTemplate" template="DevTools_Templates/PanelTemplate">
     </Frame>
-    <Frame type="Frame" name="TestMap_PanelTemplateTitled" template="CatalogManager/CatalogManager_PanelTemplate">
-        <Frame type="Label" name="Title">
-            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
-            <Text val="Title"/>
-            <Style val="@@@ModCenterSize20Bold"/>
-            <Height val="30"/>
-        </Frame>
+    <Frame type="Frame" name="TestMap_PanelTemplateTitled" template="DevTools_Templates/PanelTemplateTitled">
     </Frame>
     
-	<Frame type="Button" name="CheatTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+	<Frame type="Button" name="CheatTemplate" template="DevTools_Templates/ButtonTemplate">
         <Width val="360"/>
         <Height val="60"/>
         <Text val=""/>
         <!--<Toggleable val="True"/>-->
     </Frame>
-	<Frame type="Button" name="ShowCatalogTypeManagerTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+	<Frame type="Button" name="ShowCatalogTypeManagerTemplate" template="DevTools_Templates/ButtonTemplate">
         <Width val="360"/>
         <Height val="60"/>
         <Text val=""/>
         <Toggleable val="True"/>
     </Frame>
-    <Frame type="Button" name="CatalogManagerButtonTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+    <Frame type="Button" name="ButtonTemplate" template="DevTools_Templates/ButtonTemplate">
         <Width val="200"/>
         <Height val="60"/>
     </Frame>
     
-    <Frame type="EditBox" name="CatalogValueManagerEditBoxTemplate" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+    <Frame type="EditBox" name="EditBoxTemplate" template="DevTools_Templates/EditBoxTemplate">
         <Anchor side="Top" relative="$parent/Type" pos="Min" offset="0"/>
         <Anchor side="Left" relative="$parent/Type" pos="Max" offset="0"/>
         <Width val="200"/>
         <Height val="60"/>
-        <Frame type="Frame" name="EmptyLabelContainerFrame">
-            <Anchor side="Top" relative="$parent" pos="Min" offset="00"/>
-            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="20"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="-20"/>
-            
-            <Frame type="Label" name="Label">
-                <Anchor relative="$parent"/>
-                <Style val="BattlenetGlueEditBox"/>
-                <Options val="Ellipsis | IgnoreFormatTags"/>
-                <Enabled val="False"/>
-                <Text val="Empty..."/>
-            </Frame>
-            <StateGroup name="VisibleState">
-                <DefaultState val="NotVisible"/>
-                <State name="Visible">
-                    <When type="Property" frame="$parent" Text=""/>
-                    <When type="Property" frame="$parent" Focused="False"/>
-                    <Action type="SetProperty" frame="$this" Visible="True"/>
-                </State>
-                <State name="NotVisible">
-                    <Action type="SetProperty" frame="$this" Visible="False"/>
-                </State>
-            </StateGroup>
-        </Frame>
     </Frame>
-	<Frame type="Frame" name="CatalogValueManager" template="CatalogManager/TestMap_PanelTemplateTitled">
+	<Frame type="Frame" name="CatalogValueManager" template="DevTools_Templates/PanelTemplateTitled">
         <Width val="700"/>
         <Height val="240"/>
         <Frame type="Pulldown" name="Type" template="StandardBattlenetTemplates/StandardBattlenetPulldownTemplate">
@@ -89,7 +38,7 @@
             <Width val="200"/>
             <Height val="60"/>
         </Frame>
-        <Frame type="EditBox" name="Entry" template="CatalogManager/CatalogValueManagerEditBoxTemplate">
+        <Frame type="EditBox" name="Entry" template="CatalogManager/EditBoxTemplate">
             <Anchor side="Top" relative="$parent/Type" pos="Min" offset="0"/>
             <Anchor side="Left" relative="$parent/Type" pos="Max" offset="0"/>
             <Width val="200"/>
@@ -100,7 +49,7 @@
                 </Frame>
             </Frame>
         </Frame>
-        <Frame type="EditBox" name="Field" template="CatalogManager/CatalogValueManagerEditBoxTemplate">
+        <Frame type="EditBox" name="Field" template="CatalogManager/EditBoxTemplate">
             <Anchor side="Top" relative="$parent/Entry" pos="Min" offset="0"/>
             <Anchor side="Left" relative="$parent/Entry" pos="Max" offset="0"/>
             <Width val="200"/>
@@ -111,7 +60,7 @@
                 </Frame>
             </Frame>
         </Frame>
-        <Frame type="EditBox" name="Value" template="CatalogManager/CatalogValueManagerEditBoxTemplate">
+        <Frame type="EditBox" name="Value" template="CatalogManager/EditBoxTemplate">
             <Anchor side="Top" relative="$parent/Field" pos="Min" offset="0"/>
             <Anchor side="Left" relative="$parent/Field" pos="Max" offset="0"/>
             <Width val="150"/>
@@ -122,7 +71,7 @@
                 </Frame>
             </Frame>
         </Frame>
-        <Frame type="Button" name="Apply" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+        <Frame type="Button" name="Apply" template="DevTools_Templates/ButtonTemplate">
             <Anchor side="Top" relative="$parent/Type" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
             <Width val="150"/>
@@ -130,7 +79,7 @@
             <Text val="Apply"/>
         </Frame>
         
-        <Frame type="Button" name="Get" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+        <Frame type="Button" name="Get" template="DevTools_Templates/ButtonTemplate">
             <Anchor side="Top" relative="$parent/Apply" pos="Min" offset="0"/>
             <Anchor side="Left" relative="$parent/Apply" pos="Max" offset="5"/>
             <Width val="150"/>
@@ -138,7 +87,7 @@
             <Text val="Get"/>
         </Frame>
     </Frame>
-    <Frame type="Frame" name="CatalogManagerList" template="CatalogManager/TestMap_PanelTemplateTitled">
+    <Frame type="Frame" name="CatalogManagerList" template="DevTools_Templates/PanelTemplateTitled">
         <Height val="780"/>
         <Width val="380"/>
         <Frame type="Label" name="Title">
@@ -192,48 +141,57 @@
             <Text val="ShowRaceManager"/>
         </Frame>
     </Frame>
-    <Frame type="Frame" name="CatalogManager" template="CatalogManager/TestMap_PanelTemplateTitled">
+    <Frame type="Frame" name="CatalogManager" template="DevTools_Templates/PanelTemplateTitled">
         <Height val="600"/>
         <Width val="400"/>
         <CollapseLayout val="True"/>
-        <Frame type="EditBox" name="Item" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+        <Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
             <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Width val="300"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
             <Height val="60"/>
             <!--<RejectsFocus val="True"/>-->
             <Enabled val="False"/>
         </Frame>
-        
-        <Frame type="EditBox" name="BoxFilter" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+        <Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
             <Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
-            <Anchor side="Left" relative="$parent/Item" pos="Min" offset="0"/>
-            <Width val="200"/>
-            <Height val="60"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="-80"/>
+            
         </Frame>
-        <Frame type="Button" name="ButtonFilter" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
-            <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
-            <Text val="Filter"/>
-            <Width val="140"/>
-            <Height val="60"/>
-        </Frame>
-        <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
-            <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
-            <Width val="375"/>
-            <Height val="200"/>
-        </Frame>
+        <!--
+
+            <Frame type="EditBox" name="BoxFilter" template="DevTools_Templates/EditBoxTemplate">
+                <Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
+                <Anchor side="Left" relative="$parent/Item" pos="Min" offset="0"/>
+                <Width val="200"/>
+                <Height val="60"/>
+            </Frame>
+            <Frame type="Button" name="ButtonFilter" template="DevTools_Templates/ButtonTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Text val="Filter"/>
+                <Width val="140"/>
+                <Height val="60"/>
+            </Frame>
+            <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+                <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+                <Width val="375"/>
+                <Height val="200"/>
+            </Frame>
+        --> 
 
 
-        <Frame type="Button" name="AddButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
-            <Anchor side="Top" relative="$parent/ListFilter" pos="Max" offset="5"/>
-            <Anchor side="Left" relative="$parent/ListFilter" pos="Min" offset="0"/>
+        <Frame type="Button" name="AddButton" template="DevTools_Templates/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/NavList" pos="Max" offset="5"/>
+            <Anchor side="Left" relative="$parent/NavList" pos="Min" offset="0"/>
             <Width val="160"/>
             <Height val="60"/>
             <Text val="Add"/>
         </Frame>
-        <Frame type="Button" name="RemoveButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+        <Frame type="Button" name="RemoveButton" template="DevTools_Templates/ButtonTemplate">
             <Anchor side="Top" relative="$parent/AddButton" pos="Min" offset="0"/>
             <Anchor side="Left" relative="$parent/AddButton" pos="Max" offset="0"/>
             <Width val="160"/>
@@ -242,7 +200,7 @@
         </Frame>
     </Frame>
     <Frame type="Control" name="CatalogManagerSourceTarget" template="CatalogManager/CatalogManager">
-        <Frame type="Button" name="SetSourceUnit" template="CatalogManager/CatalogManagerButtonTemplate">
+        <Frame type="Button" name="SetSourceUnit" template="CatalogManager/ButtonTemplate">
             <Anchor side="Top" relative="$parent/AddButton" pos="Max" offset="10"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
             <Text val="SetSourceUnit"/>
@@ -264,7 +222,7 @@
                 <Text val="{$parent/TextFormatFrame/@Text}"/>
             </Frame>
         </Frame>
-        <Frame type="Button" name="SetTargetUnit" template="CatalogManager/CatalogManagerButtonTemplate">
+        <Frame type="Button" name="SetTargetUnit" template="CatalogManager/ButtonTemplate">
             <Anchor side="Top" relative="$parent/SetSourceUnit" pos="Max" offset="5"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
             <Text val="SetTargetUnit"/>
@@ -289,7 +247,7 @@
         </Frame>
     </Frame>
     
-    <Frame type="Frame" name="CheatManager" template="CatalogManager/TestMap_PanelTemplateTitled">
+    <Frame type="Frame" name="CheatManager" template="DevTools_Templates/PanelTemplateTitled">
         <Height val="600"/>
         <Width val="400"/>
         <CollapseLayout val="True"/>

@@ -9,17 +9,17 @@ static const string APPLYBTN_PATH = "Apply";
 static const string REMOVEBTN_PATH = "RemoveButton";
 
 struct DataEditorContainerStruct{
-    int panel;
-    int entryIdBox;
-    int messageBox;
-    int applyButton;
-    int removeButton;
+	int panel;
+	int entryIdBox;
+	int messageBox;
+	int applyButton;
+	int removeButton;
 };
 
 struct DataEditorAttributeContainerStruct{
-    string id;
-    int panel;
-    int value;
+	string id;
+	int panel;
+	int value;
 };
 
 
@@ -34,48 +34,48 @@ static string[ATTR_COUNT] AttributeNames;
 static DataEditorAttributeContainerStruct[ATTR_COUNT] AttributeContainers;
 
 void DataEditorAttributeInit(){
-    int i = 0;
-    AttributeNames[i] = "Name"; i+=1;
-    AttributeNames[i] = "Description"; i+=1;
-    AttributeNames[i] = "Sight"; i+=1;
-    AttributeNames[i] = "Food"; i+=1;
-    AttributeNames[i] = "LifeStart"; i+=1;
-    AttributeNames[i] = "LifeMax"; i+=1;
-    AttributeNames[i] = "Speed"; i+=1;
-    //Speed
+	int i = 0;
+	AttributeNames[i] = "Name"; i+=1;
+	AttributeNames[i] = "Description"; i+=1;
+	AttributeNames[i] = "Sight"; i+=1;
+	AttributeNames[i] = "Food"; i+=1;
+	AttributeNames[i] = "LifeStart"; i+=1;
+	AttributeNames[i] = "LifeMax"; i+=1;
+	AttributeNames[i] = "Speed"; i+=1;
+	//Speed
 }
 
 void DataEditorAttributePullValues(string entry, int player){
-    int i;
-    string prop;
-    int catalog =c_gameCatalogUnit;
-    string field;
-    for(i=0;i<ATTR_COUNT;i+=1){
-        if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
-        field = AttributeContainers[i].id;
-        prop = CatalogFieldValueGet(catalog, entry, AttributeContainers[i].id,player);
-        DialogControlSetPropertyAsString(AttributeContainers[i].value,c_triggerControlPropertyEditText,PlayerGroupSingle(player),prop);
-    }
-    
+	int i;
+	string prop;
+	int catalog =c_gameCatalogUnit;
+	string field;
+	for(i=0;i<ATTR_COUNT;i+=1){
+		if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
+		field = AttributeContainers[i].id;
+		prop = CatalogFieldValueGet(catalog, entry, AttributeContainers[i].id,player);
+		DialogControlSetPropertyAsString(AttributeContainers[i].value,c_triggerControlPropertyEditText,PlayerGroupSingle(player),prop);
+	}
+	
 };
 
 
 void DataEditorAttributePushValues(string entry, int player){
-    int i;
-    string prop;
-    int catalog =c_gameCatalogUnit;
-    string field;
-    for(i=0;i<ATTR_COUNT;i+=1){
-        if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
-        field = AttributeContainers[i].id;
-        prop = DialogControlGetPropertyAsString(AttributeContainers[i].value,c_triggerControlPropertyEditText,player);
-        CatalogFieldValueSet(catalog, entry, AttributeContainers[i].id,player,prop);
-    }
-    
+	int i;
+	string prop;
+	int catalog =c_gameCatalogUnit;
+	string field;
+	for(i=0;i<ATTR_COUNT;i+=1){
+		if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
+		field = AttributeContainers[i].id;
+		prop = DialogControlGetPropertyAsString(AttributeContainers[i].value,c_triggerControlPropertyEditText,player);
+		CatalogFieldValueSet(catalog, entry, AttributeContainers[i].id,player,prop);
+	}
+	
 };
 
 bool DataEditorListBoxFilterQuery(bool a, bool b){
-    int player = EventPlayer();
+	int player = EventPlayer();
 	playergroup pg = PlayerGroupSingle(player);
 	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
@@ -84,79 +84,79 @@ bool DataEditorListBoxFilterQuery(bool a, bool b){
 
 
 bool DataEditorListBoxSelectionChanged(bool a, bool b){
-    //string entry;
-    ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+	//string entry;
+	ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
 	//entry = ItemList.list[ItemListGetActive(ItemList,EventPlayer())];
-    //DataEditorAttributePullValues(entry,EventPlayer());
-    return true;
+	//DataEditorAttributePullValues(entry,EventPlayer());
+	return true;
 }
 
 void DataEditorListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-    int i = 0;
+	int i = 0;
 	DialogControlSetPropertyAsString(DataEditorContainer.entryIdBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
-    for(i=1; i<=PlayerGroupCount(pg);i+=1){
-        DataEditorAttributePullValues(itemList.list[index],i);
-    }
+	for(i=1; i<=PlayerGroupCount(pg);i+=1){
+		DataEditorAttributePullValues(itemList.list[index],i);
+	}
 }
 
 
 
 static unitgroup DataEditorContainerTarget(){
-    return UnitGroupSelected(EventPlayer());
-    
+	return UnitGroupSelected(EventPlayer());
+	
 }
 
 static string DataEditorContainerDataEditor(string val){
-    return val;
-    
+	return val;
+	
 }
 
 bool DataEditorContainerSendHandler(bool a, bool b){
-    bool trigRan = true;
-    string val = DialogControlGetPropertyAsString(DataEditorContainer.entryIdBox,c_triggerControlPropertyEditText,EventPlayer());
-    string DataEditorType = DataEditorContainerDataEditor(val);
-    unitgroup ug = DataEditorContainerTarget();
-    int i;
-    if(EventDialogControl()==DataEditorContainer.applyButton){
-        //TechTreeDataEditorAddLevel(EventPlayer(),val,1);
+	bool trigRan = true;
+	string val = DialogControlGetPropertyAsString(DataEditorContainer.entryIdBox,c_triggerControlPropertyEditText,EventPlayer());
+	string DataEditorType = DataEditorContainerDataEditor(val);
+	unitgroup ug = DataEditorContainerTarget();
+	int i;
+	if(EventDialogControl()==DataEditorContainer.applyButton){
+		//TechTreeDataEditorAddLevel(EventPlayer(),val,1);
 
-        DataEditorAttributePushValues(val,EventPlayer());
-    }
-    else if(EventDialogControl()==DataEditorContainer.removeButton){
-        //TechTreeDataEditorAddLevel(EventPlayer(),val,-1);
-    }
-    return trigRan;
+		DataEditorAttributePushValues(val,EventPlayer());
+	}
+	else if(EventDialogControl()==DataEditorContainer.removeButton){
+		//TechTreeDataEditorAddLevel(EventPlayer(),val,-1);
+	}
+	return trigRan;
 }
 
 
 
 void DataEditorAttributeHookup_Init(){
-    int i;
-    int count = 6;
-    const string basePath = "PropertiesEditor/";
-    for(i=0;i<ATTR_COUNT;i+=1){
-        if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
-        AttributeContainers[i].id = AttributeNames[i];
-        AttributeContainers[i].panel = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypePanel,basePath+AttributeNames[i]);
-        AttributeContainers[i].value = DialogControlHookup(AttributeContainers[i].panel,c_triggerControlTypeEditBox,"Value");
-    }
-    
+	int i;
+	int count = 6;
+	const string basePath = "PropertiesEditor/";
+	for(i=0;i<ATTR_COUNT;i+=1){
+		if((AttributeNames[i]=="")||(AttributeNames[i]==null)){continue;}
+		AttributeContainers[i].id = AttributeNames[i];
+		AttributeContainers[i].panel = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypePanel,basePath+AttributeNames[i]);
+		AttributeContainers[i].value = DialogControlHookup(AttributeContainers[i].panel,c_triggerControlTypeEditBox,"Value");
+	}
+	
 };
 
 void DataEditorHandler_Init(){
-    playergroup pg = PlayerGroupAll();
-    trigger t;
-    DataEditorContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
-    DataEditorContainer.entryIdBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,ENTRYIDBOX_PATH);
-    //DataEditorContainer.messageBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
-    DataEditorContainer.applyButton = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeButton,APPLYBTN_PATH);
-    //DataEditorContainer.removeButton = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
-    t = TriggerCreate("DataEditorContainerSendHandler");
-    TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.applyButton,c_triggerControlEventTypeClick);
-    //TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.removeButton,c_triggerControlEventTypeClick);
-    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "DataEditorListBox", DataEditorListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
-    ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
-    DataEditorAttributeInit();
-    DataEditorAttributeHookup_Init();
+	playergroup pg = PlayerGroupAll();
+	trigger t;
+	DataEditorContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+	DataEditorContainer.entryIdBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,ENTRYIDBOX_PATH);
+	//DataEditorContainer.messageBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+	DataEditorContainer.applyButton = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeButton,APPLYBTN_PATH);
+	//DataEditorContainer.removeButton = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+	t = TriggerCreate("DataEditorContainerSendHandler");
+	TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.applyButton,c_triggerControlEventTypeClick);
+	//TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.removeButton,c_triggerControlEventTypeClick);
+	ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ItemListCatalogFilter);
+	ItemList_FilterListInitStandard(ListBoxFilter, "DataEditorListBox", DataEditorListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+	DataEditorAttributeInit();
+	DataEditorAttributeHookup_Init();
 }

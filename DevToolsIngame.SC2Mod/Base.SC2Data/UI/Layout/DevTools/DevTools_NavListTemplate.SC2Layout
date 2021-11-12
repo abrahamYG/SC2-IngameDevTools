@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Frame" name="NavList">
+        
+        <Frame type="EditBox" name="BoxFilter" template="DevTools_Templates/EditBoxTemplate">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/ButtonFilter" pos="Min" offset="0"/>
+            <Height val="60"/>
+        </Frame>
+        <Frame type="Button" name="ButtonFilter" template="DevTools_Templates/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Text val="Filter"/>
+            <Width val="140"/>
+            <Height val="60"/>
+        </Frame>
+        <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+            <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+        </Frame>
+    </Frame>
+</Desc>

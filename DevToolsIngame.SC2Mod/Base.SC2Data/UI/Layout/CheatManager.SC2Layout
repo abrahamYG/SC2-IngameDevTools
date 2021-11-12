@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Button" name="ButtonTemplate" template="DevTools_Templates/ButtonTemplate">
+        <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+        <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+        <Height val="60"/>
+        <Text val=""/>
+    </Frame>
+    
+    <Frame type="Frame" name="CheatManager" template="DevTools_Templates/PanelTemplateTitled">
+        <Height val="400"/>
+        <Width val="340"/>
+        <CollapseLayout val="True"/>
+        <Frame type="Button" name="ShowMap" template="CheatManager/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+            <Text val="ShowMap"/>
+        </Frame>
+        <Frame type="Button" name="Techtree" template="CheatManager/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/ShowMap" pos="Max" offset="5"/>
+            <Text val="Techtree"/>
+        </Frame>
+        <Frame type="Button" name="FastBuild" template="CheatManager/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/Techtree" pos="Max" offset="5"/>
+            <Text val="FastBuild"/>
+        </Frame>
+        <Frame type="Button" name="Food" template="CheatManager/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/FastBuild" pos="Max" offset="5"/>
+            <Text val="Food"/>
+        </Frame>
+        <Frame type="Button" name="Resource" template="CheatManager/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/Food" pos="Max" offset="5"/>
+            <Text val="Resource"/>
+        </Frame>
+    </Frame>
+</Desc>

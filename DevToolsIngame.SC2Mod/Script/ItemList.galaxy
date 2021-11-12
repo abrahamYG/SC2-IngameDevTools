@@ -173,7 +173,8 @@ static const string FILTERLIST_PATH = "ListFilter";
 
 
 void ItemList_FilterListHookup(ListBoxFilterStructRef listBoxFilter, string path){
-	listBoxFilter.panel = DialogControlHookupStandard(c_triggerControlTypePanel,path);
+	int panel = DialogControlHookupStandard(c_triggerControlTypePanel,path);;
+	listBoxFilter.panel = panel;
     listBoxFilter.list = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeListBox,FILTERLIST_PATH);
     listBoxFilter.editbox = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeEditBox,FILTERBOX_PATH);
     listBoxFilter.button = DialogControlHookup(listBoxFilter.panel,c_triggerControlTypeButton,FILTERBTN_PATH);

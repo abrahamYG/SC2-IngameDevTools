@@ -53,6 +53,6 @@ void SkinHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(SkinContainer, CONTAINERDLG_PATH, "SkinContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogSkin, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "SkinListBox", SkinListBoxSetActive, CONTAINERDLG_PATH);
+    ItemList_FilterListInitStandard(ListBoxFilter, "SkinListBox", SkinListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

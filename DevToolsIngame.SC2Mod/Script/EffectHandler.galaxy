@@ -108,18 +108,15 @@ bool EffectContainerSendHandler(bool a, bool b){
 
 
 void EffectListInitUI(){
-	playergroup pg = PlayerGroupAll();
-    ItemList_FilterListInitStandard(ListBoxFilter, "EffectListBox", EffectListBoxSetActive, CONTAINERDLG_PATH);
-	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }
 
 void EffectList_Init(){
-    ItemListInitFromCatalog(ItemList, c_gameCatalogEffect, ItemListCatalogFilter);
 };
 
 
 void EffectHandler_Init(){
     trigger t;
+    playergroup pg = PlayerGroupAll();
     EffectContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     EffectContainer.messageBox = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     EffectContainer.addButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
@@ -128,13 +125,14 @@ void EffectHandler_Init(){
     EffectContainer.targetButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,TGTBTN_PATH);
     EffectContainer.sourceUnitFrame = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeUnitStatus,SRCUNIT_PATH);
     EffectContainer.targetUnitFrame = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeUnitStatus,TGTUNIT_PATH);
- 
+    
     t = TriggerCreate("EffectContainerSendHandler");
     TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.addButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.removeButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.sourceButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.targetButton,c_triggerControlEventTypeClick);
     
-    EffectList_Init();
-    EffectListInitUI();
+    ItemListInitFromCatalog(ItemList, c_gameCatalogEffect, ItemListCatalogFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "EffectListBox", EffectListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

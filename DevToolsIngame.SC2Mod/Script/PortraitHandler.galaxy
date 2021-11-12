@@ -1,0 +1,86 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager";
+
+ItemListContainerStruct PortraitContainer;
+
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool PortraitListBoxFilterQuery(bool a, bool b){
+    
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool PortraitListBoxSelectionChanged(bool a, bool b){
+    
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void PortraitListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+     
+	DialogControlSetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+    
+}
+
+static unitgroup PortraitContainerTarget(){
+    
+    return UnitGroupSelected(EventPlayer());
+}
+
+static string PortraitContainerPortrait(string val){
+    
+    
+    return val;
+}
+
+bool PortraitContainerSendHandler(bool a, bool b){
+    
+    bool trigRan = true;
+    int player = EventPlayer();
+    string val = DialogControlGetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,player);
+    
+    string Portrait = PortraitContainerPortrait(val);
+    
+    
+    
+    int i;
+    if(EventDialogControl()==PortraitContainer.addButton){
+        
+        //PlayerSetPortrait(player,Portrait,0.5);
+        
+        
+        console("Adding Portrait ["+Portrait+"] to player "+IntToString(player));
+        
+        
+    }
+    else if(EventDialogControl()==PortraitContainer.removeButton){
+        
+        //print("Removing Portrait ["+Portrait+"] to unit "+UnitGetType(u));
+        
+        
+    }
+    return trigRan;
+}
+
+
+bool PortraitList_IsPortrait(int catalog, string entry){
+    return (StringFind(entry,"Portrait",false) >= 0);
+}
+
+
+void PortraitHandler_Init(){
+    
+	playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(PortraitContainer, CONTAINERDLG_PATH, "PortraitContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
+    ItemList_FilterListInitStandard(ListBoxFilter, "PortraitListBox", PortraitListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

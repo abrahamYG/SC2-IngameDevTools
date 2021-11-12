@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Frame" name="PanelTemplate">
+        <Frame type="Image" name="BG">
+            <Anchor relative="$parent" offset="-4"/>
+            <Color val="000000"/>
+            <Alpha val="100"/>
+        </Frame>
+        <Frame type="Image" name="Border">
+            <Anchor relative="$parent"/>
+            <Texture val="@UI/Glues_Battlenet_StandardButtons_Small_Border_Inner"/>
+            <TextureType val="NineSlice"/>
+            <Color val="3a66dd"/>
+        </Frame>
+		<Frame type="Frame" name="BackgroundContainer" template="StandardExtendedExperienceTemplates/ExtendedExperienceBackgroundContainerTemplate">
+            <Anchor side="Top" relative="$parent/BG" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/BG" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/BG" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/BG" pos="Max" offset="0"/>
+			<Visible val="False"/>
+        </Frame>
+    </Frame>
+    <Frame type="Frame" name="PanelTemplateTitled" template="DevTools_Templates/PanelTemplate">
+        <Frame type="Label" name="Title">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Text val="Title"/>
+            <Style val="@@@ModCenterSize20Bold"/>
+            <Height val="30"/>
+        </Frame>
+    </Frame>
+    <Frame type="Button" name="ButtonTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+    </Frame>
+    
+    <Frame type="EditBox" name="EditBoxTemplate" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+        <Frame type="Frame" name="EmptyLabelContainerFrame">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="00"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="20"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-20"/>
+            
+            <Frame type="Label" name="Label">
+                <Anchor relative="$parent"/>
+                <Style val="BattlenetGlueEditBox"/>
+                <Options val="Ellipsis | IgnoreFormatTags"/>
+                <Enabled val="False"/>
+                <Text val="Empty..."/>
+            </Frame>
+            <StateGroup name="VisibleState">
+                <DefaultState val="NotVisible"/>
+                <State name="Visible">
+                    <When type="Property" frame="$parent" Text=""/>
+                    <When type="Property" frame="$parent" Focused="False"/>
+                    <Action type="SetProperty" frame="$this" Visible="True"/>
+                </State>
+                <State name="NotVisible">
+                    <Action type="SetProperty" frame="$this" Visible="False"/>
+                </State>
+            </StateGroup>
+        </Frame>
+    </Frame>
+    
+    <Frame type="ListBox" name="ListBoxTemplate" template="StandardTemplates/StandardListBoxTemplate">
+    </Frame>
+</Desc>

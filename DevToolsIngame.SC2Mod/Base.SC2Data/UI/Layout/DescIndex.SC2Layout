@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Desc>
+    <Include path="UI/Layout/DevTools/DevTools_Templates.SC2Layout"/>
+    <Include path="UI/Layout/DevTools/DevTools_NavListTemplate.SC2Layout"/>
     <Include path="UI/Layout/DevTools/DevTools_MenuBar.SC2Layout"/>
     <Include path="UI/Layout/PortView.SC2Layout"/>
     <Include path="UI/Layout/CatalogManager.SC2Layout"/>
+    <Include path="UI/Layout/CheatManager.SC2Layout"/>
     <Include path="UI/Layout/DataEditor.SC2Layout"/>
-    <Include path="UI/Layout/TestMap_GameUI.SC2Layout"/>
+    <Include path="UI/Layout/DevTools_GameUI.SC2Layout"/>
 </Desc>
