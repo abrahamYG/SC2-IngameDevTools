@@ -7,12 +7,12 @@
         <Text val=""/>
     </Frame>
     
-    <Frame type="Frame" name="CheatManager" template="DevTools_Templates/PanelTemplateTitled">
-        <Height val="400"/>
+    <Frame type="Frame" name="CheatManager" template="DevTools_Templates/PanelTemplate">
+        <Height val="360"/>
         <Width val="340"/>
         <CollapseLayout val="True"/>
         <Frame type="Button" name="ShowMap" template="CheatManager/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
             <Text val="ShowMap"/>
         </Frame>
         <Frame type="Button" name="Techtree" template="CheatManager/ButtonTemplate">
