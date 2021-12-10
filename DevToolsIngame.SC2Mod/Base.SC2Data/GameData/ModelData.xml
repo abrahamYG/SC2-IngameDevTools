@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+    <CModel id="DevToolsBeaconSpawnUnit">
+        <Model value="Assets\UI\BeaconOnMyWay_AC\BeaconOnMyWay_AC.m3"/>
+        <EditorCategories value="Race:Neutral"/>
+    </CModel>
+</Catalog>

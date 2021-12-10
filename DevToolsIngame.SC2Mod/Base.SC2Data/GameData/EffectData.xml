@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+    <CEffectPersistent id="DevToolsBeaconSpawnUnit">
+        <WhichLocation Value="TargetPoint"/>
+        <PeriodicPeriodArray value="0.5"/>
+    </CEffectSet>
+</Catalog>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+    <CActorModel id="DevToolsBeaconSpawnUnit" parent="ModelAnimationStyleContinuous">
+        <Filter index="Neutral" value="1"/>
+        <Filter index="Enemy" value="1"/>
+        <FogVisibility value="Visible"/>
+        <On Terms="Effect.DevToolsBeaconSpawnUnit.Start" Send="Create"/>
+        <On Terms="TimerExpired; TimerName A" Send="Destroy"/>
+        <On Terms="Effect.DevToolsBeaconSpawnUnit.Start" Send="TimerSet 6.000000 OnMyWayBeaconDuration"/>
+        <HostSiteOps Ops="SOpTargetPoint SOpShadow"/>
+    </CActorModel>
+</Catalog>
