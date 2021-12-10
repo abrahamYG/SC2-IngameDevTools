@@ -2,247 +2,252 @@
 <Desc>
 
 	<Frame type="Frame" name="CatalogManager_PanelTemplate" template="DevTools_Templates/PanelTemplate">
-    </Frame>
-    <Frame type="Frame" name="TestMap_PanelTemplateTitled" template="DevTools_Templates/PanelTemplateTitled">
-    </Frame>
-    
+	</Frame>
+	<Frame type="Frame" name="TestMap_PanelTemplateTitled" template="DevTools_Templates/PanelTemplateTitled">
+	</Frame>
+	
 	<Frame type="Button" name="CheatTemplate" template="DevTools_Templates/ButtonTemplate">
-        <Width val="360"/>
-        <Height val="60"/>
-        <Text val=""/>
-        <!--<Toggleable val="True"/>-->
-    </Frame>
+		<Width val="360"/>
+		<Height val="60"/>
+		<Text val=""/>
+		<!--<Toggleable val="True"/>-->
+	</Frame>
 	<Frame type="Button" name="ShowCatalogTypeManagerTemplate" template="DevTools_Templates/ButtonTemplate">
-        <Width val="360"/>
-        <Height val="60"/>
-        <Text val=""/>
-        <Toggleable val="True"/>
-    </Frame>
-    <Frame type="Button" name="ButtonTemplate" template="DevTools_Templates/ButtonTemplate">
-        <Width val="200"/>
-        <Height val="60"/>
-    </Frame>
-    
-    <Frame type="EditBox" name="EditBoxTemplate" template="DevTools_Templates/EditBoxTemplate">
-        <Anchor side="Top" relative="$parent/Type" pos="Min" offset="0"/>
-        <Anchor side="Left" relative="$parent/Type" pos="Max" offset="0"/>
-        <Width val="200"/>
-        <Height val="60"/>
-    </Frame>
+		<Width val="360"/>
+		<Height val="60"/>
+		<Text val=""/>
+		<Toggleable val="True"/>
+	</Frame>
+	<Frame type="Button" name="ButtonTemplate" template="DevTools_Templates/ButtonTemplate">
+		<Width val="200"/>
+		<Height val="60"/>
+	</Frame>
+	
+	<Frame type="EditBox" name="EditBoxTemplate" template="DevTools_Templates/EditBoxTemplate">
+		<Width val="200"/>
+		<Height val="60"/>
+	</Frame>
 	<Frame type="Frame" name="CatalogValueManager" template="DevTools_Templates/PanelTemplateTitled">
 		<Width val="330"/>
 		<Height val="440"/>
-        <Frame type="Pulldown" name="Type" template="StandardBattlenetTemplates/StandardBattlenetPulldownTemplate">
+		<Frame type="Pulldown" name="Type" template="StandardBattlenetTemplates/StandardBattlenetPulldownTemplate">
 			<Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Width val="200"/>
-            <Height val="60"/>
-        </Frame>
-        <Frame type="EditBox" name="Entry" template="CatalogManager/EditBoxTemplate">
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Width val="200"/>
+			<Height val="60"/>
+		</Frame>
+		<Frame type="EditBox" name="Entry" template="CatalogManager/EditBoxTemplate">
 			<Anchor side="Top" relative="$parent/Type" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
-            <Width val="200"/>
-            <Height val="60"/>
+			<Width val="200"/>
+			<Height val="60"/>
 			<FocusNext val="$parent/Field"/>
-            <Frame type="Frame" name="EmptyLabelContainerFrame">
-                <Frame type="Label" name="Label">
-                    <Text val="Entry"/>
-                </Frame>
-            </Frame>
-        </Frame>
-        <Frame type="EditBox" name="Field" template="CatalogManager/EditBoxTemplate">
+			<Frame type="Frame" name="EmptyLabelContainerFrame">
+				<Frame type="Label" name="Label">
+					<Text val="Entry"/>
+				</Frame>
+			</Frame>
+		</Frame>
+		<Frame type="EditBox" name="Field" template="CatalogManager/EditBoxTemplate">
 			<Anchor side="Top" relative="$parent/Entry" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/Entry" pos="Min" offset="0"/>
-            <Width val="200"/>
-            <Height val="60"/>
-            <Frame type="Frame" name="EmptyLabelContainerFrame">
-                <Frame type="Label" name="Label">
-                    <Text val="Field"/>
-                </Frame>
-            </Frame>
-        </Frame>
-        <Frame type="EditBox" name="Value" template="CatalogManager/EditBoxTemplate">
+			<Width val="200"/>
+			<Height val="60"/>
+			<Frame type="Frame" name="EmptyLabelContainerFrame">
+				<Frame type="Label" name="Label">
+					<Text val="Field"/>
+				</Frame>
+			</Frame>
+		</Frame>
+		<Frame type="EditBox" name="Value" template="CatalogManager/EditBoxTemplate">
 			<Anchor side="Top" relative="$parent/Field" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/Field" pos="Min" offset="0"/>
-            <Width val="150"/>
-            <Height val="60"/>
-            <Frame type="Frame" name="EmptyLabelContainerFrame">
-                <Frame type="Label" name="Label">
-                    <Text val="Value"/>
-                </Frame>
-            </Frame>
-        </Frame>
-        <Frame type="Button" name="Apply" template="DevTools_Templates/ButtonTemplate">
+			<Width val="150"/>
+			<Height val="60"/>
+			<Frame type="Frame" name="EmptyLabelContainerFrame">
+				<Frame type="Label" name="Label">
+					<Text val="Value"/>
+				</Frame>
+			</Frame>
+		</Frame>
+		<Frame type="Button" name="Apply" template="DevTools_Templates/ButtonTemplate">
 			<Anchor side="Top" relative="$parent/Value" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
-            <Width val="150"/>
-            <Height val="60"/>
-            <Text val="Apply"/>
-        </Frame>
-        
-        <Frame type="Button" name="Get" template="DevTools_Templates/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/Apply" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/Apply" pos="Max" offset="5"/>
-            <Width val="150"/>
-            <Height val="60"/>
-            <Text val="Get"/>
-        </Frame>
-    </Frame>
+			<Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
+			<Width val="150"/>
+			<Height val="60"/>
+			<Text val="Apply"/>
+		</Frame>
+		
+		<Frame type="Button" name="Get" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/Apply" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/Apply" pos="Max" offset="5"/>
+			<Width val="150"/>
+			<Height val="60"/>
+			<Text val="Get"/>
+		</Frame>
+	</Frame>
 	<Frame type="Frame" name="CatalogManagerList" template="DevTools_Templates/PanelTemplate">
 		<Height val="580"/>
-        <Width val="380"/>
-        <Frame type="Button" name="ShowAbilityManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+		<Width val="380"/>
+		<Frame type="Button" name="ShowAbilityManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
 			<Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowAbilityManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowBehaviorManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowAbilityManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowBehaviorManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowAbilityManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowBehaviorManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowEffectManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowBehaviorManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowEffectManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowBehaviorManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowEffectManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowSkinManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowEffectManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowSkinManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowEffectManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowSkinManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowUnitManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowSkinManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowUnitManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowSkinManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowUnitManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowUpgradeManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowUnitManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowUpgradeManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowUnitManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowUpgradeManager"/>
-        </Frame>
-        <Frame type="Button" name="ShowWeaponManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowUpgradeManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		<Frame type="Button" name="ShowWeaponManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowUpgradeManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowWeaponManager"/>
-        </Frame>
-        
-        <Frame type="Button" name="ShowLightingManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowWeaponManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		
+		<Frame type="Button" name="ShowLightingManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowWeaponManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowLightingManager"/>
-        </Frame>
-        
-        <Frame type="Button" name="ShowRaceManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/ShowLightingManager" pos="Max" offset="0"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+		</Frame>
+		
+		<Frame type="Button" name="ShowRaceManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowLightingManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowRaceManager"/>
-        </Frame>
-    </Frame>
-    <Frame type="Frame" name="CatalogManager" template="DevTools_Templates/PanelTemplateTitled">
-        <Height val="600"/>
-        <Width val="400"/>
-        <CollapseLayout val="True"/>
-        <Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
-            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
-            <Height val="60"/>
-            <!--<RejectsFocus val="True"/>-->
-            <Enabled val="False"/>
-        </Frame>
-        <Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
-            <Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
-            <Anchor side="Bottom" relative="$parent" pos="Max" offset="-80"/>
-            
-        </Frame>
-        <!--
+		</Frame>
+	</Frame>
+	<Frame type="Frame" name="CatalogManager" template="DevTools_Templates/PanelTemplateTitled">
+		<Height val="600"/>
+		<Width val="400"/>
+		<CollapseLayout val="True"/>
+		<Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
+			<Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Height val="60"/>
+			<!--<RejectsFocus val="True"/>-->
+			<Enabled val="False"/>
+		</Frame>
+		<Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
+			<Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-80"/>
+			
+		</Frame>
+		<!--
 
-            <Frame type="EditBox" name="BoxFilter" template="DevTools_Templates/EditBoxTemplate">
-                <Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
-                <Anchor side="Left" relative="$parent/Item" pos="Min" offset="0"/>
-                <Width val="200"/>
-                <Height val="60"/>
-            </Frame>
-            <Frame type="Button" name="ButtonFilter" template="DevTools_Templates/ButtonTemplate">
-                <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
-                <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
-                <Text val="Filter"/>
-                <Width val="140"/>
-                <Height val="60"/>
-            </Frame>
-            <Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
-                <Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
-                <Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
-                <Width val="375"/>
-                <Height val="200"/>
-            </Frame>
-        --> 
+			<Frame type="EditBox" name="BoxFilter" template="DevTools_Templates/EditBoxTemplate">
+				<Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
+				<Anchor side="Left" relative="$parent/Item" pos="Min" offset="0"/>
+				<Width val="200"/>
+				<Height val="60"/>
+			</Frame>
+			<Frame type="Button" name="ButtonFilter" template="DevTools_Templates/ButtonTemplate">
+				<Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+				<Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+				<Text val="Filter"/>
+				<Width val="140"/>
+				<Height val="60"/>
+			</Frame>
+			<Frame type="ListBox" name="ListFilter" template="StandardTemplates/StandardListBoxTemplate">
+				<Anchor side="Top" relative="$parent/BoxFilter" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$parent/BoxFilter" pos="Min" offset="0"/>
+				<Width val="375"/>
+				<Height val="200"/>
+			</Frame>
+		--> 
 
 
-        <Frame type="Button" name="AddButton" template="DevTools_Templates/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/NavList" pos="Max" offset="5"/>
-            <Anchor side="Left" relative="$parent/NavList" pos="Min" offset="0"/>
-            <Width val="160"/>
-            <Height val="60"/>
-            <Text val="Add"/>
-        </Frame>
-        <Frame type="Button" name="RemoveButton" template="DevTools_Templates/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/AddButton" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/AddButton" pos="Max" offset="0"/>
-            <Width val="160"/>
-            <Height val="60"/>
-            <Text val="Remove"/>
-        </Frame>
-    </Frame>
-    <Frame type="Control" name="CatalogManagerSourceTarget" template="CatalogManager/CatalogManager">
-        <Frame type="Button" name="SetSourceUnit" template="CatalogManager/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/AddButton" pos="Max" offset="10"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="SetSourceUnit"/>
-            <Width val="250"/>
-        </Frame>
-        <Frame type="UnitStatusFrame" name="Source">
-            <Anchor side="Top" relative="$parent/SetSourceUnit" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/SetSourceUnit" pos="Max" offset="5"/>
-            <Anchor side="Bottom" relative="$parent/SetSourceUnit" pos="Max" offset="0"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
-            <Frame type="TextFormatFrame" name="TextFormatFrame">
-                <FormatText val="%0% - %1%"/>
+		<Frame type="Button" name="AddButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/NavList" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent/NavList" pos="Min" offset="0"/>
+			<Width val="160"/>
+			<Height val="60"/>
+			<Text val="Add"/>
+		</Frame>
+		<Frame type="Button" name="RemoveButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/AddButton" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AddButton" pos="Max" offset="0"/>
+			<Width val="160"/>
+			<Height val="60"/>
+			<Text val="Remove"/>
+		</Frame>
+	</Frame>
+	<Frame type="Control" name="CatalogManagerSourceTarget" template="CatalogManager/CatalogManager">
+		<Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
+			<Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			<Anchor side="Bottom" relative="$parent" pos="Max" offset="-230"/>
+			
+		</Frame>
+		<Frame type="Button" name="SetSourceUnit" template="CatalogManager/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/AddButton" pos="Max" offset="10"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Text val="SetSourceUnit"/>
+			<Width val="250"/>
+		</Frame>
+		<Frame type="UnitStatusFrame" name="Source">
+			<Anchor side="Top" relative="$parent/SetSourceUnit" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/SetSourceUnit" pos="Max" offset="5"/>
+			<Anchor side="Bottom" relative="$parent/SetSourceUnit" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+			<Frame type="TextFormatFrame" name="TextFormatFrame">
+				<FormatText val="%0% - %1%"/>
 
-                <Replacement val="{$parent/@Unit}" index="0"/>
-                <Replacement val="{$parent/@UnitTag}" index="1"/>
-            </Frame>
-            <Frame type="Label" name="Label">
-                <Anchor relative="$parent"/>
-                <Text val="{$parent/TextFormatFrame/@Text}"/>
-            </Frame>
-        </Frame>
-        <Frame type="Button" name="SetTargetUnit" template="CatalogManager/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/SetSourceUnit" pos="Max" offset="5"/>
-            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="SetTargetUnit"/>
-            <Width val="250"/>
-        </Frame>
-        <Frame type="UnitStatusFrame" name="Target">
-            <Anchor side="Top" relative="$parent/SetTargetUnit" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/SetTargetUnit" pos="Max" offset="5"/>
-            <Anchor side="Bottom" relative="$parent/SetTargetUnit" pos="Max" offset="0"/>
-            <Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
-            
-            <Frame type="TextFormatFrame" name="TextFormatFrame">
-                <FormatText val="%0% - %1%"/>
+				<Replacement val="{$parent/@Unit}" index="0"/>
+				<Replacement val="{$parent/@UnitTag}" index="1"/>
+			</Frame>
+			<Frame type="Label" name="Label">
+				<Anchor relative="$parent"/>
+				<Text val="{$parent/TextFormatFrame/@Text}"/>
+			</Frame>
+		</Frame>
+		<Frame type="Button" name="SetTargetUnit" template="CatalogManager/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/SetSourceUnit" pos="Max" offset="5"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Text val="SetTargetUnit"/>
+			<Width val="250"/>
+		</Frame>
+		<Frame type="UnitStatusFrame" name="Target">
+			<Anchor side="Top" relative="$parent/SetTargetUnit" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/SetTargetUnit" pos="Max" offset="5"/>
+			<Anchor side="Bottom" relative="$parent/SetTargetUnit" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="-5"/>
+			
+			<Frame type="TextFormatFrame" name="TextFormatFrame">
+				<FormatText val="%0% - %1%"/>
 
-                <Replacement val="{$parent/@Unit}" index="0"/>
-                <Replacement val="{$parent/@UnitTag}" index="1"/>
-            </Frame>
-            <Frame type="Label" name="Label">
-                <Anchor relative="$parent"/>
-                <Text val="{$parent/TextFormatFrame/@Text}"/>
-            </Frame>
-        </Frame>
-    </Frame>
-    
+				<Replacement val="{$parent/@Unit}" index="0"/>
+				<Replacement val="{$parent/@UnitTag}" index="1"/>
+			</Frame>
+			<Frame type="Label" name="Label">
+				<Anchor relative="$parent"/>
+				<Text val="{$parent/TextFormatFrame/@Text}"/>
+			</Frame>
+		</Frame>
+	</Frame>
+	
 </Desc>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Desc>
+    <Include path="UI/Layout/DevTools/DevTools_PanelTemplate.SC2Layout"/>
     <Include path="UI/Layout/DevTools/DevTools_Templates.SC2Layout"/>
     <Include path="UI/Layout/DevTools/DevTools_NavListTemplate.SC2Layout"/>
     <Include path="UI/Layout/DevTools/DevTools_MenuBar.SC2Layout"/>

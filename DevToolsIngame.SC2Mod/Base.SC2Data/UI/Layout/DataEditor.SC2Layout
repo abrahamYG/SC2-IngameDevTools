@@ -20,7 +20,7 @@
             <Height val="{$parent/@Height}"/>
         </Frame>
     </Frame>
-    <Frame type="Frame" Name="MainWindow" template="CatalogManager/CatalogManager_PanelTemplate">
+    <Frame type="Frame" Name="MainWindow" template="DevTools_PanelTemplate/ContainerTemplate">
         <Frame type="Image" name="BG">
             <Anchor relative="$parent" offset="-4"/>
             <Color val="000000"/>

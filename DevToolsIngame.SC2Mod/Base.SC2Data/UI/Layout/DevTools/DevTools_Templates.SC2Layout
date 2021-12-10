@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Desc>
-    <Frame type="Frame" name="PanelTemplate">
+    <Frame type="Frame" name="PanelTemplateold">
         <Frame type="Image" name="BG">
             <Anchor relative="$parent" offset="-4"/>
             <Color val="000000"/>
@@ -20,7 +20,9 @@
 			<Visible val="False"/>
         </Frame>
     </Frame>
-    <Frame type="Frame" name="PanelTemplateTitled" template="DevTools_Templates/PanelTemplate">
+    <Frame type="Frame" name="PanelTemplate" template="DevTools_PanelTemplate/ContainerTemplate">
+    </Frame>
+    <Frame type="Frame" name="PanelTemplateTitled" template="DevTools_PanelTemplate/ContainerTemplate">
         <Frame type="Label" name="Title">
             <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
@@ -34,6 +36,14 @@
     </Frame>
     
     <Frame type="EditBox" name="EditBoxTemplate" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+        
+		<LoseFocusOnEsc val="true"/>
+		<Animation name="LoseFocus">
+			<Event event="OnEnterPressed" frame="$this" action="Reset,Play"/>
+			<Controller type="Property" property="Focused" frame="$this" end="Pause">
+				<Key type="Property" time="0.02" value="False"/>
+			</Controller>
+		</Animation>
         <Frame type="Frame" name="EmptyLabelContainerFrame">
             <Anchor side="Top" relative="$parent" pos="Min" offset="00"/>
             <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
