@@ -24,8 +24,32 @@ bool PortraitListBoxSelectionChanged(bool a, bool b){
     return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
 }
 
+
+int PortraitList_RebuildPortrait(){
+	int p;
+	if(PortFrame>-1){
+		DialogControlDestroy(PortFrame);
+	}
+	PortFrame = DialogControlCreateInPanelFromTemplate(PortContainer,c_triggerControlTypePortrait,"PortView/PortraitTemplateFull");
+	p = PortraitGetTriggerControl(PortFrame);
+	PortraitSetBorderVisible(p,false);
+	return p;
+}
+
+
 void PortraitListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-     
+    string portId;
+	string portActor = "PortraitActorDummy";
+	portId = PortList[index];
+	if(CatalogEntryIsValid(c_gameCatalogActor,portId)){
+		portActor = portId;
+	}
+	Portrait = PortraitList_RebuildPortrait();
+	PortraitSetModel(Portrait,portId,false);
+	PortraitSetActor(Portrait,portActor);
+	DialogControlSetPropertyAsText(Label,c_triggerControlPropertyText,PG,StringToText(portId));
+	DialogControlSetPropertyAsString(EditBoxIndex,c_triggerControlPropertyEditText,PG,IntToString(index));
+	DialogControlSetPropertyAsString(EditBoxSearch,c_triggerControlPropertyEditText,PG,portId);
 	DialogControlSetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
     
 }
