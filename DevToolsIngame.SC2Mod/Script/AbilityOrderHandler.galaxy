@@ -1,5 +1,6 @@
 include "Script/debug_h";
 include "Script/split_string";
+include "Script/DevTools/helpers_h";
 include "Script/ItemList";
 
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/AbilityOrderManager";
@@ -144,6 +145,9 @@ void AbilityOrderList_AbilClassInit(){
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbil),"");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilArmMagazine),"Ammo");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAttack),"Execute/Towards/Barrage");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilAttack)+":0","Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilAttack)+":1","Towards");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilAttack)+":2","Barrage");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAttackModifier),"Execute");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilAugment),"Execute");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilBattery),"Execute");
@@ -168,6 +172,9 @@ void AbilityOrderList_AbilClassInit(){
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMerge),"SelectedUnits/WithTarget");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMergeable),"Cancel");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMorph),"Execute/Cancel/Unmorph");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMorph)+":0","Execute");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMorph)+":1","Cancel");
+    DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMorph)+":2","Unmorph");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMorphPlacement),"");
     DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+IntToString(c_classIdCAbilMove),"Move/Patrol/HoldPos/AcquireMove/Turn");
     DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+IntToString(c_classIdCAbilMove)+":0","Move");
@@ -215,7 +222,7 @@ void AbilityOrderList_AbilClassInit(){
 
     DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbil),0);
     DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilArmMagazine),20);
-    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAttack),2);
+    DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAttack),3);
     DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAttackModifier),1);
     DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilAugment),1);
     DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+IntToString(c_classIdCAbilBattery),1);
@@ -254,11 +261,28 @@ void AbilityOrderList_AbilClassInit(){
 }
 
 
+static unitgroup AbilityOrderContainerAbilMgmtGroup(int player){
+    return UnitGroupSelected(player);
+    
+}
+
+static unit AbilityOrderContainerSource(int player){
+    unit u;
+    u = DialogControlGetPropertyAsUnit(AbilityOrderContainer.sourceUnitFrame,c_triggerControlPropertyUnit,player);
+    if(u==null){
+        u = UnitGroupUnit(UnitGroupSelected(player),1);
+    }
+    return u;
+    
+}
 
 
-
-static unitgroup AbilityOrderContainerTarget(){
-    return UnitGroupSelected(EventPlayer());
+static unit AbilityOrderContainerTarget(int player){
+    unit u = DialogControlGetPropertyAsUnit(AbilityOrderContainer.targetUnitFrame,c_triggerControlPropertyUnit,player);
+    if(u==null){
+        u = null;
+    }
+    return u;
     
 }
 
@@ -277,49 +301,53 @@ bool AbilityOrderContainerSendHandler(bool a, bool b){
     bool trigRan = true;
     string val = DialogControlGetPropertyAsString(AbilityOrderContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
     int cmdIndex = AbilityOrderContainerAbilityOrderCmd(val);
-    string AbilityOrder = AbilityOrderContainerAbilityOrder(val);
-    unitgroup ug = AbilityOrderContainerTarget();
+    string abilOrder = AbilityOrderContainerAbilityOrder(val);
+    int cmdAction;
+    unitgroup ug = AbilityOrderContainerAbilMgmtGroup(EventPlayer());
     abilcmd cmd;
     order o;
     unit u;
+    unit source = AbilityOrderContainerSource(EventPlayer());
+    unit target = AbilityOrderContainerTarget(EventPlayer());
     int i;
     if(EventDialogControl()==AbilityOrderContainer.addButton){
-        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
-            u = UnitGroupUnit(ug,i);
-            if(AbilityOrderContainer.source==null){
-                AbilityOrderContainer.source = u;
-            }
-            if(AbilityOrderContainer.target==null){
-                AbilityOrderContainer.target = u;
-            }
-            cmd = AbilityCommand(AbilityOrder,cmdIndex);
-            if(AbilityCommandGetAction(cmd)==c_cmdActionNone){
-                o = Order(cmd);
-            }
-            if(AbilityCommandGetAction(cmd)==c_cmdActionInstant){
-                o = Order(cmd);
-            }
-            if(AbilityCommandGetAction(cmd)==c_cmdActionTarget){
-                o = OrderTargetingUnit(cmd,AbilityOrderContainer.target);
-            }
-            UnitIssueOrder(AbilityOrderContainer.source,o,c_orderQueueReplace);
-            print("Ordering ["+AbilityOrder+"] from unit "+UnitGetType(AbilityOrderContainer.source)+" to unit "+UnitGetType(AbilityOrderContainer.target));
+        cmd = AbilityCommand(abilOrder,cmdIndex);
+        cmdAction = AbilityCommandGetAction(cmd);
+        if(cmdAction==c_cmdActionNone){
+            o = Order(cmd);
         }
+        else if(cmdAction==c_cmdActionInstant){
+            o = Order(cmd);
+        }
+        else if(cmdAction==c_cmdActionTarget){
+            if(target==null){
+                o = OrderTargetingPoint(cmd,DevTools_GetSpawnPoint(EventPlayer()));
+            }
+            else{
+                o = OrderTargetingUnit(cmd,target);
+            }
+        }
+        if(source!=null){
+            UnitIssueOrder(source,o,c_orderQueueReplace);
+            print("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
+        }
+        else{
+            for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+                source = UnitGroupUnit(ug,i);
+                UnitIssueOrder(source,o,c_orderQueueReplace);
+                print("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
+            }
+        }
+       
     }
     else if(EventDialogControl()==AbilityOrderContainer.removeButton){
-            for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
-            u = UnitGroupUnit(ug,i);
-            //print("Removing behavior ["+AbilityOrder+"] to unit "+UnitGetType(u));
-        }
     }
     else if(EventDialogControl()==AbilityOrderContainer.sourceButton){
         u = UnitGroupUnit(ug,1);
-        AbilityOrderContainer.source = u;
         DialogControlSetPropertyAsUnit(AbilityOrderContainer.sourceUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
     }
     else if(EventDialogControl()==AbilityOrderContainer.targetButton){
         u = UnitGroupUnit(ug,1);
-        AbilityOrderContainer.target = u;
         DialogControlSetPropertyAsUnit(AbilityOrderContainer.targetUnitFrame,c_triggerControlPropertyUnit,PlayerGroupSingle(EventPlayer()),u);
     }
     return trigRan;
@@ -341,9 +369,24 @@ void AbilityOrderList_Init(){
 	}
 };
 
+bool aa(bool a, bool b){
+    const int c_PingPanelPingRetreat = 2;
+    const int c_PingPanelPingOnMyWay = 3;
+    int option = EventPingOption();
+    point p = EventPingPoint();
+    if(option==c_PingPanelPingRetreat){
+        DevTools_SetSpawnPoint(EventPlayer(),p);
+    }
+    if(option==c_PingPanelPingOnMyWay){
+        DevTools_ClearSpawnPoint(EventPlayer());
+    }
+    return true;
+}
+
 void AbilityOrderHandler_Init(){
     trigger t;
     playergroup pg = PlayerGroupAll();
+    int player;
     AbilityOrderContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     AbilityOrderContainer.messageBox = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     AbilityOrderContainer.addButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
@@ -352,13 +395,19 @@ void AbilityOrderHandler_Init(){
     AbilityOrderContainer.targetButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,TGTBTN_PATH);
     AbilityOrderContainer.sourceUnitFrame = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeUnitStatus,SRCUNIT_PATH);
     AbilityOrderContainer.targetUnitFrame = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeUnitStatus,TGTUNIT_PATH);
- 
+    DialogControlSetPropertyAsUnit(AbilityOrderContainer.sourceUnitFrame,c_triggerControlPropertyUnit,pg,null);
+    DialogControlSetPropertyAsUnit(AbilityOrderContainer.targetUnitFrame,c_triggerControlPropertyUnit,pg,null);
+    
     t = TriggerCreate("AbilityOrderContainerSendHandler");
     TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.addButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.removeButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.sourceButton,c_triggerControlEventTypeClick);
     TriggerAddEventDialogControl(t,c_playerAny,AbilityOrderContainer.targetButton,c_triggerControlEventTypeClick);
     
+
+    t = TriggerCreate("aa");
+    TriggerAddEventPing(t,c_playerAny);
+
     AbilityOrderList_AbilClassInit();   
     AbilityOrderList_Init();
     

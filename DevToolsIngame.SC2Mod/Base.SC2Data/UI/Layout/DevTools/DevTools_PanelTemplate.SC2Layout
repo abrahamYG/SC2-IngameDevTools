@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Frame" name="ContainerTemplate">
+        
+        <Frame type="BlurFrame" name="BackgroundBlur">
+            <Anchor relative="$parent/Background"/>
+            <BlurAmount val="0.35"/>
+            <Alpha val="255"/>
+        </Frame>
+        
+        <Frame type="Frame" name="AnchorFrame">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="8"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="-8"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="8"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-8"/>
+        </Frame>
+        
+        <Frame type="Image" name="Shadow">
+            <Anchor relative="$parent"/>
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_Border_Glow"/>
+            <TextureType val="NineSlice"/>
+            <Color val="0,0,0"/>
+            <Alpha val="128"/>
+        </Frame>
+        
+        <Frame type="Image" name="Background">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="-4"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="4"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-4"/>
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_Mask"/>
+            <TextureType val="NineSlice"/>
+            <Color val="9,12,21"/>
+            <Alpha val="153"/>
+        </Frame>
+        
+        
+        <Frame type="Image" name="BorderInner">
+            <Anchor relative="$parent/Background"/>
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_Border_Inner"/>
+            <TextureType val="NineSlice"/>
+            <Color val="69,120,167"/>
+            <Alpha val="77"/>
+        </Frame>
+        
+        <Frame type="Image" name="BorderOuter">
+            <Anchor relative="$parent/Background"/>
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_Border_Outer"/>
+            <TextureType val="NineSlice"/>
+            <Color val="0,0,0"/>
+            <Alpha val="179"/>
+        </Frame>
+            
+    </Frame>
+    
+    <Frame type="Frame" name="ContainerTemplateDivider" template="DevTools_PanelTemplate/ContainerTemplate">
+        
+        <Frame type="Image" name="HeaderHighlight">
+            <Anchor side="Top" relative="$parent/Background" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/Background" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/Background" pos="Max" offset="0"/>
+            <LayerCount val="2"/>
+            
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_Mask" layer="0"/>
+            <TextureType val="NineSlice" layer="0"/>
+            <AlphaLayer val="True" layer="0"/>
+            
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_InnerHighlight" layer="1"/>
+            <LayerColor val="46,112,168" layer="1"/>
+            <LayerAlpha val="64" layer="1"/>
+        </Frame>
+        
+        <Frame type="Image" name="BodyShadow">
+            <Anchor side="Top" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/Background" pos="Min" offset="2"/>
+            <Anchor side="Right" relative="$parent/Background" pos="Max" offset="-2"/>
+            <Height val="80"/>
+            <Texture val="@UI/Glues_Battlenet_PageAssets_StandardContainer_InnerShadow"/>
+            <Color val="11,14,25"/>
+            <Alpha val="102"/>
+        </Frame>
+        <Frame type="Image" name="DividerAnchor" template="StandardBattlenetTemplates/BattlenetStandardContentContainerDividerTemplate">
+            <Anchor side="Top" relative="$Anchor_StandardContentHeader_Bottom" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$Anchor_StandardContentSidebar_Right" pos="Max" offset="0"/>
+            <Width val="2"/>
+            <Height val="2"/>
+        </Frame>
+        
+        <Frame type="Image" name="DividerLeft" template="StandardBattlenetTemplates/BattlenetStandardContentContainerDividerTemplate">
+            <Anchor side="Top" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/AnchorFrame" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+        </Frame>
+            
+        <Frame type="Image" name="DividerRight" template="StandardBattlenetTemplates/BattlenetStandardContentContainerDividerTemplate">
+            <Anchor side="Top" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Right" relative="$parent/AnchorFrame" pos="Max" offset="0"/>
+        </Frame>
+            
+        <Frame type="Image" name="DividerTop" template="StandardBattlenetTemplates/BattlenetStandardContentContainerDividerTemplate">
+            <Anchor side="Top" relative="$parent/AnchorFrame" pos="Min" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+            <Anchor side="Left" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+        </Frame>
+            
+        <Frame type="Image" name="DividerBottom" template="StandardBattlenetTemplates/BattlenetStandardContentContainerDividerTemplate">
+            <Anchor side="Top" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/AnchorFrame" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent/DividerAnchor" pos="Min" offset="0"/>
+            <Anchor side="Right" relative="$parent/DividerAnchor" pos="Max" offset="0"/>
+        </Frame>
+    </Frame>
+</Desc>

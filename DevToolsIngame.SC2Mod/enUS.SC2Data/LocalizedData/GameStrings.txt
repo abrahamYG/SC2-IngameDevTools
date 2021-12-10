@@ -1,4 +1,4 @@
-DocInfo/DescLong=Emebdded Dev Tools to make your testing and iteration a bit easier
+﻿DocInfo/DescLong=Emebdded Dev Tools to make your testing and iteration a bit easier
 DocInfo/DescShort=Any
 DocInfo/Name=Alevice's Ingame Dev Tools
 Effect/Name/DevToolsBeaconSpawnUnit=DevTools Beacon SpawnUnit

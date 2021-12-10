@@ -1,0 +1,31 @@
+include "Script/DevTools/helpers_h";
+
+static const string PREFIX="DevToolsHelper";
+
+static string GetSpawnPointKey(int player){
+	return PREFIX+".SpawnPoint["+IntToString(player)+"]";
+}
+
+point DevTools_GetSpawnPoint(int player){
+	point p;
+	
+	if ( DataTableValueExists(true,GetSpawnPointKey(player)) ) {
+		p = DataTableGetPoint(true,GetSpawnPointKey(player));
+	}	
+	else {
+		p = CameraGetTarget(player);
+	}
+	
+	return p;
+}
+void DevTools_SetSpawnPoint(int player, point p){
+	DataTableSetPoint(true,GetSpawnPointKey(player),p);
+	PlayerCreateEffectPoint(player, "DevToolsBeaconSpawnUnit", p);
+}
+void DevTools_ClearSpawnPoint(int player){
+	point p = DevTools_GetSpawnPoint(player);
+	if(p!=null){
+		GameDestroyEffects(p,1.0,1,"DevToolsBeaconSpawnUnit");
+	}
+	DataTableValueRemove(true,GetSpawnPointKey(player));
+}

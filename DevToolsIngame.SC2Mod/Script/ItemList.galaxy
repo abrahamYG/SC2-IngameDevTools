@@ -52,6 +52,8 @@ void ItemListContainer_InitStandard(ItemListContainerStructRef ItemListContainer
     TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
 }
 
+// ## ItemListClear
+// Clears an `itemList` by setting all values to an empty `string`
 void ItemListClear(ItemListStructRef itemList){
 	int i =0;
 	for(i=0;i<itemList.count;i+=1){
@@ -61,6 +63,9 @@ void ItemListClear(ItemListStructRef itemList){
 	itemList.current = -1;
 }
 
+// ## ItemListAdd
+// Adds a new item to the `itemList` and returns its index.
+// If the list has reached its max capacity, it will return -1
 int ItemListAdd(ItemListStructRef itemList, string itemId){
 	if(itemList.count<ITEM_LIST_MAX){
 		itemList.list[itemList.count] = itemId;
@@ -70,6 +75,9 @@ int ItemListAdd(ItemListStructRef itemList, string itemId){
 	else{return -1;}
 }
 
+// ## ItemListFind
+// Finds an item on the `itemList` and returns its index.
+// If the item can't be found, it will return -1
 int ItemListFind(ItemListStructRef itemList, string itemId){
 	int i;
 	int index = -1;
@@ -102,6 +110,8 @@ void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveC
 bool ItemListCatalogFilterDef(int catalog, string entry){
 	return true;
 }
+// ## ItemListCatalogFilterFunc
+// Function Definition to filter entries from a given catalog to add into the list when using `ItemListInitFromCatalog`
 typedef funcref<ItemListCatalogFilterDef> ItemListCatalogFilterFunc;
 
 bool ItemListCatalogFilter(int catalog, string entry){return true;}

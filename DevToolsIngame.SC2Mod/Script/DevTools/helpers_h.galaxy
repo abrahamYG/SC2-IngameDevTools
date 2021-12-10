@@ -1,0 +1,3 @@
+point DevTools_GetSpawnPoint(int player);
+void DevTools_SetSpawnPoint(int player, point p);
+void DevTools_ClearSpawnPoint(int player);

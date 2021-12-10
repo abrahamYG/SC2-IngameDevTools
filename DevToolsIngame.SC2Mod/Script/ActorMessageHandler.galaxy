@@ -2,6 +2,7 @@ include "Script/debug_h";
 
 static const string ACTORMESSAGECONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/ActorMessageManager";
 static const string ACTORMESSAGEEDITBOX_PATH = "ActorMessage";
+static const string ACTORMESSAGETARGETEDITBOX_PATH = "ActorTarget";
 static const string ACTORMESSAGESENDBTN_PATH = "ActorMessageSendButton";
 
 
@@ -10,6 +11,7 @@ static const string ACTORMESSAGESENDBTN_PATH = "ActorMessageSendButton";
 struct ActorMessageContainerStruct{
     int panel;
     int messageBox;
+    int targetBox;
     int sendButton;
 };
 
@@ -27,8 +29,11 @@ static actor ActorMessageContainerTarget(){
 bool ActorMessageContainerSendHandler(bool a, bool b){
     bool trigRan = true;
     string val = DialogControlGetPropertyAsString(ActorMessageContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
-    actor target = ActorMessageContainerTarget();
-    ActorSend(target,val);
+    actor unitactor = ActorMessageContainerTarget();
+    string target =DialogControlGetPropertyAsString(ActorMessageContainer.targetBox,c_triggerControlPropertyEditText,EventPlayer());//"::Main";
+    ActorSendTo(unitactor, target, val);
+    ActorCreate(null,"","","","");
+    //ActorSend(unitactor,val);
     //ConsoleCommand(val,true,true);
     print(val);
     return trigRan;
@@ -38,6 +43,7 @@ void ActorMessageHandler_Init(){
     trigger t;
     ActorMessageContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,ACTORMESSAGECONTAINERDLG_PATH);
     ActorMessageContainer.messageBox = DialogControlHookup(ActorMessageContainer.panel,c_triggerControlTypeEditBox,ACTORMESSAGEEDITBOX_PATH);
+    ActorMessageContainer.targetBox = DialogControlHookup(ActorMessageContainer.panel,c_triggerControlTypeEditBox,ACTORMESSAGETARGETEDITBOX_PATH);
     ActorMessageContainer.sendButton = DialogControlHookup(ActorMessageContainer.panel,c_triggerControlTypeButton,ACTORMESSAGESENDBTN_PATH);
     t = TriggerCreate("ActorMessageContainerSendHandler");
     TriggerAddEventDialogControl(t,c_playerAny,ActorMessageContainer.sendButton,c_triggerControlEventTypeClick);

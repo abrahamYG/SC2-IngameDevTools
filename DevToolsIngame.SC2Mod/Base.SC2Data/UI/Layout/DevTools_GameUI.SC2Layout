@@ -19,14 +19,14 @@
 		<Frame type="ToggleControl" name="DataEditorMain" template="DataEditor/MainWindow">
 			<Shortcut val="Control+Shift+D"/>
 			<Visible val="{$parent/DevToolsMenuContainer/DataEditorButton/@Toggled}"/>
-			<Anchor side="Top" relative="$parent/DevToolsMenuContainer" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/DataEditorButton/HitTestFrame" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
 			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
 			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
 			
 		</Frame>
 		<Frame type="Frame" name="CatalogManager">
-			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CatalogManagerButton/HitTestFrame" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CatalogManagerButton/HitTestFrame" pos="Min" offset="0"/>
 			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
 			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
@@ -166,17 +166,17 @@
 			<Visible val="{$parent/DevToolsMenuContainer/CheatManagerButton/@Toggled}"/>
 			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Min" offset="0"/>
-			<Frame type="Label" name="Title">
+			<!--<Frame type="Label" name="Title">
 				<Text val="Cheat"/>
-			</Frame>
+			</Frame>-->
 		</Frame>
 		
-		<Frame type="Control" name="ActorMessageManager" template="CatalogManager/TestMap_PanelTemplateTitled">
+		<Frame type="Control" name="ActorMessageManager" template="DevTools_Templates/PanelTemplateTitled">
 			<Visible val="{$parent/DevToolsMenuContainer/MiscButton/@Toggled}"/>
 			<CollapseLayout val="True"/>
 			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/MiscButton/HitTestFrame" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/MiscButton/HitTestFrame" pos="Min" offset="0"/>
-			<Height val="200"/>
+			<Height val="350"/>
 			<Width val="400"/>
 			<Frame type="Label" name="Title">
 				<Text val="ActorMessage"/>
@@ -188,10 +188,17 @@
 				<Width val="300"/>
 				<Height val="60"/>
 			</Frame>
-
-			<Frame type="Button" name="ActorMessageSendButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+			<Frame type="EditBox" name="ActorTarget" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
 				<Anchor side="Top" relative="$parent/ActorMessage" pos="Max" offset="5"/>
 				<Anchor side="Left" relative="$parent/ActorMessage" pos="Min" offset="0"/>
+				<Width val="300"/>
+				<Height val="60"/>
+				<Text val="::Main"/>
+			</Frame>
+
+			<Frame type="Button" name="ActorMessageSendButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+				<Anchor side="Top" relative="$parent/ActorTarget" pos="Max" offset="5"/>
+				<Anchor side="Left" relative="$parent/ActorTarget" pos="Min" offset="0"/>
 				<Width val="200"/>
 				<Height val="60"/>
 				<Text val="Send"/>

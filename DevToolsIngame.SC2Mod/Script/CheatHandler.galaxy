@@ -34,6 +34,10 @@ bool CheatContainerSendHandler(bool a, bool b){
     int player = EventPlayer();
     int dialog = EventDialogControl();
     bool toggled = DialogControlGetPropertyAsBool(dialog,c_triggerControlPropertyToggled,player);
+    if(DataTableValueExists(true, "fastbuild.enabled") == false){
+        DataTableSetBool(true,"fastbuild.enabled",false);
+        GameCheatAllow(c_gameCheatFastBuild,true);
+    }
     if(dialog==CheatContainer.showMapButton){
         toggled = VisIsEnabled(c_visTypeMask) && VisIsEnabled(c_visTypeFog);
         VisEnable(c_visTypeMask,!toggled);
@@ -44,9 +48,9 @@ bool CheatContainerSendHandler(bool a, bool b){
         TechTreeRequirementsEnable(player,!toggled);
     } 
     else if(dialog==CheatContainer.fastBuildButton){
-        toggled = TechTreeRequirementsEnabled(player);
-        TechTreeRequirementsEnable(player,!toggled);
+        toggled = !DataTableGetBool(true,"fastbuild.enabled");
         ConsoleCommand("fastbuild",true,true);
+        DataTableSetBool(true,"fastbuild.enabled",toggled);
     } 
     else if(dialog==CheatContainer.foodButton){
         toggled = PlayerGetState(player,c_playerStateFoodIgnored);
@@ -70,6 +74,7 @@ bool CheatContainerSendHandler(bool a, bool b){
 
 void CheatHandler_Init(){
     trigger t;
+    
     CheatContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     CheatContainer.showMapButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,SHOWMAPBUTTON_PATH);
     CheatContainer.techtreeButton = DialogControlHookup(CheatContainer.panel,c_triggerControlTypeButton,TECHTREEBUTTON_PATH);
