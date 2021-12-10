@@ -88,58 +88,55 @@
             <Text val="Get"/>
         </Frame>
     </Frame>
-    <Frame type="Frame" name="CatalogManagerList" template="DevTools_Templates/PanelTemplateTitled">
-        <Height val="780"/>
+	<Frame type="Frame" name="CatalogManagerList" template="DevTools_Templates/PanelTemplate">
+		<Height val="580"/>
         <Width val="380"/>
-        <Frame type="Label" name="Title">
-            <Text val="CatalogManagerList"/>
-        </Frame>
         <Frame type="Button" name="ShowAbilityManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
-            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowAbilityManager"/>
+			<Text val="@UI/CatalogManager/ShowAbilityManager"/>
         </Frame>
         <Frame type="Button" name="ShowBehaviorManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowAbilityManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowBehaviorManager"/>
+			<Text val="@UI/CatalogManager/ShowBehaviorManager"/>
         </Frame>
         <Frame type="Button" name="ShowEffectManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowBehaviorManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowEffectManager"/>
+			<Text val="@UI/CatalogManager/ShowEffectManager"/>
         </Frame>
         <Frame type="Button" name="ShowSkinManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowEffectManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowSkinManager"/>
+			<Text val="@UI/CatalogManager/ShowSkinManager"/>
         </Frame>
         <Frame type="Button" name="ShowUnitManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowSkinManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowUnitManager"/>
+			<Text val="@UI/CatalogManager/ShowUnitManager"/>
         </Frame>
         <Frame type="Button" name="ShowUpgradeManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowUnitManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowUpgradeManager"/>
+			<Text val="@UI/CatalogManager/ShowUpgradeManager"/>
         </Frame>
         <Frame type="Button" name="ShowWeaponManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowUpgradeManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowWeaponManager"/>
+			<Text val="@UI/CatalogManager/ShowWeaponManager"/>
         </Frame>
         
         <Frame type="Button" name="ShowLightingManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowWeaponManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowLightingManager"/>
+			<Text val="@UI/CatalogManager/ShowLightingManager"/>
         </Frame>
         
         <Frame type="Button" name="ShowRaceManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowLightingManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-            <Text val="ShowRaceManager"/>
+			<Text val="@UI/CatalogManager/ShowRaceManager"/>
         </Frame>
     </Frame>
     <Frame type="Frame" name="CatalogManager" template="DevTools_Templates/PanelTemplateTitled">
