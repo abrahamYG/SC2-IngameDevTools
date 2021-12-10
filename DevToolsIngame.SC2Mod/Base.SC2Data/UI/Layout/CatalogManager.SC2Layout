@@ -30,19 +30,20 @@
         <Height val="60"/>
     </Frame>
 	<Frame type="Frame" name="CatalogValueManager" template="DevTools_Templates/PanelTemplateTitled">
-        <Width val="700"/>
-        <Height val="240"/>
+		<Width val="330"/>
+		<Height val="440"/>
         <Frame type="Pulldown" name="Type" template="StandardBattlenetTemplates/StandardBattlenetPulldownTemplate">
-            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
             <Width val="200"/>
             <Height val="60"/>
         </Frame>
         <Frame type="EditBox" name="Entry" template="CatalogManager/EditBoxTemplate">
-            <Anchor side="Top" relative="$parent/Type" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/Type" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Type" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
             <Width val="200"/>
             <Height val="60"/>
+			<FocusNext val="$parent/Field"/>
             <Frame type="Frame" name="EmptyLabelContainerFrame">
                 <Frame type="Label" name="Label">
                     <Text val="Entry"/>
@@ -50,8 +51,8 @@
             </Frame>
         </Frame>
         <Frame type="EditBox" name="Field" template="CatalogManager/EditBoxTemplate">
-            <Anchor side="Top" relative="$parent/Entry" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/Entry" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Entry" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/Entry" pos="Min" offset="0"/>
             <Width val="200"/>
             <Height val="60"/>
             <Frame type="Frame" name="EmptyLabelContainerFrame">
@@ -61,8 +62,8 @@
             </Frame>
         </Frame>
         <Frame type="EditBox" name="Value" template="CatalogManager/EditBoxTemplate">
-            <Anchor side="Top" relative="$parent/Field" pos="Min" offset="0"/>
-            <Anchor side="Left" relative="$parent/Field" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Field" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/Field" pos="Min" offset="0"/>
             <Width val="150"/>
             <Height val="60"/>
             <Frame type="Frame" name="EmptyLabelContainerFrame">
@@ -72,7 +73,7 @@
             </Frame>
         </Frame>
         <Frame type="Button" name="Apply" template="DevTools_Templates/ButtonTemplate">
-            <Anchor side="Top" relative="$parent/Type" pos="Max" offset="0"/>
+			<Anchor side="Top" relative="$parent/Value" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent/Type" pos="Min" offset="0"/>
             <Width val="150"/>
             <Height val="60"/>
