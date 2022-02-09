@@ -56,6 +56,6 @@ void RaceHandler_Init(){
 	playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(RaceContainer, CONTAINERDLG_PATH, "RaceContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogRace, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "RaceListBox", RaceListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "RaceListBox", RaceListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
     ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

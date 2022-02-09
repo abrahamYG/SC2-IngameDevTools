@@ -70,6 +70,6 @@ void UpgradeHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(UpgradeContainer, CONTAINERDLG_PATH, "UpgradeContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

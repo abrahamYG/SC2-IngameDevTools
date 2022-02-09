@@ -63,6 +63,6 @@ void BehaviorHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(BehaviorContainer, CONTAINERDLG_PATH, "BehaviorContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogBehavior, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "BehaviorListBox", BehaviorListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "BehaviorListBox", BehaviorListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
     ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

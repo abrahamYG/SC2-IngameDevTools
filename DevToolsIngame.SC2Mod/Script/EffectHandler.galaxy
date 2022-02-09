@@ -133,6 +133,6 @@ void EffectHandler_Init(){
     TriggerAddEventDialogControl(t,c_playerAny,EffectContainer.targetButton,c_triggerControlEventTypeClick);
     
     ItemListInitFromCatalog(ItemList, c_gameCatalogEffect, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "EffectListBox", EffectListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "EffectListBox", EffectListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
     ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

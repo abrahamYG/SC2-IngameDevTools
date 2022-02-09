@@ -1,0 +1,38 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager";
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+ItemListContainerStruct PlayerContainer;
+
+
+void PlayerListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+    
+}
+
+bool PlayerContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(PlayerContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    
+    if(EventDialogControl()==PlayerContainer.addButton){
+    }
+    else if(EventDialogControl()==PlayerContainer.removeButton){
+    }
+    return trigRan;
+}
+
+
+text PlayerListItemTextValue(ItemListStructRef itemList,int index){
+    int player = StringToInt(itemList.list[index]);
+	return PlayerName(player);
+}
+
+void PlayerHandler_Init(){
+	playergroup pg = PlayerGroupAll();
+    ItemListContainer_InitStandard(PlayerContainer, CONTAINERDLG_PATH, "PlayerContainerSendHandler");
+    ItemListInitFromPlayerGroup(ItemList, PlayerGroupActive());
+    ItemList_FilterListInitStandard(ListBoxFilter, "PlayerListBox", PlayerListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

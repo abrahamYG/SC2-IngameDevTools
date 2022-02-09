@@ -344,6 +344,7 @@ void CatalogValueHandler_Init(){
 	ListBoxFilter.setActive = CatalogValueListBoxSetActive;
 	ListBoxFilter.panel = CatalogValueContainer.panel;
 	ListBoxFilter.list = CatalogValueContainer.typePull;
+	ListBoxFilter.itemTextFunc = ItemListItemTextValue;
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 	t = TriggerCreate("CatalogValueListBoxSelectionChanged");
 	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);

@@ -105,6 +105,6 @@ void PortraitHandler_Init(){
 	playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(PortraitContainer, CONTAINERDLG_PATH, "PortraitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
-    ItemList_FilterListInitStandard(ListBoxFilter, "PortraitListBox", PortraitListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "PortraitListBox", PortraitListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

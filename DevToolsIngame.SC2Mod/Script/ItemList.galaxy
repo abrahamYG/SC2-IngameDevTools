@@ -15,6 +15,12 @@ typedef structref<ItemListStruct> ItemListStructRef;
 void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
 typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
 
+text ItemListItemTextValue(ItemListStructRef itemList,int index){
+	return StringToText(itemList.list[index]);
+}
+typedef funcref<ItemListItemTextValue> ItemListItemTextValueFuncRef;
+
+
 
 struct ListBoxFilterStruct{
     string id;
@@ -23,6 +29,7 @@ struct ListBoxFilterStruct{
     int button;
     int list;
     ItemListSetActiveCallback setActive;
+	ItemListItemTextValueFuncRef itemTextFunc;
 
 };
 typedef structref<ListBoxFilterStruct> ListBoxFilterStructRef;
@@ -128,14 +135,22 @@ void ItemListInitFromCatalog(ItemListStructRef itemList, int catalog, ItemListCa
 	}
 }
 
-
+void ItemListInitFromPlayerGroup(ItemListStructRef itemList, playergroup pg){
+    int i;
+    int player;
+    int count = MinI(PlayerGroupCount(pg),ITEM_LIST_MAX);
+    for(i=1;i<=count;i+=1){
+		player = PlayerGroupPlayer(pg,i);//CatalogEntryGet(catalog,i);
+		ItemListAdd(itemList,IntToString(player));
+	}
+}
 
 int ItemList_FilterListAddItem(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int index, playergroup pg){
     int listItem = 0;
 	int player;
 	int i;
-	string key;
-	DialogControlAddItem(listBoxFilter.list,pg,StringToText(itemList.list[index]));
+	string key;	
+	DialogControlAddItem(listBoxFilter.list,pg,listBoxFilter.itemTextFunc(itemList,index));
 	for(i=1;i<=PlayerGroupCount(pg);i+=1){
 		player = PlayerGroupPlayer(pg,i);
     	listItem = DialogControlGetItemCount(listBoxFilter.list,player);
@@ -152,7 +167,6 @@ void ItemList_FilterListRebuild(ItemListStructRef itemList, ListBoxFilterStructR
 	int i; int j;
 	int listItem = 0;
 	data_split_t dsplit;
-    
     split_string(dsplit, filter, ",");
 	DialogControlRemoveAllItems(listBoxFilter.list,pg);
 	for(i=0;i<itemList.count;i+=1){
@@ -191,10 +205,11 @@ void ItemList_FilterListHookup(ListBoxFilterStructRef listBoxFilter, string path
 }
 
 
-void ItemList_FilterListInitStandard(ListBoxFilterStructRef Filter, string id, ItemListSetActiveCallback setActiveFunc, string dlgPath) {
+void ItemList_FilterListInitStandard(ListBoxFilterStructRef Filter, string id, ItemListSetActiveCallback setActiveFunc, ItemListItemTextValueFuncRef itemTextFunc, string dlgPath) {
     trigger t;
     Filter.id = id;
     Filter.setActive = setActiveFunc;
+	Filter.itemTextFunc = itemTextFunc;
     ItemList_FilterListHookup(Filter,dlgPath);
 	t = TriggerCreate(id+"FilterQuery");
 	TriggerAddEventDialogControl(t,c_playerAny,Filter.editbox,c_triggerControlEventTypeTextChanged);

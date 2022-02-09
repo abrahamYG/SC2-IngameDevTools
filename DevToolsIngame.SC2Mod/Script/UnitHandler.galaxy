@@ -79,11 +79,15 @@ void PlayerList_Init(){
 bool UnitList_IsNotMissileFilter(int catalog, string entry){
     return CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0;
 }
-
+text UnitListItemTextValue(ItemListStructRef itemList,int index){
+    text name = StringExternal(CatalogFieldValueGet(c_gameCatalogUnit,itemList.list[index],"Name",c_playerAny));
+    name = StringToText(itemList.list[index]+": ")+name;
+	return name;
+}
 void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNotMissileFilter);
-	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, UnitListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

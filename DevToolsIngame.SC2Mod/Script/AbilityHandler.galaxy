@@ -65,7 +65,7 @@ void AbilityHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemListContainer_InitStandard(AbilityContainer, CONTAINERDLG_PATH, "AbilityContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogAbil, ItemListCatalogFilter);
-    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityListBox", AbilityListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+    ItemList_FilterListInitStandard(ListBoxFilter, "AbilityListBox", AbilityListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 
 }

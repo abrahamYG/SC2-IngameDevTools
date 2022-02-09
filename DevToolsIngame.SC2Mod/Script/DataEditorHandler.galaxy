@@ -155,7 +155,7 @@ void DataEditorHandler_Init(){
 	TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.applyButton,c_triggerControlEventTypeClick);
 	//TriggerAddEventDialogControl(t,c_playerAny,DataEditorContainer.removeButton,c_triggerControlEventTypeClick);
 	ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ItemListCatalogFilter);
-	ItemList_FilterListInitStandard(ListBoxFilter, "DataEditorListBox", DataEditorListBoxSetActive, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListInitStandard(ListBoxFilter, "DataEditorListBox", DataEditorListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 	DataEditorAttributeInit();
 	DataEditorAttributeHookup_Init();
