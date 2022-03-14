@@ -25,7 +25,7 @@ bool UnitListBoxSelectionChanged(bool a, bool b){
 }
 
 void UnitListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
-    DialogControlSetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+    DialogControlSetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup UnitContainerTarget(){
@@ -80,12 +80,15 @@ bool UnitList_IsNotMissileFilter(int catalog, string entry){
     return CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0;
 }
 text UnitListItemTextValue(ItemListStructRef itemList,int index){
-    text name = StringExternal(CatalogFieldValueGet(c_gameCatalogUnit,itemList.list[index],"Name",c_playerAny));
-    name = StringToText(itemList.list[index]+": ")+name;
+    text name;
+    console(ItemListGetVal(itemList,index));
+    name = StringExternal(CatalogFieldValueGet(c_gameCatalogUnit,ItemListGetVal(itemList,index),"Name",c_playerAny));
+    name = StringToText(ItemListGetVal(itemList,index)+": ")+name;
 	return name;
 }
 void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "UnitList";
     ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNotMissileFilter);
 	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, UnitListItemTextValue, CONTAINERDLG_PATH+"/NavList");

@@ -1,0 +1,70 @@
+void libGalExe_debug(int player, string msg)
+{
+    UIDisplayMessage(PlayerGroupSingle(player), c_messageAreaChat, StringToText(msg));
+}
+
+string libGalExe_strip(string message)
+{
+    string retstr = message;
+    int index;
+    index = 1;
+    while(1)
+    {
+        if(StringSub(retstr, index, index) == " ")
+        {
+            retstr = StringSub(retstr, index+1, StringLength(retstr));
+            index += 1;
+        }
+        else 
+        {
+            break;
+        }
+    }
+    index = StringLength(retstr);
+    while(1)
+    {
+        if(StringSub(retstr, index, index) == " ")
+        {
+            retstr = StringSub(retstr, 1, index-1);
+            index -= 1;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return retstr;
+}
+
+string libGalExe_stripQuotes(string message)
+{
+    string retstr = message;
+    int index;
+    index = 1;
+    while(1)
+    {
+        if(StringSub(retstr, index, index) == "\"")
+        {
+            retstr = StringSub(retstr, index+1, StringLength(retstr));
+            index += 1;
+        }
+        else 
+        {
+            break;
+        }
+    }
+    index = StringLength(retstr);
+    while(1)
+    {
+        if(StringSub(retstr, index, index) == "\"")
+        {
+            retstr = StringSub(retstr, 1, index-1);
+            index -= 1;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return retstr;
+}

@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Catalog>
+    <!--AbilClassID-->
+    <CUser id="DevTools_AbilClass">
+        <Fields Id="Id" Type="Int" EditorColumn="1"/>
+        <Fields Id="Name" Type="String" EditorColumn="2"/>
+        <Fields Id="Prefix" Type="String" EditorColumn="3"/>
+        <Fields>
+            <Id value="SubPrefix"/>
+            <Type value="String"/>
+            <Count value="32"/>
+            <EditorColumn value="4"/>
+        </Fields>
+        <Fields Id="Count" Type="Int" EditorColumn="5"/>
+        <Instances Id="[Default]"/>
+        <Instances Id="c_classIdCAbil">
+            <String String="CAbil">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilProgress">
+            <Int Int="1">
+                <Field Id="Id"/>
+            </Int>
+            <String String="CAbilProgress">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilEffect">
+            <Int Int="2">
+                <Field Id="Id"/>
+            </Int>
+            <String String="CAbilEffect">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilQueueable">
+            <Int Int="3">
+                <Field Id="Id"/>
+            </Int>
+            <String String="CAbilQueueable">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilRedirect">
+            <Int Int="4">
+                <Field Id="Id"/>
+            </Int>
+            <String String="CAbilRedirect">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilArmMagazine">
+            <Int Int="5">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="20">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilArmMagazine">
+                <Field Id="Name"/>
+            </String>
+            <String String="Ammo">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilAttack">
+            <Int Int="6">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="3">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilAttack">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute/Towards/Barrage">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Execute">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Towards">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="Barrage">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilAugment">
+            <Int Int="7">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilAugment">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilAttackModifier">
+            <Int Int="8">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilAttackModifier">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilBattery">
+            <Int Int="9">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilBattery">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilBeacon">
+            <Int Int="10">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilBeacon">
+                <Field Id="Name"/>
+            </String>
+            <String String="Move">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Move">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilBehavior">
+            <Int Int="11">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilBehavior">
+                <Field Id="Name"/>
+            </String>
+            <String String="On/Off">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="On">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Off">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilBuild">
+            <Int Int="12">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="31">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilBuild">
+                <Field Id="Name"/>
+            </String>
+            <String String="Build">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Halt">
+                <Field Id="SubPrefix" Index="30"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilBuildable">
+            <Int Int="13">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilBuildable">
+                <Field Id="Name"/>
+            </String>
+            <String String="Cancel/Halt">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Halt">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilEffectInstant">
+            <Int Int="14">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilEffectInstant">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute/Cancel">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Execute">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilEffectTarget">
+            <Int Int="15">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilEffectTarget">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute/Cancel">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Execute">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilHarvest">
+            <Int Int="16">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="3">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilHarvest">
+                <Field Id="Name"/>
+            </String>
+            <String String="Gather/Return/Cancel">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Gather">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Return">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilInteract">
+            <Int Int="17">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilInteract">
+                <Field Id="Name"/>
+            </String>
+            <String String="Designate">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilInventory">
+            <Int Int="18">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="9">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilInventory">
+                <Field Id="Name"/>
+            </String>
+            <String String="Drop/Move/Take/ItemInstant/ItemTarget/ItemCancel/PawnInstant/ItemTogOn/ItemTogOff">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Drop">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Move">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="Take">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+            <String String="ItemInstant">
+                <Field Id="SubPrefix" Index="3"/>
+            </String>
+            <String String="ItemTarget">
+                <Field Id="SubPrefix" Index="4"/>
+            </String>
+            <String String="ItemCancel">
+                <Field Id="SubPrefix" Index="5"/>
+            </String>
+            <String String="PawnInstant">
+                <Field Id="SubPrefix" Index="6"/>
+            </String>
+            <String String="ItemTogOn">
+                <Field Id="SubPrefix" Index="7"/>
+            </String>
+            <String String="ItemTogOff">
+                <Field Id="SubPrefix" Index="8"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilLearn">
+            <Int Int="19">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="20">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilLearn">
+                <Field Id="Name"/>
+            </String>
+            <String String="Learn">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilMerge">
+            <Int Int="20">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilMerge">
+                <Field Id="Name"/>
+            </String>
+            <String String="SelectedUnits/WithTarget">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="SelectedUnits">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="WithTarget">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilMergeable">
+            <Int Int="21">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilMergeable">
+                <Field Id="Name"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilMorph">
+            <Int Int="22">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="3">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilMorph">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute/Cancel/Unmorph">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Execute">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="Unmorph">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilMorphPlacement">
+            <Int Int="23">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="3">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilMorphPlacement">
+                <Field Id="Name"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilMove">
+            <Int Int="24">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="5">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilMove">
+                <Field Id="Name"/>
+            </String>
+            <String String="Move/Patrol/HoldPos/AcquireMove/Turn">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Move">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="Patrol">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="HoldPos">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+            <String String="AcquireMove">
+                <Field Id="SubPrefix" Index="3"/>
+            </String>
+            <String String="Turn">
+                <Field Id="SubPrefix" Index="4"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilPawn">
+            <Int Int="25">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="20">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilPawn">
+                <Field Id="Name"/>
+            </String>
+            <String String="Pawn">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilQueue">
+            <Int Int="26">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="2">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilQueue">
+                <Field Id="Name"/>
+            </String>
+            <String String="CancelLast/CancelSlot">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="CancelLast">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="CancelSlot">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilRally">
+            <Int Int="27">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="4">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilRally">
+                <Field Id="Name"/>
+            </String>
+            <String String="Rally">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilRedirectInstant">
+            <Int Int="28">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilRedirectInstant">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilRedirectTarget">
+            <Int Int="29">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilRedirectTarget">
+                <Field Id="Name"/>
+            </String>
+            <String String="Execute">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilResearch">
+            <Int Int="30">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="30">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilResearch">
+                <Field Id="Name"/>
+            </String>
+            <String String="Research">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilRevive">
+            <Int Int="31">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="30">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilRevive">
+                <Field Id="Name"/>
+            </String>
+            <String String="Revive">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="ReviveAtTarget1">
+                <Field Id="SubPrefix" Index="20"/>
+            </String>
+            <String String="ReviveAtTarget2">
+                <Field Id="SubPrefix" Index="21"/>
+            </String>
+            <String String="ReviveAtTarget3">
+                <Field Id="SubPrefix" Index="22"/>
+            </String>
+            <String String="ReviveAtTarget4">
+                <Field Id="SubPrefix" Index="23"/>
+            </String>
+            <String String="ReviveAtTarget5">
+                <Field Id="SubPrefix" Index="24"/>
+            </String>
+            <String String="ReviveAtTarget6">
+                <Field Id="SubPrefix" Index="25"/>
+            </String>
+            <String String="ReviveAtTarget7">
+                <Field Id="SubPrefix" Index="26"/>
+            </String>
+            <String String="ReviveAtTarget8">
+                <Field Id="SubPrefix" Index="27"/>
+            </String>
+            <String String="ReviveAtTarget9">
+                <Field Id="SubPrefix" Index="28"/>
+            </String>
+            <String String="ReviveAtTarget10">
+                <Field Id="SubPrefix" Index="29"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilSpecialize">
+            <Int Int="32">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="20">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilSpecialize">
+                <Field Id="Name"/>
+            </String>
+            <String String="Specialize">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilStop">
+            <Int Int="33">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="6">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilStop">
+                <Field Id="Name"/>
+            </String>
+            <String String="Stop/HoldFire/Cheer/Dance/Tease/RequestPickup">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Stop">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="HoldFire">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="Cheer">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+            <String String="Dance">
+                <Field Id="SubPrefix" Index="3"/>
+            </String>
+            <String String="Tease">
+                <Field Id="SubPrefix" Index="4"/>
+            </String>
+            <String String="RequestPickup">
+                <Field Id="SubPrefix" Index="5"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilTrain">
+            <Int Int="34">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="30">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilTrain">
+                <Field Id="Name"/>
+            </String>
+            <String String="Train">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilTransport">
+            <Int Int="35">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="4">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilTransport">
+                <Field Id="Name"/>
+            </String>
+            <String String="Load/UnloadAll/UnloadAt/UnloadUnit/LoadAll">
+                <Field Id="Prefix"/>
+            </String>
+            <String String="Load">
+                <Field Id="SubPrefix"/>
+            </String>
+            <String String="UnloadAll">
+                <Field Id="SubPrefix" Index="1"/>
+            </String>
+            <String String="UnloadAt">
+                <Field Id="SubPrefix" Index="2"/>
+            </String>
+            <String String="UnloadUnit">
+                <Field Id="SubPrefix" Index="3"/>
+            </String>
+            <String String="LoadAll">
+                <Field Id="SubPrefix" Index="4"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilWarpable">
+            <Int Int="36">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="1">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilWarpable">
+                <Field Id="Name"/>
+            </String>
+            <String String="Cancel">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+        <Instances Id="c_classIdCAbilWarpTrain">
+            <Int Int="37">
+                <Field Id="Id"/>
+            </Int>
+            <Int Int="20">
+                <Field Id="Count"/>
+            </Int>
+            <String String="CAbilWarpTrain">
+                <Field Id="Name"/>
+            </String>
+            <String String="Train">
+                <Field Id="Prefix"/>
+            </String>
+        </Instances>
+    </CUser>
+</Catalog>

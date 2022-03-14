@@ -22,7 +22,7 @@ bool BehaviorListBoxSelectionChanged(bool a, bool b){
 }
 
 void BehaviorListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(BehaviorContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(BehaviorContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup BehaviorContainerTarget(){
@@ -45,14 +45,14 @@ bool BehaviorContainerSendHandler(bool a, bool b){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             UnitBehaviorAdd(u,behavior,u,1);
-            print("Adding behavior ["+behavior+"] to unit "+UnitGetType(u));
+            console("Adding behavior ["+behavior+"] to unit "+UnitGetType(u));
         }
     }
     else if(EventDialogControl()==BehaviorContainer.removeButton){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             UnitBehaviorRemove(u,behavior,1);
-            print("Removing behavior ["+behavior+"] to unit "+UnitGetType(u));
+            console("Removing behavior ["+behavior+"] to unit "+UnitGetType(u));
         }
         
     }
@@ -61,6 +61,7 @@ bool BehaviorContainerSendHandler(bool a, bool b){
 
 void BehaviorHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "BehaviorList";
     ItemListContainer_InitStandard(BehaviorContainer, CONTAINERDLG_PATH, "BehaviorContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogBehavior, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "BehaviorListBox", BehaviorListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

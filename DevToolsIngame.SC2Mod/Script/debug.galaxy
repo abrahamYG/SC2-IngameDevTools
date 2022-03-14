@@ -11,3 +11,8 @@ void printT(text t){
 void console(string s){
 	TriggerDebugOutput(1,StringToText(s),false);
 }
+
+
+void error(string s){
+	TriggerDebugOutput(1,StringToText(s),true);
+}

@@ -38,7 +38,7 @@ bool UpgradeListBoxSelectionChanged(bool a, bool b){
 }
 
 void UpgradeListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(UpgradeContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(UpgradeContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup UpgradeContainerTarget(){
@@ -68,6 +68,7 @@ bool UpgradeContainerSendHandler(bool a, bool b){
 
 void UpgradeHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "UpgradeList";
     ItemListContainer_InitStandard(UpgradeContainer, CONTAINERDLG_PATH, "UpgradeContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

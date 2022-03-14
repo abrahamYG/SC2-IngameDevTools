@@ -34,7 +34,7 @@ bool CatalogValueListBoxSelectionChanged(bool a, bool b){
 
 void CatalogValueListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
 	//itemList.current = index;
-	print(itemList.list[index]);
+	console(ItemListGetVal(itemList,index));
 }
 
 void CatalogValueList_Init(){
@@ -271,7 +271,7 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	string entry = DialogControlGetPropertyAsString(CatalogValueContainer.entryBox,c_triggerControlPropertyEditText,player);
 	string field = DialogControlGetPropertyAsString(CatalogValueContainer.fieldBox,c_triggerControlPropertyEditText,player);
 	string value = DialogControlGetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,player);
-	int catalog = CatalogValueContainerCatalogValue(ItemList.list[ItemListGetActive(ItemList,player)]);
+	int catalog = CatalogValueContainerCatalogValue(ItemListGetVal(ItemList,ItemListGetActive(ItemList,player)));
 	string scope;
 
 
@@ -299,9 +299,9 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
     }
 	if(CatalogEntryIsValid(catalog,entry)){
 		scope = CatalogEntryScope(catalog,entry);
-		print("Catalog Is Array "+IntToString(BoolToInt(CatalogFieldIsArray(scope,field))));
-		print("Catalog Is Scope "+IntToString(BoolToInt(CatalogFieldIsScope(scope,field))));
-		print("Catalog Field Type "+CatalogFieldType(scope,field));
+		console("Catalog Is Array "+IntToString(BoolToInt(CatalogFieldIsArray(scope,field))));
+		console("Catalog Is Scope "+IntToString(BoolToInt(CatalogFieldIsScope(scope,field))));
+		console("Catalog Field Type "+CatalogFieldType(scope,field));
 		if(EventDialogControl()==CatalogValueContainer.applyBtn){
 			if(CatalogFieldExists(scope,field)){
 				CatalogFieldValueSet(catalog,entry,field,player,value);
@@ -319,7 +319,7 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 		
 	}
 	else{
-		print("Catalog entry: ["+entry+"] could not be found in catalog type "+IntToString(catalog));
+		console("Catalog entry: ["+entry+"] could not be found in catalog type "+IntToString(catalog));
 		trigRan = false;
 	}
 	return trigRan;
@@ -328,6 +328,7 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 void CatalogValueHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
+	ItemList.id = "CatalogValueList";
 	CatalogValueContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	CatalogValueContainer.typePull = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
 	CatalogValueContainer.entryBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);

@@ -50,7 +50,7 @@ void PortraitListBoxSetActive(ItemListStructRef itemList, int index,playergroup 
 	DialogControlSetPropertyAsText(Label,c_triggerControlPropertyText,PG,StringToText(portId));
 	DialogControlSetPropertyAsString(EditBoxIndex,c_triggerControlPropertyEditText,PG,IntToString(index));
 	DialogControlSetPropertyAsString(EditBoxSearch,c_triggerControlPropertyEditText,PG,portId);
-	DialogControlSetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
     
 }
 
@@ -103,6 +103,7 @@ bool PortraitList_IsPortrait(int catalog, string entry){
 void PortraitHandler_Init(){
     
 	playergroup pg = PlayerGroupAll();
+	ItemList.id = "PortraitList";
     ItemListContainer_InitStandard(PortraitContainer, CONTAINERDLG_PATH, "PortraitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
     ItemList_FilterListInitStandard(ListBoxFilter, "PortraitListBox", PortraitListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

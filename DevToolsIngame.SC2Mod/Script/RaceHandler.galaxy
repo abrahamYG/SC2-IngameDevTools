@@ -21,7 +21,7 @@ bool RaceListBoxSelectionChanged(bool a, bool b){
 }
 
 void RaceListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(RaceContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(RaceContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup RaceContainerTarget(){
@@ -42,7 +42,7 @@ bool RaceContainerSendHandler(bool a, bool b){
     int i;
     if(EventDialogControl()==RaceContainer.addButton){
         PlayerSetRace(player,Race);
-        print("Adding Race ["+Race+"] to player "+IntToString(player));
+        console("Adding Race ["+Race+"] to player "+IntToString(player));
         
     }
     else if(EventDialogControl()==RaceContainer.removeButton){
@@ -54,6 +54,7 @@ bool RaceContainerSendHandler(bool a, bool b){
 
 void RaceHandler_Init(){
 	playergroup pg = PlayerGroupAll();
+    ItemList.id = "RaceList";
     ItemListContainer_InitStandard(RaceContainer, CONTAINERDLG_PATH, "RaceContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogRace, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "RaceListBox", RaceListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

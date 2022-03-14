@@ -25,12 +25,13 @@ bool PlayerContainerSendHandler(bool a, bool b){
 
 
 text PlayerListItemTextValue(ItemListStructRef itemList,int index){
-    int player = StringToInt(itemList.list[index]);
+    int player = StringToInt(ItemListGetVal(itemList,index));
 	return PlayerName(player);
 }
 
 void PlayerHandler_Init(){
 	playergroup pg = PlayerGroupAll();
+    ItemList.id = "PlayerList";
     ItemListContainer_InitStandard(PlayerContainer, CONTAINERDLG_PATH, "PlayerContainerSendHandler");
     ItemListInitFromPlayerGroup(ItemList, PlayerGroupActive());
     ItemList_FilterListInitStandard(ListBoxFilter, "PlayerListBox", PlayerListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

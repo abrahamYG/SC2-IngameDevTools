@@ -93,9 +93,9 @@ bool DataEditorListBoxSelectionChanged(bool a, bool b){
 
 void DataEditorListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
 	int i = 0;
-	DialogControlSetPropertyAsString(DataEditorContainer.entryIdBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(DataEditorContainer.entryIdBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 	for(i=1; i<=PlayerGroupCount(pg);i+=1){
-		DataEditorAttributePullValues(itemList.list[index],i);
+		DataEditorAttributePullValues(ItemListGetVal(itemList,index),i);
 	}
 }
 
@@ -146,6 +146,7 @@ void DataEditorAttributeHookup_Init(){
 void DataEditorHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
+	ItemList.id = "DataEditorList";
 	DataEditorContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	DataEditorContainer.entryIdBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,ENTRYIDBOX_PATH);
 	//DataEditorContainer.messageBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);

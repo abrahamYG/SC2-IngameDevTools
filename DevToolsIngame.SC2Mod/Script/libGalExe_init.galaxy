@@ -1,0 +1,18 @@
+include "Script/libGalExe_func";
+include "Script/libGalExe_lib";
+include "Script/libGalExe_utils";
+
+static trigger gt_devCmd
+
+bool gt_libGalExeChatMsg_Func(bool testConds, bool runActions){
+    string chatMsg = EventChatMessage(false);
+    if(StringWord(chatMsg, 1) != "$exec"){ return false; }
+//    if(!(PlayerHandle(EventPlayer()) == "YOUR_HANDLE")){ return false; }
+    libGalExe_exec(EventPlayer(), StringSub(chatMsg, 6, StringLength(chatMsg)));
+    return true;
+}
+
+void gt_libGalExe_Init(){
+    gt_devCmd = TriggerCreate("gt_libGalExeChatMsg_Func");
+    TriggerAddEventChatMessage(gt_devCmd,c_playerAny,"",false);
+}

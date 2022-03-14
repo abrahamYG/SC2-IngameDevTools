@@ -1,3 +1,4 @@
 void print(string s);
 void printT(text t);
 void console(string s);
+void error(string s);

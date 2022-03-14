@@ -21,7 +21,7 @@ bool LightingListBoxSelectionChanged(bool a, bool b){
 }
 
 void LightingListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(LightingContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(LightingContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup LightingContainerTarget(){
@@ -43,7 +43,6 @@ bool LightingContainerSendHandler(bool a, bool b){
         console("Adding Lighting ["+Lighting+"] to player "+IntToString(player));
     }
     else if(EventDialogControl()==LightingContainer.removeButton){
-        //print("Removing Lighting ["+Lighting+"] to unit "+UnitGetType(u));
     }
     return trigRan;
 }
@@ -56,6 +55,7 @@ bool LightingList_IsTilesetFilter(int catalog, string entry){
 
 void LightingHandler_Init(){
 	playergroup pg = PlayerGroupAll();
+    ItemList.id = "LightingList";
     ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogLight, LightingList_IsTilesetFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

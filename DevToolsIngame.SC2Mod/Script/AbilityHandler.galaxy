@@ -22,7 +22,7 @@ bool AbilityListBoxSelectionChanged(bool a, bool b){
 }
 
 void AbilityListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
-    DialogControlSetPropertyAsString(AbilityContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+    DialogControlSetPropertyAsString(AbilityContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 
@@ -63,6 +63,7 @@ bool AbilityContainerSendHandler(bool a, bool b){
 
 void AbilityHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "AbilityList";
     ItemListContainer_InitStandard(AbilityContainer, CONTAINERDLG_PATH, "AbilityContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogAbil, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "AbilityListBox", AbilityListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

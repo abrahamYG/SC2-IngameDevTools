@@ -22,7 +22,7 @@ bool SkinListBoxSelectionChanged(bool a, bool b){
 }
 
 void SkinListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(SkinContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(SkinContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup SkinContainerTarget(){
@@ -51,6 +51,7 @@ bool SkinContainerSendHandler(bool a, bool b){
 
 void SkinHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "SkinList";
     ItemListContainer_InitStandard(SkinContainer, CONTAINERDLG_PATH, "SkinContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogSkin, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "SkinListBox", SkinListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

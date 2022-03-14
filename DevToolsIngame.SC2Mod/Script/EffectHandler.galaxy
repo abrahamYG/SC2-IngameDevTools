@@ -50,7 +50,7 @@ bool EffectListBoxSelectionChanged(bool a, bool b){
 }
 
 void EffectListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
-	DialogControlSetPropertyAsString(EffectContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(EffectContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 
@@ -83,14 +83,14 @@ bool EffectContainerSendHandler(bool a, bool b){
             }
             
             UnitCreateEffectUnit(EffectContainer.source,effect,EffectContainer.target);
-            print("Adding effect ["+effect+"] from unit "+UnitGetType(EffectContainer.source)+" to unit "+UnitGetType(EffectContainer.target));
+            console("Adding effect ["+effect+"] from unit "+UnitGetType(EffectContainer.source)+" to unit "+UnitGetType(EffectContainer.target));
         }
     }
     else if(EventDialogControl()==EffectContainer.removeButton){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             CatalogFieldValueSet(c_gameCatalogEffect,effect,"DebugTrace",player,"1");
-            print("Enabling Debug Trace for ["+effect+"] to player "+IntToString(player));
+            console("Enabling Debug Trace for ["+effect+"] to player "+IntToString(player));
         }
     }
     else if(EventDialogControl()==EffectContainer.sourceButton){
@@ -117,6 +117,7 @@ void EffectList_Init(){
 void EffectHandler_Init(){
     trigger t;
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "EffectList";
     EffectContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     EffectContainer.messageBox = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     EffectContainer.addButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);

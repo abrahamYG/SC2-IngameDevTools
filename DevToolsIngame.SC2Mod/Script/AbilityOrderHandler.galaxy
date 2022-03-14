@@ -53,6 +53,7 @@ int AbilityOrderList_AbilClassGetCount(int val){
 }
 
 
+
 void AbilityOrderList_AddAbilityOrderItems(string entry, int player){
     int j;
     int abilClass = AbilityClass(entry);
@@ -98,11 +99,11 @@ bool AbilityOrderListBoxSelectionChanged(bool a, bool b){
 }
 
 void AbilityOrderListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
-	DialogControlSetPropertyAsString(AbilityOrderContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(AbilityOrderContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 
-void AbilityOrderList_AbilClassInit(){
+void AbilityOrderList_AbilClassInitOld(){
     DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbil),c_classIdCAbilName);
     DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilProgress),c_classIdCAbilProgressName);
     DataTableSetString(true,"AbilityOrderList_AbilClass."+IntToString(c_classIdCAbilEffect),c_classIdCAbilEffectName);
@@ -261,6 +262,36 @@ void AbilityOrderList_AbilClassInit(){
 }
 
 
+void AbilityOrderList_AbilClassPurge(){
+    DataTableValueRemove(true,"");
+}
+
+void AbilityOrderList_AbilClassInit(){
+    string UD = "DevTools_AbilClass";
+    int i = 0;
+    int j = 0;
+    string instance = "";
+    string instanceID = "";
+    string subPrefix = "";
+    int count = UserDataInstanceCount(UD);
+    int subPrefixCount = UserDataFieldValueCount(UD,"SubPrefix");
+    for(i=0;i<count;i+=1){
+        instance = UserDataInstance(UD,i);
+        instanceID = IntToString(UserDataGetInt(UD,instance,"Id",1));
+        console(instanceID);
+        DataTableSetString(true,"AbilityOrderList_AbilClass."+instanceID,UserDataGetString(UD,instance,"Name",1));
+        DataTableSetString(true,"AbilityOrderList_AbilClass.Prefix."+instanceID,UserDataGetString(UD,instance,"Prefix",1));
+        DataTableSetInt(true,"AbilityOrderList_AbilClass.Count."+instanceID,UserDataGetInt(UD,instance,"Count",1));
+        for(j=1;j<=subPrefixCount;j+=1){
+            subPrefix = UserDataGetString(UD,instance,"SubPrefix",j);
+            if(subPrefix!=""){
+                DataTableSetString(true,"AbilityOrderList_AbilClass.SubPrefix."+instanceID+":"+IntToString(j-1),subPrefix);
+            }
+        }
+    }
+}
+
+
 static unitgroup AbilityOrderContainerAbilMgmtGroup(int player){
     return UnitGroupSelected(player);
     
@@ -329,13 +360,13 @@ bool AbilityOrderContainerSendHandler(bool a, bool b){
         }
         if(source!=null){
             UnitIssueOrder(source,o,c_orderQueueReplace);
-            print("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
+            console("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
         }
         else{
             for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
                 source = UnitGroupUnit(ug,i);
                 UnitIssueOrder(source,o,c_orderQueueReplace);
-                print("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
+                console("Ordering ["+abilOrder+"] from unit "+UnitGetType(source)+" to unit "+UnitGetType(target));
             }
         }
        
@@ -383,10 +414,41 @@ bool aa(bool a, bool b){
     return true;
 }
 
+text AbilityOrderListItemTextValue(ItemListStructRef itemList,int index){
+    int j;
+    string entry = ItemListGetVal(itemList,index);
+    int abilClass = AbilityClass(entry);
+    string abilCmdPrefix;
+    string suffix;
+    string subEntry;
+    text name;
+    for(j=0;j<AbilityOrderList_AbilClassGetCount(abilClass);j+=1){
+        abilCmdPrefix = AbilityOrderList_AbilClassGetPrefix(abilClass,j);
+        suffix = abilCmdPrefix;
+        subEntry = entry+":"+suffix;
+        if(CatalogFieldExists(CatalogEntryScope(c_gameCatalogAbil,entry),"CmdButtonArray")){
+            subEntry += "("+CatalogFieldValueGet(c_gameCatalogAbil,entry,"CmdButtonArray["+IntToString(j)+"].DefaultButtonFace",c_playerAny)+")";
+        }
+        else if (CatalogFieldExists(CatalogEntryScope(c_gameCatalogAbil,entry),"InfoArray")){
+            subEntry += "("+CatalogFieldValueGet(c_gameCatalogAbil,entry,"InfoArray["+IntToString(j)+"].Button.DefaultButtonFace",c_playerAny)+")";
+        }
+        //print(CatalogFieldValueGet(c_gameCatalogAbil,entry,"CmdButtonArray["+IntToString(j)+"].DefaultButtonFace",1));
+        ItemListAdd(ItemList,subEntry);
+        DataTableSetString(true,"AbilityOrderList.AbilRecord."+subEntry,entry);
+        DataTableSetInt(true,"AbilityOrderList.AbilRecord.Cmd."+subEntry,j);
+    }
+
+    name = StringToText(subEntry);
+    
+	return name;
+}
+
+
 void AbilityOrderHandler_Init(){
     trigger t;
     playergroup pg = PlayerGroupAll();
     int player;
+    ItemList.id = "AbilityOrderList";
     AbilityOrderContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     AbilityOrderContainer.messageBox = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     AbilityOrderContainer.addButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);

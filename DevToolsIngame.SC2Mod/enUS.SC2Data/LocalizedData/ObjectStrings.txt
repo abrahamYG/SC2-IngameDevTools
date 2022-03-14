@@ -1,2 +1,3 @@
 ﻿Actor/Name/DevToolsBeaconSpawnUnit=DevTools Beacon SpawnUnit
 Model/Name/DevToolsBeaconSpawnUnit=DevTools Beacon SpawnUnit
+User/Name/DevTools_AbilClass=DevTools_AbilClass

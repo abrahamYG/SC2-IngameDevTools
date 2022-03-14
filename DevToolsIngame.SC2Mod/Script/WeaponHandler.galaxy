@@ -22,7 +22,7 @@ bool WeaponListBoxSelectionChanged(bool a, bool b){
 }
 
 void WeaponListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
-	DialogControlSetPropertyAsString(WeaponContainer.messageBox,c_triggerControlPropertyEditText,pg,itemList.list[index]);
+	DialogControlSetPropertyAsString(WeaponContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
 static unitgroup WeaponContainerTarget(){
@@ -43,14 +43,14 @@ bool WeaponContainerSendHandler(bool a, bool b){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             UnitWeaponAdd(u,weapon,"");
-            print("Adding Weapon ["+weapon+"] to unit "+UnitGetType(u));
+            console("Adding Weapon ["+weapon+"] to unit "+UnitGetType(u));
         }
     }
     else if(EventDialogControl()==WeaponContainer.removeButton){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             UnitWeaponRemove(u,weapon);
-            print("Removing Weapon ["+weapon+"] to unit "+UnitGetType(u));
+            console("Removing Weapon ["+weapon+"] to unit "+UnitGetType(u));
         }
         
     }
@@ -59,6 +59,7 @@ bool WeaponContainerSendHandler(bool a, bool b){
 
 void WeaponHandler_Init(){
     playergroup pg = PlayerGroupAll();
+    ItemList.id = "WeaponList";
     ItemListContainer_InitStandard(WeaponContainer, CONTAINERDLG_PATH, "WeaponContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogWeapon, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "WeaponListBox", WeaponListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

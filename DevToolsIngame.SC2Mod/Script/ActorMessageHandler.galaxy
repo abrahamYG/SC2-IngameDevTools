@@ -35,7 +35,7 @@ bool ActorMessageContainerSendHandler(bool a, bool b){
     ActorCreate(null,"","","","");
     //ActorSend(unitactor,val);
     //ConsoleCommand(val,true,true);
-    print(val);
+    console(val);
     return trigRan;
 }
 
