@@ -76,8 +76,12 @@ void PlayerList_Init(){
 
 
 
-bool UnitList_IsNotMissileFilter(int catalog, string entry){
-    return CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0;
+bool UnitList_IsNormalUnitFilter(int catalog, string entry){
+    bool isUnit = true;
+    isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0);
+    isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"EditorFlags[NoPlacement]",c_playerAny) == 0);
+    isUnit = isUnit && (!StringContains(CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny),"ObjectFamily:Storymode",c_stringAnywhere,false));//ObjectFamily:Storymode
+    return isUnit;
 }
 text UnitListItemTextValue(ItemListStructRef itemList,int index){
     text name;
@@ -90,7 +94,7 @@ void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemList.id = "UnitList";
     ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
-    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNotMissileFilter);
+    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNormalUnitFilter);
 	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, UnitListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

@@ -31,6 +31,11 @@
             <Style val="@@@ModCenterSize20Bold"/>
             <Height val="30"/>
         </Frame>
+        <Frame type="Frame" name="AnchorContainerFrame">
+            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+        </Frame>
+        
+        
     </Frame>
     <Frame type="Button" name="ButtonTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
     </Frame>

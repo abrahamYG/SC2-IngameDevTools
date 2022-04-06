@@ -2,16 +2,16 @@ include "Script/debug_h";
 include "Script/split_string";
 include "Script/ItemList";
 
-static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager/PortraitManager";
+static const string PORTRAITCONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager/PortraitContainer";
 
 ItemListContainerStruct PortraitContainer;
-
-
 static ItemListStruct ItemList;
 static ListBoxFilterStruct ListBoxFilter;
+static int PortraitFrame;
+static int PortraitFrameContainer;
 
 bool PortraitListBoxFilterQuery(bool a, bool b){
-    
     int player = EventPlayer();
 	playergroup pg = PlayerGroupSingle(player);
 	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
@@ -20,18 +20,17 @@ bool PortraitListBoxFilterQuery(bool a, bool b){
 }
 
 bool PortraitListBoxSelectionChanged(bool a, bool b){
-    
     return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
 }
 
 
 int PortraitList_RebuildPortrait(){
 	int p;
-	if(PortFrame>-1){
-		DialogControlDestroy(PortFrame);
+	if(PortraitFrame>-1){
+		DialogControlDestroy(PortraitFrame);
 	}
-	PortFrame = DialogControlCreateInPanelFromTemplate(PortContainer,c_triggerControlTypePortrait,"PortView/PortraitTemplateFull");
-	p = PortraitGetTriggerControl(PortFrame);
+	PortraitFrame = DialogControlCreateInPanelFromTemplate(PortraitFrameContainer,c_triggerControlTypePortrait,"PortraitManager/PortraitTemplateFull");
+	p = PortraitGetTriggerControl(PortraitFrame);
 	PortraitSetBorderVisible(p,false);
 	return p;
 }
@@ -40,16 +39,14 @@ int PortraitList_RebuildPortrait(){
 void PortraitListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
     string portId;
 	string portActor = "PortraitActorDummy";
-	portId = PortList[index];
+	int Portrait;
+	portId = ItemListGetVal(ItemList,index);
 	if(CatalogEntryIsValid(c_gameCatalogActor,portId)){
 		portActor = portId;
 	}
 	Portrait = PortraitList_RebuildPortrait();
 	PortraitSetModel(Portrait,portId,false);
 	PortraitSetActor(Portrait,portActor);
-	DialogControlSetPropertyAsText(Label,c_triggerControlPropertyText,PG,StringToText(portId));
-	DialogControlSetPropertyAsString(EditBoxIndex,c_triggerControlPropertyEditText,PG,IntToString(index));
-	DialogControlSetPropertyAsString(EditBoxSearch,c_triggerControlPropertyEditText,PG,portId);
 	DialogControlSetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
     
 }
@@ -70,26 +67,15 @@ bool PortraitContainerSendHandler(bool a, bool b){
     bool trigRan = true;
     int player = EventPlayer();
     string val = DialogControlGetPropertyAsString(PortraitContainer.messageBox,c_triggerControlPropertyEditText,player);
-    
     string Portrait = PortraitContainerPortrait(val);
-    
-    
-    
     int i;
+	int p;
     if(EventDialogControl()==PortraitContainer.addButton){
-        
-        //PlayerSetPortrait(player,Portrait,0.5);
-        
-        
-        console("Adding Portrait ["+Portrait+"] to player "+IntToString(player));
-        
-        
+		p = PortraitGetTriggerControl(PortraitFrame);
+		PortraitSetAnim(p,"Talk");
     }
     else if(EventDialogControl()==PortraitContainer.removeButton){
-        
         //print("Removing Portrait ["+Portrait+"] to unit "+UnitGetType(u));
-        
-        
     }
     return trigRan;
 }
@@ -104,6 +90,9 @@ void PortraitHandler_Init(){
     
 	playergroup pg = PlayerGroupAll();
 	ItemList.id = "PortraitList";
+	PortraitFrame = -1;
+	PortraitFrameContainer = DialogControlHookupStandard(c_triggerControlTypePanel,PORTRAITCONTAINERDLG_PATH);
+	PortraitList_RebuildPortrait();
     ItemListContainer_InitStandard(PortraitContainer, CONTAINERDLG_PATH, "PortraitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogModel, PortraitList_IsPortrait);
     ItemList_FilterListInitStandard(ListBoxFilter, "PortraitListBox", PortraitListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

@@ -9,4 +9,37 @@
         <On Terms="Effect.DevToolsBeaconSpawnUnit.Start" Send="TimerSet 6.000000 OnMyWayBeaconDuration"/>
         <HostSiteOps Ops="SOpTargetPoint SOpShadow"/>
     </CActorModel>
+      <CActorModel id="PointNormal">
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+        <FogVisibility value="Visible"/>
+    </CActorModel>
+    <CActorModel id="DebugSphere">
+        <On Terms="ActorCreation" Send="Create PointNormalName"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+        <Model value="ActorShapeSphere"/>
+    </CActorModel>
+    <CActorText id="PointNormalName">
+        <Aliases value="_Text"/>
+        <Inherits index="LocalTintColor" value="1"/>
+        <Inherits index="Opacity" value="1"/>
+        <Inherits index="Scale" value="1"/>
+        <Inherits index="TintColor" value="1"/>
+        <Inherits index="Visibility" value="1"/>
+        <FogVisibility value="Visible"/>
+        <Supporter Subject="::Creator"/>
+        <On Terms="SupporterDestruction" Send="Destroy"/>
+    </CActorText>
+    <CActorModel id="PointThreeD">
+        <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
+        <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
+        <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
+    </CActorModel>
+    <CActorText id="PointThreeDName">
+        <Aliases value="_Text"/>
+        <On Terms="ActorOrphan" Send="Destroy"/>
+    </CActorText>
 </Catalog>

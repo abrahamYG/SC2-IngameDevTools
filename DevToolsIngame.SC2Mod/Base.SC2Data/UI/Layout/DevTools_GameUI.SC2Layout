@@ -7,6 +7,7 @@
 			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
 			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
 		</Frame>
+		<!--
 		<Frame type="ToggleControl" name="PortViewerContainer" template="PortView/PortViewerContainer">
 			<Shortcut val="Control+Shift+P"/>
 			<Visible val="False"/>
@@ -16,6 +17,7 @@
 			<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
 			
 		</Frame>
+		-->
 		<Frame type="ToggleControl" name="DataEditorMain" template="DataEditor/MainWindow">
 			<Shortcut val="Control+Shift+D"/>
 			<Visible val="{$parent/DevToolsMenuContainer/DataEditorButton/@Toggled}"/>
@@ -44,6 +46,8 @@
 				<TabListItem val="$this/ShowLightingManager"/>
 				<TabListItem val="$this/ShowRaceManager"/>
 				<TabListItem val="$this/ShowSkinManager"/>
+				<TabListItem val="$this/ShowPortraitManager"/>
+				<TabListItem val="$this/ShowDataTableManager"/>
 
 				<PanelListItem val="$parent/AbilityManager"/>
 				<PanelListItem val="$parent/BehaviorManager"/>
@@ -54,6 +58,8 @@
 				<PanelListItem val="$parent/LightingManager"/>
 				<PanelListItem val="$parent/RaceManager"/>
 				<PanelListItem val="$parent/SkinManager"/>
+				<PanelListItem val="$parent/PortraitManager"/>
+				<PanelListItem val="$parent/DataTableManager"/>
 
 				<Wrap val="true"/>
 				<SelectedIndex val="3"/>
@@ -160,6 +166,19 @@
 					<Text val="Skin"/>
 				</Frame>
 			</Frame>
+			<Frame type="Control" name="PortraitManager" template="PortraitManager/PortraitManager">
+				<Visible val="{$parent/CatalogManagerList/ShowPortraitManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/SkinManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/SkinManager" pos="Max" offset="0"/>
+				<Anchor side="Left" relative="$this/PortraitContainer" pos="Min" offset="0"/>
+				<Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+				
+			</Frame>
+			<Frame type="Frame" name="DataTableManager" template="DataTableManager/DataTableManager">
+				<Visible val="{$parent/CatalogManagerList/ShowDataTableManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/PortraitManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/PortraitManager" pos="Min" offset="-10"/>
+			</Frame>
 		</Frame>
 		
 		<Frame type="Control" name="CheatManager" template="CheatManager/CheatManager">
@@ -218,7 +237,6 @@
 		
 	</Frame>
 	<Frame type="Frame" name="GameUI/UIContainer" file="GameUI">
-		
 		
 	</Frame>
 	

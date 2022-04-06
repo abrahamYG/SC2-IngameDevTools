@@ -13,6 +13,6 @@ void console(string s){
 }
 
 
-void error(string s){
+void err(string s){
 	TriggerDebugOutput(1,StringToText(s),true);
 }

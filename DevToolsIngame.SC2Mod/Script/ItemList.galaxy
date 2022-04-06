@@ -1,4 +1,4 @@
-
+include "Script/split_string";
 const int ITEM_LIST_MAX = 60000;
 const string ITEM_LIST_PREFIX = "ItemList";
 //static string[MAX_ITEM_LIST] ItemList;
@@ -19,16 +19,17 @@ typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
 
 
 static string ItemListGetKey(ItemListStructRef itemList, int index){
-	console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
 	return ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]";
 }
 
 void ItemListSetVal(ItemListStructRef itemList, int index, string val){
 	if(itemList.count<index){
-		console("Error setting a ItemList value higher than itemlist count");
-		console("ItemList: "+itemList.id);
-		console("ItemList Index: "+IntToString(index));
-		console("ItemList COunt: "+IntToString(itemList.count));
+		err("Error setting a ItemList value higher than itemlist count");
+		err("ItemList: "+itemList.id);
+		err("ItemList Index: "+IntToString(index));
+		err("ItemList COunt: "+IntToString(itemList.count));
+		return;
 	}
 	DataTableSetString(true,ItemListGetKey(itemList,index),val);
 }
@@ -177,6 +178,7 @@ int ItemList_FilterListAddItem(ItemListStructRef itemList, ListBoxFilterStructRe
 	DialogControlAddItem(listBoxFilter.list,pg,listBoxFilter.itemTextFunc(itemList,index));
 	for(i=1;i<=PlayerGroupCount(pg);i+=1){
 		player = PlayerGroupPlayer(pg,i);
+		if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){continue;}
     	listItem = DialogControlGetItemCount(listBoxFilter.list,player);
 		key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
 		//console(key);
@@ -187,13 +189,33 @@ int ItemList_FilterListAddItem(ItemListStructRef itemList, ListBoxFilterStructRe
     return listItem;
 }
 
+void ItemList_FilterListClear(ListBoxFilterStructRef listBoxFilter, playergroup pg){
+	int player;
+	int i;
+	int j;
+	string key;
+	int itemCount;
+	for(i=1;i<=PlayerGroupCount(pg);i+=1){
+		player = PlayerGroupPlayer(pg,i);
+		itemCount = DialogControlGetItemCount(listBoxFilter.list,player);
+		for(j=1;j<=itemCount;j+=1){
+			key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(j);
+			DataTableValueRemove(true,key);
+		}
+		DialogControlRemoveAllItems(listBoxFilter.list,pg);
+    	//DataTableSetString(true,key,itemList.list[index]);
+	}
+    
+}
+
 void ItemList_FilterListRebuild(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, string filter,playergroup pg){
 	//string val = DialogControlGetPropertyAsString(BoxFilter,c_triggerControlPropertyEditText,EventPlayer());
 	int i; int j;
 	int listItem = 0;
 	data_split_t dsplit;
     split_string(dsplit, filter, ",");
-	DialogControlRemoveAllItems(listBoxFilter.list,pg);
+	//DialogControlRemoveAllItems(listBoxFilter.list,pg);
+	ItemList_FilterListClear(listBoxFilter,pg);
 	for(i=0;i<itemList.count;i+=1){
         if(filter==""){
             ItemList_FilterListAddItem(itemList,listBoxFilter,i,pg);
@@ -255,7 +277,7 @@ bool ItemList_FilterBoxSelectionChanged(ItemListStructRef itemList, ListBoxFilte
 	string val;
 	int index;
 	string key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
-	console(key);
+	if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
     if(DataTableValueExists(true,key)){
 		val=DataTableGetString(true,key);
 		console(val);

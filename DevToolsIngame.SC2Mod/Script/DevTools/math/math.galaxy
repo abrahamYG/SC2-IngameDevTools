@@ -1,0 +1,80 @@
+const fixed c_PI = 3.141592653589793;
+const fixed c_FIXED_MAX = 524287;
+const fixed c_INTEGER_MAX = 65535;
+const fixed c_EPSILON = 0.001;
+
+fixed Sqr( fixed a ) { return a * a; }
+fixed ClampF( fixed min, fixed max, fixed a ) {
+    if (a < min) { return min; }
+    if (a > max) { return max; }
+    return a;
+}
+
+int ClampI( int min, int max, int a ) {
+    if (a < min) { return min; }
+    if (a > max) { return max; }
+    return a;
+}
+
+fixed Lerp(fixed start, fixed end, fixed percent) {
+    return start + percent * (end - start);
+}
+
+fixed FacingToAngle (fixed facing) {
+    fixed r = facing;
+    if (r < 0.0) {
+        return r + 360.0;
+    }
+    else if (r > 360.0) {
+        return r - 360.0;
+    }
+    return r;
+}
+
+fixed AngleToFacing (fixed angle) {
+    fixed r = angle;
+    if (r > 180.0) {
+        return (r - 360.0);
+    }
+    return r;
+}
+
+fixed ValueToRange (fixed value, fixed min, fixed max) {
+    return (value - min) / (max - min);
+}
+
+fixed RangeValueToRange (fixed value, fixed newMin, fixed newMax, fixed oldMin, fixed oldMax) {
+    return ((((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin);
+}
+
+point RotatePointAlongPoint (point originPoint, point otherPoint, fixed angle) {
+    fixed x = PointGetX(originPoint); fixed y = PointGetY(originPoint); fixed z = PointGetHeight(originPoint);
+    fixed otherX = PointGetX(otherPoint); fixed otherY = PointGetY(otherPoint); fixed otherZ = PointGetHeight(otherPoint);
+    return libNtve_gf_PointFromXYZ((otherX - x) * Cos(angle) - (otherY - y) * Sin(angle) + x,
+                                   (otherX - x) * Sin(angle) + (otherY - y) * Cos(angle) + y, otherZ);
+}
+
+fixed PythagoreanSolve(fixed value1, fixed value2) {
+    return SquareRoot(value1 * value1 + value2 * value2);
+}
+
+fixed RadToDegree(fixed value)
+{
+    return value * (180 / c_PI);
+}
+
+fixed DegreeToRad(fixed value)
+{
+    return value * (c_PI / 180);
+}
+
+fixed TruncPoint(fixed value, int decimal){ 
+    return StringToFixed(FixedToString(value, decimal));
+}
+
+fixed CorrectRotation (fixed min, fixed max, fixed value) {
+    if (value > max) { value -= max; }
+    else if (value < min) { value += max; }
+    else if (true) { }
+    return value;
+}

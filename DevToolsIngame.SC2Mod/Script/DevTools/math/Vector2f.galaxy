@@ -1,0 +1,150 @@
+include "TriggerLibs/NativeLib"
+include "scripts/math/math.galaxy"
+point Vector2f_Scale (point v, fixed scalar);
+point Vector2f_Divide (point v, fixed scalar); 
+point Vector2f_Add (point v, fixed value);
+point Vector2f_Sub (point v, fixed value);
+point Vector2f_AddVec (point v1, point v2);
+point Vector2f_SubVec (point v1, point v2);
+point Vector2f_NormalizeXY (fixed x, fixed y);
+point Vector2f_Norm (point v);
+fixed Vector2f_Dot (point v1, point v2);
+fixed Vector2f_getMag (fixed x, fixed y);
+fixed Vector2f_getVectorMag (point v); 
+
+point Vector2f_Empty() { return Point(0.0, 0.0); }
+
+point Vector2f_Scale (point v, fixed scalar){
+    return Point(PointGetX(v) * scalar, PointGetY(v) * scalar);
+}
+
+point Vector2f_Divide (point v, fixed scalar) {
+    return Point(PointGetX(v) / scalar, PointGetY(v) / scalar);
+}
+
+point Vector2f_Add (point v, fixed value) {
+    return Point(PointGetX(v) + value, PointGetY(v) + value);
+}
+
+point Vector2f_Sub (point v, fixed value) {
+    return Point(PointGetX(v) - value, PointGetY(v) - value);
+}
+
+point Vector2f_AddVec (point v1, point v2){
+    return Point(PointGetX(v1) + PointGetX(v2), PointGetY(v1) + PointGetY(v2));
+}
+
+point Vector2f_SubVec (point v1, point v2){
+    return Point(PointGetX(v1) - PointGetX(v2), PointGetY(v1) - PointGetY(v2));
+}
+
+point Vector2f_ScaleVec (point v1, point v2){
+    return Point(PointGetX(v1) * PointGetX(v2), PointGetY(v1) * PointGetY(v2));
+}
+
+point Vector2f_Power (point v, fixed power){
+    return Point(Pow(PointGetX(v),power), Pow(PointGetY(v), power));
+}
+
+fixed Vector2f_Dot (point v1, point v2) {
+    fixed r;
+    r += PointGetX(v1) * PointGetX(v2); r += PointGetY(v1) * PointGetY(v2);
+    return r;
+}
+
+fixed Vector2f_getMag (fixed x, fixed y) {
+    return SquareRoot(((x * x) + (y * y)));
+}
+
+fixed Vector2f_LengthSquared(point v) {
+    return (PointGetX(v) * PointGetX(v)) + (PointGetY(v) * PointGetY(v));
+}
+
+fixed Vector2f_Length(point v) {
+    return SquareRoot(Vector2f_LengthSquared(v));
+}
+
+fixed Vector2f_getVectorMag (point v) {
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return Vector2f_getMag(PointGetX(v), PointGetY(v));
+}
+
+point Vector2f_NormalizeXY (fixed x, fixed y) {
+    fixed r = Vector2f_getMag(x, y);
+    if ((r > 0.0)) { return Point((x / r), (y / r)); }
+    return Vector2f_Empty();
+}
+
+point Vector2f_Norm (point v) {
+    fixed r;
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    r = Vector2f_getVectorMag(v);
+    if (r > 0.0) { return Point(PointGetX(v) / r, PointGetY(v) / r); }
+    return Vector2f_Empty();
+}
+
+// float32 Normalize()
+// {
+//     float32 length = Length();
+//     if (length < b2_epsilon)
+//     {
+//         return 0.0f;
+//     }
+//     float32 invLength = 1.0f / length;
+//     x *= invLength;
+//     y *= invLength;
+
+//     return length;
+// }
+
+fixed Vector2f_NormU(point v) {
+    return Vector2f_Length(v);
+}
+
+point Vector2f_getVectorBetweenPoints (point a, point b) {
+    fixed x = PointGetX(b) -  PointGetX(a);
+    fixed y = PointGetY(b) -  PointGetY(a);
+    return Point(x, y);
+}
+
+fixed Vector2f_Cross(point v1, point v2) {
+    fixed[2] x;
+    fixed[2] y;
+    x[0] = PointGetX(v1); y[0] = PointGetY(v1); 
+    x[1] = PointGetX(v2); y[1] = PointGetY(v2);
+    return x[0] * y[1] - y[0] * x[1];
+}
+
+// More exotic (but necessary) forms of the cross product
+// with a vector a and scalar s, both returning a vector
+point Vector2f_CrossScalar(point a, fixed s )
+{
+    fixed x = s * PointGetY(a);
+    fixed y = -s * PointGetX(a);    
+    return Point(x, y);
+}
+ 
+point Vector2f_CrossScalarReverse(point a, fixed s )
+{
+    fixed x = -s * PointGetY(a);
+    fixed y = s * PointGetX(a);    
+    return Point(x, y);
+}
+
+point Vector2f_Rotate(point v, fixed angle){
+    fixed cs = Cos(angle);
+    fixed sn = Sin(angle);
+    fixed x = PointGetX(v) * cs - PointGetY(v) * sn;
+    fixed y = PointGetX(v) * sn + PointGetY(v) * cs;
+
+    return Point(x, y);
+}
+
+point Vector2f_Abs(point v) {
+    return Point(AbsF(PointGetX(v)), AbsF(PointGetY(v)));
+}
+
+point Vector2f_ClampToVectorXY(point min, point max, point v){
+    return Point(ClampF(PointGetX(min), PointGetX(max), PointGetX(v)), ClampF(PointGetY(min), PointGetY(max), PointGetY(v)));
+}
+

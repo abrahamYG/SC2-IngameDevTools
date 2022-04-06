@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    
+	<Frame type="Frame" name="DataTableManager" template="DevTools_Templates/PanelTemplateTitled">
+		<Height val="600"/>
+		<Width val="400"/>
+		<CollapseLayout val="True"/>
+		<Visible val="False"/>
+		<Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
+			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/Item" pos="Min" offset="-10"/>
+		</Frame>
+        
+		<Frame type="Button" name="AddButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Bottom" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+            <Width val="190"/>
+			<Height val="60"/>
+			<Text val="@UI/CatalogManager/PrevButton"/>
+		</Frame>
+		<Frame type="Button" name="RemoveButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Bottom" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+            <Width val="190"/>
+            <Height val="60"/>
+			<Text val="@UI/CatalogManager/NextButton"/>
+		</Frame>
+		<Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
+			<Anchor side="Bottom" relative="$parent/AddButton" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Height val="60"/>
+			<!--<RejectsFocus val="True"/>-->
+			<Enabled val="False"/>
+		</Frame>
+        
+        <Frame type="Label" name="Title">
+            <Text val="DataTable"/>
+        </Frame>
+	</Frame>
+</Desc>

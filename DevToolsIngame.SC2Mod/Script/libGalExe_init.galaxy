@@ -1,8 +1,9 @@
-include "Script/libGalExe_func";
-include "Script/libGalExe_lib";
 include "Script/libGalExe_utils";
+include "Script/libGalExe_lib";
+include "Script/libGalExe_func";
+include "Script/split_string";
 
-static trigger gt_devCmd
+static trigger gt_devCmd;
 
 bool gt_libGalExeChatMsg_Func(bool testConds, bool runActions){
     string chatMsg = EventChatMessage(false);

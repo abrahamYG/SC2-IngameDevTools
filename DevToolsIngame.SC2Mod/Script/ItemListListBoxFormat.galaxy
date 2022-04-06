@@ -1,0 +1,195 @@
+
+string ItemList_ListBoxValueFormat(string type, string val){
+    string format = StringReplaceWord("{type}:[{val}]","{type}",type,1,false);
+    return StringReplaceWord(format,"{val}",val,1,false);
+}
+
+
+//text
+
+string ItemListListBoxFormatAbilCmd(abilcmd val){
+    string entry;
+    entry = "{name}({action},{cmd})";
+    entry = StringReplaceWord(entry,"{name}",AbilityCommandGetAbility(val),1,false);
+    entry = StringReplaceWord(entry,"{action}",IntToString(AbilityCommandGetAction(val)),1,false);
+    entry = StringReplaceWord(entry,"{cmd}",IntToString(AbilityCommandGetCommand(val)),1,false);
+    return ItemList_ListBoxValueFormat("AbilCmd",entry);
+}
+string ItemListListBoxFormatColor(color val){
+    string entry;
+    entry = "R:{red};G:{green};B:{blue};A:{alpha}";
+    entry = StringReplaceWord(entry,"{red}",FixedToString(ColorGetComponent(val,c_colorComponentRed),2),1,false);
+    entry = StringReplaceWord(entry,"{green}",FixedToString(ColorGetComponent(val,c_colorComponentGreen),2),1,false);
+    entry = StringReplaceWord(entry,"{blue}",FixedToString(ColorGetComponent(val,c_colorComponentBlue),2),1,false);
+    entry = StringReplaceWord(entry,"{alpha}",FixedToString(ColorGetComponent(val,c_colorComponentAlpha),2),1,false);
+    return ItemList_ListBoxValueFormat("Color",entry);
+}
+string ItemListListBoxFormatFixed(fixed val){
+    return ItemList_ListBoxValueFormat("Fixed",FixedToString(val,2));
+}
+string ItemListListBoxFormatInt(int val){
+    return  ItemList_ListBoxValueFormat("Int",IntToString(val));
+}
+string ItemListListBoxFormatString(string val){
+    return ItemList_ListBoxValueFormat("String",val);
+}
+//string TextToString(text t);
+string ItemListListBoxFormatText(text val){
+    return ItemList_ListBoxValueFormat("String",TextToString(val));
+}
+
+string ItemListListBoxFormatBank(bank val){
+    return ItemList_ListBoxValueFormat("Bank",BankName(val));
+}
+
+string ItemListListBoxFormatBool(bool val){
+    string entry = "false";if (val){entry = "true";}
+    return ItemList_ListBoxValueFormat("Bool",entry);
+}
+
+string ItemListListBoxFormatCameraInfo(camerainfo val){
+    string entry = "DirX:{x};DirY:{y};DirZ:{z};";
+    entry = StringReplaceWord(entry,"{x}",FixedToString(CameraInfoGetValue (val, c_cameraDirectionX),2),1,false);
+    entry = StringReplaceWord(entry,"{y}",FixedToString(CameraInfoGetValue (val, c_cameraDirectionY),2),1,false);
+    entry = StringReplaceWord(entry,"{z}",FixedToString(CameraInfoGetValue (val, c_cameraDirectionZ),2),1,false);
+    return ItemList_ListBoxValueFormat("CameraInfo",entry);
+}
+
+string ItemListListBoxFormatObjective(int val){
+    string entry = "Obj:{obj}";
+    entry = StringReplaceWord(entry,"{obj}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Objective",entry);
+}
+string ItemListListBoxFormatDialog(int val){
+    string entry = "Dialog:{dlg}";
+    entry = StringReplaceWord(entry,"{dlg}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Dialog",entry);
+}
+string ItemListListBoxFormatDialogControl(int val){
+    string entry = "DialogControl:{dlg}";
+    entry = StringReplaceWord(entry,"{dlg}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("DialogControl",entry);
+}
+string ItemListListBoxFormatConversation(int val){
+    string entry = "Conversation:{conv}";
+    entry = StringReplaceWord(entry,"{conv}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Conversation",entry);
+}
+string ItemListListBoxFormatCinematic(int val){
+    string entry = "Cinematic:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Cinematic",entry);
+}
+string ItemListListBoxFormatPing(int val){
+    string entry = "Ping:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Ping",entry);
+}
+string ItemListListBoxFormatPlanet(int val){
+    string entry = "Planet:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Planet",entry);
+}
+string ItemListListBoxFormatPortrait(int val){
+    string entry = "Portrait:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Portrait",entry);
+}
+string ItemListListBoxFormatReply(int val){
+    string entry = "Reply:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Reply",entry);
+}
+string ItemListListBoxFormatTransmission(int val){
+    string entry = "Transmission:{cine}";
+    entry = StringReplaceWord(entry,"{cine}",IntToString(val),1,false);
+    return ItemList_ListBoxValueFormat("Transmission",entry);
+}
+
+string ItemListListBoxFormatByte(byte val){
+    return ItemList_ListBoxValueFormat("Byte",IntToString(val));
+}
+
+string ItemListListBoxFormatRevealer(revealer val){
+    return ItemList_ListBoxValueFormat("Revealer","[Object]");
+}
+
+string ItemListListBoxFormatActor(actor val){
+    return ItemList_ListBoxValueFormat("Actor","[Object]");
+}
+
+string ItemListListBoxFormatActorScope(actorscope val){
+    return ItemList_ListBoxValueFormat("ActorScope","[Object]");
+}
+string ItemListListBoxFormatAIFilter(aifilter val){
+    return ItemList_ListBoxValueFormat("AIFilter","[Object]");
+}
+string ItemListListBoxFormatDoodad(doodad val){
+    return ItemList_ListBoxValueFormat("Doodad","[Object]");
+}
+string ItemListListBoxFormatGenericHandle(generichandle val){
+    return ItemList_ListBoxValueFormat("GenericHandle","[Object]");
+}
+string ItemListListBoxFormatMarker(marker val){
+    return ItemList_ListBoxValueFormat("Marker","[Object]");
+}
+string ItemListListBoxFormatOrder(order val){
+    return ItemList_ListBoxValueFormat("Order","[Object]");
+}
+string ItemListListBoxFormatPlayerGroup(playergroup val){
+    return ItemList_ListBoxValueFormat("PlayerGroup","[Object]");
+}
+static fixed PointGetZ(point p){
+    return PointGetHeight(p);
+}
+string ItemListListBoxFormatPoint(point val){
+    string entry = "X:{x};Y:{y};Z:{z}";
+    entry = StringReplaceWord(entry,"{x}",FixedToString(PointGetX(val),2),1,false);
+    entry = StringReplaceWord(entry,"{y}",FixedToString(PointGetY (val),2),1,false);
+    entry = StringReplaceWord(entry,"{z}",FixedToString(PointGetZ (val),2),1,false);
+    return ItemList_ListBoxValueFormat("Point",entry);
+}
+string ItemListListBoxFormatRegion(region val){
+    string entry = "MinX:{minx};MinY:{miny};MaxX:{maxx};MaxY:{maxy};";
+    entry = StringReplaceWord(entry,"{minx}",FixedToString(PointGetX(RegionGetBoundsMin(val)),2),1,false);
+    entry = StringReplaceWord(entry,"{miny}",FixedToString(PointGetY (RegionGetBoundsMin(val)),2),1,false);
+    entry = StringReplaceWord(entry,"{maxx}",FixedToString(PointGetX(RegionGetBoundsMax(val)),2),1,false);
+    entry = StringReplaceWord(entry,"{maxy}",FixedToString(PointGetY (RegionGetBoundsMax(val)),2),1,false);
+    return ItemList_ListBoxValueFormat("Region","[Object]");
+}
+string ItemListListBoxFormatSound(sound val){
+    return ItemList_ListBoxValueFormat("Sound","[Object]");
+}
+string ItemListListBoxFormatSoundLink(soundlink val){
+    return ItemList_ListBoxValueFormat("SoundLink",SoundLinkId(val));
+}
+string ItemListListBoxFormatTimer(timer val){
+    return ItemList_ListBoxValueFormat("Timer","[Object]");
+}
+string ItemListListBoxFormatTransmissionSource(transmissionsource val){
+    return ItemList_ListBoxValueFormat("TransmissionSource","[Object]");
+}
+string ItemListListBoxFormatTrigger(trigger val){
+    return ItemList_ListBoxValueFormat("Trigger","[Object]");
+}
+string ItemListListBoxFormatUnit(unit val){
+    return ItemList_ListBoxValueFormat("Unit",UnitGetType(val)+"#"+IntToString(UnitGetTag(val)));
+}
+string ItemListListBoxFormatUnitFilter(unitfilter val){
+    return ItemList_ListBoxValueFormat("UnitFilter","[Object]");
+}
+string ItemListListBoxFormatUnitGroup(unitgroup val){
+    return ItemList_ListBoxValueFormat("UnitGroup","[Object]");
+}
+string ItemListListBoxFormatUnitRef(unitref val){
+    return ItemList_ListBoxValueFormat("UnitRef",UnitGetType(UnitRefToUnit(val))+"#"+IntToString(UnitGetTag(UnitRefToUnit (val))));
+}
+string ItemListListBoxFormatWave(wave val){
+    return ItemList_ListBoxValueFormat("Wave","[Object]");
+}
+string ItemListListBoxFormatWaveInfo(waveinfo val){
+    return ItemList_ListBoxValueFormat("WaveInfo","[Object]");
+}
+string ItemListListBoxFormatWaveTarget(wavetarget val){
+    return ItemList_ListBoxValueFormat("WaveTarget","[Object]");
+}

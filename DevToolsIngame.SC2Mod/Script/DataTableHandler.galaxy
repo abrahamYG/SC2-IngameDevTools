@@ -1,0 +1,167 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+include "Script/ItemListListBoxFormat";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/DataTableManager";
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+static ItemListContainerStruct DataTableContainer;
+
+bool DataTableListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool DataTableListBoxPageIsSet(int player){
+    return DataTableValueExists(true,"DataTableListPage."+IntToString(player));
+}
+
+
+void DataTableListBoxSetPage(int player, int page){
+    DataTableSetInt(true,"DataTableListPage."+IntToString(player),page);
+}
+int DataTableListBoxGetPage(int player){
+    if(!DataTableListBoxPageIsSet(player)){DataTableListBoxSetPage(player,1);}
+    return DataTableGetInt(true,"DataTableListPage."+IntToString(player));
+}
+
+
+
+void DataTableListRebuild(ItemListStructRef itemList,int player,int page){
+    int i;
+    int startPoint = page*100;
+    string entry;
+    int count = MinI(DataTableValueCount(true),startPoint+100);
+    console("DataTableValueCount:"+IntToString(DataTableValueCount(true)));
+    ItemListClear(itemList);
+    console("DataTable Count:"+IntToString(count));
+    for(i=startPoint;i<=count;i+=1){
+		entry = DataTableValueName(true,i);
+		ItemListAdd(itemList,entry);
+	}
+    
+}
+
+bool DataTableListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+string DataTableListBoxValueFormat(string type, string val){
+    string format = StringReplaceWord("{type}:[{val}]","{type}",type,1,false);
+    return StringReplaceWord(format,"{val}",val,1,false);
+}
+
+
+
+void DataTableListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+    string val ="";
+    string name = ItemListGetVal(itemList,index);
+    int type = DataTableValueType(true, name);
+    if(type==c_dataTypeBool){
+        val = ItemListListBoxFormatBool(DataTableGetBool(true,name));
+    }
+    else if(type==c_dataTypeAbilCmd){
+        val = "{name}({action},{cmd})";
+        val = StringReplaceWord(val,"{name}",AbilityCommandGetAbility(DataTableGetAbilCmd(true,name)),1,false);
+        val = StringReplaceWord(val,"{action}",IntToString(AbilityCommandGetAction(DataTableGetAbilCmd(true,name))),1,false);
+        val = StringReplaceWord(val,"{cmd}",IntToString(AbilityCommandGetCommand(DataTableGetAbilCmd(true,name))),1,false);
+        val = DataTableListBoxValueFormat("AbilCmd",val);
+    }
+    else if(type==c_dataTypeBank){
+        //val = DataTableListBoxValueFormat("Bank",BankName(DataTableGetBank(true,name)));
+        val = ItemListListBoxFormatBank(DataTableGetBank(true,name));
+    }
+    else if(type==c_dataTypeInt){
+        //val = DataTableListBoxValueFormat("Int",IntToString(DataTableGetInt(true,name)));
+        val = ItemListListBoxFormatInt(DataTableGetInt(true,name));
+    }
+    else if(type==c_dataTypeString){
+        //val = DataTableListBoxValueFormat("String",DataTableGetString(true,name));
+        val = ItemListListBoxFormatString(DataTableGetString(true,name));
+    }
+    else{
+        val = "Unsupported Type Code:"+ IntToString(type);
+    }
+    //c_dataTypeActor
+    //c_dataTypeActorScope
+    //c_dataTypeAIFilter
+    //c_dataTypeByte
+    //c_dataTypeCameraInfo
+    //c_dataTypeCinematic
+    //c_dataTypeColor
+    //c_dataTypeControl
+    //c_dataTypeConversation
+    //c_dataTypeDataTableInstance
+    //c_dataTypeDialog
+    //c_dataTypeDoodad
+    //c_dataTypeFixed
+    //c_dataTypeGenericHandle
+    //
+    //c_dataTypeMarker
+    //c_dataTypeObjective
+    //c_dataTypeOrder
+    //c_dataTypePing
+    //c_dataTypePlanet
+    //c_dataTypePlayerGroup
+    //c_dataTypePoint
+    //c_dataTypePortrait
+    //c_dataTypeRegion
+    //c_dataTypeReply
+    //c_dataTypeRevealer
+    //c_dataTypeSound
+    //c_dataTypeSoundLink
+    //
+    //c_dataTypeText
+    //c_dataTypeTimer
+    //c_dataTypeTransmission
+    //c_dataTypeTransmissionSource
+    //c_dataTypeTrigger
+    //c_dataTypeUnit
+    //c_dataTypeUnitFilter
+    //c_dataTypeUnitGroup
+    //c_dataTypeUnitRef
+    //c_dataTypeWave
+    //c_dataTypeWaveInfo
+    //c_dataTypeWaveTarget
+	DialogControlSetPropertyAsString(DataTableContainer.messageBox,c_triggerControlPropertyEditText,pg,val);
+}
+
+
+bool DataTableContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    //string val = DialogControlGetPropertyAsString(DataTableContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    int page = DataTableListBoxGetPage(EventPlayer());
+    if(EventDialogControl()==DataTableContainer.addButton){
+        if(page>1){
+            page -= 1;
+        };
+    }
+    else if(EventDialogControl()==DataTableContainer.removeButton){
+        page += 1;
+    }
+    DataTableListBoxSetPage(EventPlayer(),page);
+    DataTableListRebuild(ItemList,EventPlayer(),page);
+    ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",PlayerGroupSingle(EventPlayer()));
+    return trigRan;
+}
+
+
+text DataTableListItemTextValue(ItemListStructRef itemList,int index){
+    string entry = ItemListGetVal(itemList,index);
+	return StringToText(entry);
+}
+
+
+
+void DataTableHandler_Init(){
+	playergroup pg = PlayerGroupAll();
+    ItemList.id = "DataTableList";
+    ItemListContainer_InitStandard(DataTableContainer, CONTAINERDLG_PATH, "DataTableContainerSendHandler");
+    DataTableListRebuild(ItemList,1,1);
+    ItemList_FilterListInitStandard(ListBoxFilter, "DataTableListBox", DataTableListBoxSetActive, DataTableListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

@@ -13,8 +13,10 @@ include "Script/LightingHandler";
 include "Script/RaceHandler";
 include "Script/SkinHandler";
 include "Script/CheatHandler";
+include "Script/PortraitHandler";
+include "Script/DataTableHandler";
 include "Script/DataEditorHandler";
-include "Script/PortView";
+//include "Script/PortView";
 //include "Script/libGalExe_init";
 
 void DevToolsMain_Init(){
@@ -32,7 +34,9 @@ void DevToolsMain_Init(){
     SkinHandler_Init();
     RaceHandler_Init();
     CheatHandler_Init();
-    //DataEditorHandler_Init();
-    PortView_Init();
+    PortraitHandler_Init();
+    DataTableHandler_Init();
+    DataEditorHandler_Init();
+    //PortView_Init();
 	//gt_libGalExe_Init();
 }

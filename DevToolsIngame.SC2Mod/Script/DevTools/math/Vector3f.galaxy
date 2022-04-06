@@ -1,0 +1,181 @@
+include "TriggerLibs/NativeLib"
+include "scripts/math/math.galaxy"
+
+point Vector3f_Scale (point v, fixed value);
+point Vector3f_Divide (point v, fixed value); 
+point Vector3f_DivideValue (fixed value, point v);
+point Vector3f_Add (point v, fixed value);
+point Vector3f_Sub (point v, fixed value);
+point Vector3f_Norm (point v);
+fixed Vector3f_Dot (point v1, point v2);
+point Vector3f_Empty() { return PointFromXYZ(0,0,0); }
+
+point Vector3f_AddVec (point v1, point v2);
+point Vector3f_SubVec (point v1, point v2);
+point Vector3f_ScaleVec (point v1, point v2);
+
+text Vector3f_ToText(point v, int precision) { 
+    return  FixedToText(PointGetX(v), precision)+StringToText(" ")+
+            FixedToText(PointGetY(v), precision)+StringToText(" ")+
+            FixedToText(PointGetZ(v), precision);
+}
+
+string Vector3f_ToString(point v, int precision) { 
+    return  FixedToString(PointGetX(v), precision)+" "+
+            FixedToString(PointGetY(v), precision)+" "+
+            FixedToString(PointGetZ(v), precision);
+}
+
+point Vector3f_Scale (point v, fixed value){
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v) * value, PointGetY(v) * value, PointGetZ(v) * value);
+}
+
+point Vector3f_Divide (point v, fixed value){
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v) / value, PointGetY(v) / value, PointGetZ(v) / value);
+}
+
+point Vector3f_DivideValue (fixed value, point v){
+    fixed x = 0; fixed y = 0; fixed z = 0;
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    if (PointGetX(v) != 0) { x = value / PointGetX(v); }
+    if (PointGetY(v) != 0) { y = value / PointGetY(v); }
+    if (PointGetZ(v) != 0) { z = value / PointGetZ(v); }
+    return PointFromXYZ(x, y, z);
+}
+
+point Vector3f_Add (point v, fixed value){
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v) + value, PointGetY(v) + value, PointGetZ(v) + value);
+}
+
+point Vector3f_Sub (point v, fixed value) {
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v) - value, PointGetY(v) - value, PointGetZ(v) - value);
+}
+
+point Vector3f_AddVec (point v1, point v2){
+    if (DEBUG_MODE) { if(v1 == null || v2 == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v1) + PointGetX(v2), PointGetY(v1) + PointGetY(v2), PointGetZ(v1) + PointGetZ(v2));
+}
+
+point Vector3f_SubVec (point v1, point v2){
+    if (DEBUG_MODE) { if(v1 == null || v2 == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v1) - PointGetX(v2), PointGetY(v1) - PointGetY(v2), PointGetZ(v1) - PointGetZ(v2));
+}
+
+point Vector3f_ScaleVec (point v1, point v2){
+    if (DEBUG_MODE) { if(v1 == null || v2 == null){ breakpoint; } }
+    return PointFromXYZ(PointGetX(v1) * PointGetX(v2), PointGetY(v1) * PointGetY(v2), PointGetZ(v1) * PointGetZ(v2));
+}
+
+point Vector3f_Power (point v, fixed value){
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return PointFromXYZ(Pow(PointGetX(v),value), Pow(PointGetY(v),value), Pow(PointGetZ(v),value));
+}
+
+fixed Vector3f_Dot (point v1, point v2) {
+    if (DEBUG_MODE) { if(v1 == null || v2 == null){ breakpoint; } }
+    return PointGetX(v1) * PointGetX(v2) + PointGetY(v1) * PointGetY(v2) + PointGetZ(v1) * PointGetZ(v2);
+}
+
+fixed Vector3f_LengthSquared(point v) {
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return (PointGetX(v) * PointGetX(v)) + (PointGetY(v) * PointGetY(v)) + (PointGetZ(v) * PointGetZ(v));
+}
+
+fixed Vector3f_Length(point v) {
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    return SquareRoot(Vector3f_LengthSquared(v));
+}
+
+point Vector3f_Norm (point v) {
+    fixed r = Vector3f_Length(v);
+    if (DEBUG_MODE) { if(v == null){ breakpoint; } }
+    if (r > 0.0) { return PointFromXYZ(PointGetX(v) / r, PointGetY(v) / r, PointGetZ(v) / r); }
+    return Vector3f_Empty();
+}
+
+point Vector3f_getVectorBetweenPoints (point a, point b) {
+    return PointFromXYZ(PointGetX(b) - PointGetX(a),
+                        PointGetY(b) - PointGetY(a),
+                        PointGetZ(b) - PointGetZ(a));
+}
+
+point Vector3f_Cross(point v1, point v2) {
+    fixed[2] x; fixed[2] y; fixed[2] z;
+    x[0]=PointGetX(v1); y[0]=PointGetY(v1); z[0]=PointGetZ(v1); 
+    x[1]=PointGetX(v2); y[1]=PointGetY(v2); z[1]=PointGetZ(v2); 
+    return PointFromXYZ(y[0]*z[1] - z[0]*y[1],
+                        z[0]*x[1] - x[0]*z[1],
+                        x[0]*y[1] - y[0]*x[1]);
+}
+
+point Vector3f_CrossScalar(point v1, fixed scalar) {
+    fixed x; fixed y; fixed z;
+    x=PointGetX(v1); y=PointGetY(v1); z=PointGetZ(v1); 
+    return PointFromXYZ(y*scalar - z*scalar,
+                        z*scalar - x*scalar,
+                        x*scalar - y*scalar);
+}
+
+
+fixed Vector3f_CrossValue(point v1, point v2 ) {
+    fixed[2] x; fixed[2] y; fixed[2] z;
+    x[0]=PointGetX(v1); y[0]=PointGetY(v1); z[0]=PointGetZ(v1); 
+    x[1]=PointGetX(v2); y[1]=PointGetY(v2); z[1]=PointGetZ(v2); 
+    return (y[0]*z[1] - z[0]*y[1]) - (z[0]*x[1] - x[0]*z[1]) - (x[0]*y[1] - y[0]*x[1]);
+}
+
+point Vector3f_Clamp( fixed min, fixed max, point v){
+    return PointFromXYZ(ClampF(min, max, PointGetX(v)), ClampF(min, max, PointGetY(v)), ClampF(min, max, PointGetZ(v)));
+}
+
+point Vector3f_ClampToVectorXY( point min, point max, point v){
+    return PointFromXYZ(ClampF(PointGetX(min), PointGetX(max), PointGetX(v)), ClampF(PointGetY(min), PointGetY(max), PointGetY(v)),  PointGetZ(v));
+}
+
+point Vector3f_Projection(point a, point b) {
+    // https://stackoverflow.com/questions/26958198/vector-projection-rejection-in-c
+    // return Scale(Dot(a, b)/Dot(b, b), b);
+    return Vector3f_Scale(b, Vector3f_Dot(a, b) / Vector3f_Dot(b, b));
+}
+
+point Vector3f_Rotate(point v, fixed angle, int axis){
+    fixed cos = Cos(angle);
+    fixed sin = Sin(angle);
+    fixed x = PointGetX(v); fixed y = PointGetY(v); fixed z = PointGetZ(v);
+    fixed x1; fixed y1; fixed z1;
+    if (axis == 0) {
+        x1 = x;
+        y1 = (y * cos) - (z * sin);
+        z1 = (y * sin) - (z * cos);        
+    }
+    else if (axis == 1) {
+        x1 = (x * cos) + (z * sin);
+        y1 = y;
+        z1 =(-x * sin) + (z * cos);
+    }
+    else if (axis == 2) {
+        x1 = (x * cos) - (y * sin);
+        y1 = (x * sin) + (y * cos);
+        z1 = z;
+    }
+    else if(true){ x1 = x; y1 = y; z1 = z;}
+    return PointFromXYZ(x1, y1, z1);
+}
+
+
+fixed Vector3f_NormU(point v) {
+    fixed length = Vector3f_Length(v);
+    // fixed invLength;
+    // if(length == 0.0){ return 0.0; }
+    // invLength = 1.0 / length;
+    // v = Vector3f_Scale(v, invLength);
+    return length;
+}
+
+point Vector3f_Abs(point v) {
+    return PointFromXYZ(AbsF(PointGetX(v)), AbsF(PointGetY(v)), AbsF(PointGetZ(v)));
+}

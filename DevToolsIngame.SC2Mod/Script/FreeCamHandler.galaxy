@@ -1,0 +1,328 @@
+include "Script/DevTools/math/math";
+
+const int c_MAX_PLAYER_COUNT = 15;
+const int gv_MOUSE_BUTTON_COUNT = 5;
+const int gv_INPUT_KEY_COUNT = 98;
+const int gv_MOVE_DIRECTION = 3;
+const fixed gv_KEY_REPEAT_DELAY = 0.1875;
+const fixed gv_KEY_REPEAT_TICK = 0.02;
+const int ge_MouseTrackType_World = 0;
+const int ge_MouseTrackType_UI = 1;
+const int ge_InputType_Up = 0;
+const int ge_InputType_Down = 1;
+const int ge_InputType_Repeat = 2;
+
+struct gs_Player {
+    bool[5] isTrackingType;
+    bool[5] trackingForceAlwaysOn;
+    // Camera
+    // gs_PlayerCamera chaseCamera;
+    unit cameraFollowTarget;
+    point cameraFollowOffset;
+
+    // Selection & Targeting
+    int heroIndex;
+    int unitSelectedIndex;
+    unit hero;
+    unit targetDummy;
+    unit unitSelected;
+    trigger unitSelectedTrigger;
+    trigger unitDeselectedTrigger;
+    bool canSelect;
+    
+    // Keys
+        // bool shiftDown;
+        // bool controlDown;
+    trigger[2] keyPressedTrigger;
+    bool[gv_INPUT_KEY_COUNT + 1] keyDown;
+        // string keyDown2;
+    int[gv_MOVE_DIRECTION + 1] moveHotKeys;
+    
+    // Mouse
+    trigger[2] mouseClickedTrigger;
+    trigger mouseMoveTrigger;
+    trigger mouseWheelTrigger;
+    
+    
+    bool reverseMouse;
+    bool[gv_MOUSE_BUTTON_COUNT + 1] mouseButtonDown;
+    bool mouseTrack_WorldLoc;
+    bool mouseTrack_UILoc;
+    
+    point mouseWorld_Move;
+    point mouseUI_Move;
+    point mouseWorld_MoveVector;
+
+    point mouseUI_MoveVector;
+    point[gv_MOUSE_BUTTON_COUNT + 1] mouseWorld_Click;
+    point[gv_MOUSE_BUTTON_COUNT + 1] mouseUI_Click;
+    
+    fixed lastMouseSpin;
+    bool cameraInputLocked;
+    bool cameraInputCanOverride;
+
+};
+
+// Variable Declaration
+
+gs_Player[c_MAX_PLAYER_COUNT + 1] gv_plyr;
+
+bool[16] FreeCam_Active;
+//camerainfo[16] FreeCam_Camera;
+int FreeCam_Player;
+
+static const string FREECAM_KEYPREFIX = "FreeCam";
+
+static string FreeCam_KeyGet(int player){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return FREECAM_KEYPREFIX+"["+IntToString(player)+"]";
+}
+
+static string FreeCam_CameraKeyGet(int player){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return FreeCam_KeyGet(player)+".Camera";
+}
+camerainfo FreeCam_CameraGet(int player){
+    return DataTableGetCameraInfo(true,FreeCam_CameraKeyGet(player));
+}
+void FreeCam_CameraSet(int player, camerainfo cam){
+    DataTableSetCameraInfo(true,FreeCam_CameraKeyGet(player),cam);
+}
+
+static string FreeCam_ActiveKeyGet(int player){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return FreeCam_KeyGet(player)+".Active";
+}
+bool FreeCam_ActiveGet(int player){
+    return DataTableGetBool(true, FreeCam_ActiveKeyGet(player));//gv_plyr[player].cameraInputLocked;
+}
+void FreeCam_ActiveSet(int player, bool lock){
+    //gv_plyr[player].cameraInputLocked = lock;
+    DataTableSetBool(true, FreeCam_ActiveKeyGet(player),lock);
+}
+
+
+static string FreeCam_LockInputKeyGet(int player){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return FreeCam_KeyGet(player)+".LockInput";
+}
+bool FreeCam_LockInputGet(int player){
+    return DataTableGetBool(true, FreeCam_LockInputKeyGet(player));//gv_plyr[player].cameraInputLocked;
+}
+void FreeCam_LockInputSet(int player, bool lock){
+    //gv_plyr[player].cameraInputLocked = lock;
+    DataTableSetBool(true, FreeCam_LockInputKeyGet(player),lock);
+}
+
+
+
+static string FreeCam_LockInputOverrideKeyGet(int player){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return FreeCam_KeyGet(player)+".LockInputOverride";
+}
+void FreeCam_LockInputOverrideSet(int player, bool override){
+    //gv_plyr[player].cameraInputCanOverride = override;
+    DataTableSetBool(true, FreeCam_LockInputOverrideKeyGet(player),override);
+}
+bool FreeCam_LockInputOverrideGet(int player){
+    return DataTableGetBool(true, FreeCam_LockInputOverrideKeyGet(player));;
+    //gv_plyr[player].cameraInputCanOverride;
+}
+
+
+void FreeCam_CameraLockInput(int player, bool lock){
+    if(FreeCam_LockInputOverrideGet(player)){
+        FreeCam_LockInputSet(player, lock);
+        CameraLockInput(player, lock);
+    }
+}
+
+camerainfo FreeCam_CopyPlayerCameraLocation(int player){
+    // Only copies target, pitch yaw and distance
+    camerainfo copy = CameraInfoDefault();
+    CameraInfoSetTarget(copy, CameraGetTarget(player));
+    CameraInfoSetValue(copy, c_cameraValuePitch, CameraGetPitch(player));
+    CameraInfoSetValue(copy, c_cameraValueYaw, CameraGetYaw(player));
+    CameraInfoSetValue(copy, c_cameraValueDistance, CameraGetDistance(player));
+    return copy;
+}
+
+//FreeCam_Deactivate;
+
+void FreeCam_Activate(int player){
+    int i;
+    playergroup pg = PlayerGroupSingle(player);
+    camerainfo camera;
+
+    // Save Camera and lock inputs
+    FreeCam_CameraLockInput(player, true);
+    FreeCam_LockInputOverrideSet(player, false);
+    CameraSave(player);
+    CameraUseHeightDisplacement(player, false);
+    CameraUseHeightSmoothing(player, false);
+    libNtve_gf_HideGameUI(false, pg);
+
+    //FreeCam_Camera[player] = FreeCam_CopyPlayerCameraLocation(player);
+    FreeCam_CameraSet(player,FreeCam_CopyPlayerCameraLocation(player));
+    // CameraSetMouseRotates(player, true);
+    // CameraForceMouseRelative(player, true);
+
+    for (i = 0; i < 6; i += 1) {
+        UISetCommandAllowed(pg, i, false);
+
+    }
+
+    // Update Camera info
+    //while(FreeCam_Active[player]){
+    while(FreeCam_ActiveGet(player)){
+        //CameraApplyInfo(player, FreeCam_CameraGet(player);//FreeCam_Camera[player], 0.0625, 0.0, 0.0, true);
+        CameraApplyInfo(player, FreeCam_CameraGet(player), 0.0625, 0.0, 0.0, true);
+        Wait(0.0, c_timeReal);
+    }
+
+    // Restore Camera
+    //FreeCam_Active[player] = false;
+    FreeCam_ActiveSet(player,false);
+    FreeCam_LockInputOverrideSet(player, true);
+    FreeCam_CameraLockInput(player, false);
+    CameraRestore(player, 0.0, -1, -1);
+    CameraUseHeightDisplacement(player, true);
+    CameraUseHeightSmoothing(player, true);
+    libNtve_gf_HideGameUI(true, pg);
+
+    for (i = 0; i < 6; i += 1) {
+        UISetCommandAllowed(pg, i, true);
+    }
+}
+
+bool FreeCam_Func(bool test_conds, bool run_actions){
+    FreeCam_Activate(FreeCam_Player);
+    TriggerDestroy(TriggerGetCurrent());
+    return true;
+}
+
+
+
+void FreeCam_Translate(int player, int key, int button, int state, fixed spin){
+    structref<gs_Player>myPlyr = gv_plyr[player];
+    point moveVectorOrig = myPlyr.mouseUI_MoveVector;
+    point moveVector = moveVectorOrig;
+    fixed scalar = 0.1;
+    fixed value;
+    point temp;
+    bool rightDown = myPlyr.mouseButtonDown[c_mouseButtonRight]; 
+    bool middleDown = myPlyr.mouseButtonDown[c_mouseButtonMiddle];
+    bool translate = rightDown || middleDown;
+    bool alt = myPlyr.keyDown[c_keyAlt];
+    bool ctrl = myPlyr.keyDown[c_keyControl];
+    bool shift = myPlyr.keyDown[c_keyShift];
+    bool nomod = !(alt || ctrl || shift);
+    
+    camerainfo myCam = FreeCam_CameraGet(player);//FreeCam_Camera[player];
+    point camTarget = CameraInfoGetTarget(myCam);
+    fixed dist =    CameraInfoGetValue(myCam, c_cameraValueDistance);
+    fixed yaw =     CameraInfoGetValue(myCam, c_cameraValueYaw);
+    fixed pitch =   CameraInfoGetValue(myCam, c_cameraValuePitch);
+    fixed roll =    CameraInfoGetValue(myCam, c_cameraValueRoll);
+    fixed height =  CameraInfoGetValue(myCam, c_cameraValueHeightOffset);
+    fixed fov =  CameraInfoGetValue(myCam, c_cameraValueFieldOfView);
+    fixed farclip =  CameraInfoGetValue(myCam, c_cameraValueFarClip);
+
+    if(spin != 0.0){
+        value = dist - ((spin * 0.75) * (dist * 0.1 ));
+        // UIMsg(c_messageAreaDirective, FixedToText((spin * 0.5) * (dist * 0.1), -1));
+        CameraInfoSetValue(myCam, c_cameraValueDistance, ClampF(0.1, 400, value));
+    }
+    else if(translate){
+        scalar = scalar * (dist * 0.05);
+        moveVector = Vector3f_Clamp(-2, 2, Vector2f_Scale(moveVector, scalar));
+        if(rightDown || middleDown){
+            if(nomod){
+                temp = Vector3f_Rotate(Point(-PointGetX(moveVector), PointGetY(moveVector)), yaw - 90, 2);
+                camTarget = Vector3f_AddVec(camTarget, temp);
+                CameraInfoSetTarget(myCam, camTarget);
+            }
+        }
+        if(rightDown && !middleDown){
+            // Right Mouse only
+            if(alt && !(shift || ctrl)){
+                // Alt only
+                CameraInfoSetValue(myCam, c_cameraValueHeightOffset, height + PointGetY(moveVector));
+            }
+            else if(ctrl && !(shift || alt)){
+                // Ctrl only
+                value = yaw + -(PointGetX(moveVectorOrig) * 0.25);
+                CameraInfoSetValue(myCam, c_cameraValueYaw,  CorrectRotation(0, 360, value));
+                value = pitch + (PointGetY(moveVectorOrig) * 0.25);
+                CameraInfoSetValue(myCam, c_cameraValuePitch, CorrectRotation(0, 360, ClampF(-90, 90, AngleToFacing(value))));
+            }
+            else if(shift && !(ctrl || alt) ){
+                value = dist + ((PointGetY(moveVectorOrig) * 0.25) * (dist * 0.05));
+                CameraInfoSetValue(myCam, c_cameraValueDistance, ClampF(0.1, 400, value));
+            }
+            
+            else if(ctrl && shift && !alt){
+                // Ctrl + Shift
+                value = farclip + PointGetY(moveVectorOrig) * 0.25;
+                CameraInfoSetValue(myCam, c_cameraValueFarClip, ClampF(CameraInfoGetValue(myCam, c_cameraValueNearClip), 100000, value));
+            }
+            else{}
+        }
+        else if(middleDown && !rightDown){
+            // Middle mouse only
+            if(alt && !(shift || ctrl)){
+                temp = Vector3f_Empty();
+                CameraInfoSetValue(myCam, c_cameraValueHeightOffset, height + PointGetY(moveVector));
+            }
+
+            else if(shift && !(ctrl || alt) ){
+                value = dist + ((PointGetY(moveVectorOrig) * 0.25) * (dist * 0.01));
+                CameraInfoSetValue(myCam, c_cameraValueDistance, ClampF(0.1, 400, value));
+            }
+
+            else if(shift && alt && !ctrl ){
+                // Shift + Alt
+                value = roll + PointGetX(moveVectorOrig) * 0.25;
+                CameraInfoSetValue(myCam, c_cameraValueRoll, CorrectRotation(0, 360, value));
+            }
+            else if(ctrl && shift && !alt){
+                // Ctrl + Shift
+                value = fov + PointGetY(moveVectorOrig) * 0.25;
+                CameraInfoSetValue(myCam, c_cameraValueFieldOfView, ClampF(6.8, 120, value));
+            }
+            else{}
+        }
+        else{}
+    }
+    else if(button != -1 && state == ge_InputType_Up){
+        if(myPlyr.mouseWorld_Click[button] != null){
+            CameraInfoSetTarget(myCam, myPlyr.mouseWorld_Click[button]);
+        }
+    }
+    else{}
+    // dist =    CameraInfoGetValue(cam, c_cameraValueDistance);
+    // yaw =     CameraInfoGetValue(cam, c_cameraValueYaw);
+    // pitch =   CameraInfoGetValue(cam, c_cameraValuePitch);
+    // roll =    CameraInfoGetValue(cam, c_cameraValueRoll);
+    // height =  CameraInfoGetValue(cam, c_cameraValueHeightOffset);
+    // // fov =  CameraInfoGetValue(cam, c_cameraValueFieldOfView);
+
+    // Dbg(Vector3f_ToString(CameraInfoGetTarget(cam), -1));
+    // Dbg("YPR:"+" "+FixedToString(yaw, 2)+"|"+FixedToString(pitch, 2)+"|"+FixedToString(roll, 2));
+    // Dbg("Dist:"+     FixedToString(dist, -1));
+    //FreeCam_Camera[player] = myCam;
+    FreeCam_CameraSet(player,myCam);
+}
+
+
+void dC_FreeCam () {
+    int p = EventPlayer();
+    if(FreeCam_ActiveGet(p) == false){
+        FreeCam_ActiveSet(p,true);
+        FreeCam_Player = p;
+        TriggerExecute(TriggerCreate("FreeCam_Func"), false, false);
+    }
+    else{
+        FreeCam_ActiveSet(p,false);
+    }
+}

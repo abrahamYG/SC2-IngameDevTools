@@ -1,0 +1,189 @@
+include "Script/debug_h";
+include "Script/split_string";
+include "Script/ItemList";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/DataTableManager";
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+static ItemListContainerStruct DataTableContainer;
+
+bool UserDataListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool UserDataListBoxPageIsSet(int player){
+    return DataTableValueExists(true,"UserDataListPage."+IntToString(player));
+}
+
+
+void UserDataListBoxSetPage(int player, int page){
+    DataTableSetInt(true,"UserDataListPage."+IntToString(player),page);
+}
+int UserDataListBoxGetPage(int player){
+    if(!UserDataListBoxPageIsSet(player)){UserDataListBoxSetPage(player,1);}
+    return DataTableGetInt(true,"UserDataListPage."+IntToString(player));
+}
+
+
+
+void UserDataListRebuild(ItemListStructRef itemList,int player,int page){
+    int i; int j; int k; int ii;
+    int startPoint = page*100;
+    string entry;
+    int UDTypeCount = CatalogEntryCount(c_gameCatalogUser);
+    int count = MinI(UDTypeCount,startPoint+10);
+    string UDCurrentType; 
+    string UDCurrentInstance; 
+    string UDCurrentField;
+    int UDInstanceCount;
+    int UDInstFieldCount;
+    int UDInstFieldType;
+    int UDInstFieldValueCount;
+    ItemListClear(itemList);
+    console("UserData Count:"+IntToString(count));
+    for(i=startPoint;i<=count;i+=1){
+        UDCurrentType = CatalogEntryGet(c_gameCatalogUser,i);
+        UDInstanceCount = UserDataInstanceCount(UDCurrentType);
+        UDInstFieldCount = UserDataFieldCount(UDCurrentType);
+        for (j=1;j<=UDInstanceCount;j+=1){
+            UDCurrentInstance = UserDataInstance(UDCurrentType,j);
+            for (k=1;k<=UDInstanceCount;k+=1){
+                UDCurrentField =UserDataField(UDCurrentType,k);
+                UDInstFieldType = UserDataFieldType(UDCurrentType,UDCurrentField);
+                UDInstFieldValueCount = UserDataFieldValueCount(UDCurrentType,UDCurrentField);
+                for(ii=1;ii<=UDInstFieldValueCount;ii+=1){
+                    entry = "UserData::{type}[{instance}].{field}[{index}]";
+                    entry = StringReplaceWord(entry,"{type}",UDCurrentType,1,false);
+                    entry = StringReplaceWord(entry,"{instance}",UDCurrentInstance,1,false);
+                    entry = StringReplaceWord(entry,"{field}",UDCurrentField,1,false);
+                    entry = StringReplaceWord(entry,"{index}",IntToString(ii),1,false);
+                }
+            }
+        }
+		ItemListAdd(itemList,entry);
+	}
+    
+}
+
+bool UserDataListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+string UserDataListBoxValueFormat(string type, string val){
+    string format = StringReplaceWord("{type}:[{val}]","{type}",type,1,false);
+    return StringReplaceWord(format,"{val}",val,1,false);
+}
+
+
+
+void UserDataListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+    string val ="";
+    string UDCurrentType;
+    string UDCurrentInstance;
+    string UDCurrentField;
+    int UDInstFieldValueIndex;
+    int type = UserDataFieldType(UDCurrentType, UDCurrentField);
+    if(type==c_userTypeString){
+        val = UserDataGetString(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex);
+        val = UserDataListBoxValueFormat("String",val);
+    }
+    else if(type==c_userTypeAbilCmd){
+        val = "{name}({action},{cmd})";
+        val = StringReplaceWord(val,"{name}",AbilityCommandGetAbility(UserDataGetAbilCmd(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex)),1,false);
+        val = StringReplaceWord(val,"{action}",IntToString(AbilityCommandGetAction(UserDataGetAbilCmd(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex))),1,false);
+        val = StringReplaceWord(val,"{cmd}",IntToString(AbilityCommandGetCommand(UserDataGetAbilCmd(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex))),1,false);
+        val = UserDataListBoxValueFormat("AbilCmd",val);
+    }
+    else if(type==c_userTypeInt){
+        val = UserDataListBoxValueFormat("Int",IntToString(UserDataGetInt(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex)));
+    }
+    else if(type==c_userTypeString){
+        val = UserDataGetString(UDCurrentType,UDCurrentInstance , UDCurrentField,UDInstFieldValueIndex);
+        val = UserDataListBoxValueFormat("String",val);
+    }
+    else{
+        val = "Unsupported Type";
+    }
+    //c_dataTypeActor
+    //c_dataTypeActorScope
+    //c_dataTypeAIFilter
+    //c_dataTypeByte
+    //c_dataTypeCameraInfo
+    //c_dataTypeCinematic
+    //c_dataTypeColor
+    //c_dataTypeControl
+    //c_dataTypeConversation
+    //c_dataTypeDataTableInstance
+    //c_dataTypeDialog
+    //c_dataTypeDoodad
+    //c_dataTypeFixed
+    //c_dataTypeGenericHandle
+    //
+    //c_dataTypeMarker
+    //c_dataTypeObjective
+    //c_dataTypeOrder
+    //c_dataTypePing
+    //c_dataTypePlanet
+    //c_dataTypePlayerGroup
+    //c_dataTypePoint
+    //c_dataTypePortrait
+    //c_dataTypeRegion
+    //c_dataTypeReply
+    //c_dataTypeRevealer
+    //c_dataTypeSound
+    //c_dataTypeSoundLink
+    //
+    //c_dataTypeText
+    //c_dataTypeTimer
+    //c_dataTypeTransmission
+    //c_dataTypeTransmissionSource
+    //c_dataTypeTrigger
+    //c_dataTypeUnit
+    //c_dataTypeUnitFilter
+    //c_dataTypeUnitGroup
+    //c_dataTypeUnitRef
+    //c_dataTypeWave
+    //c_dataTypeWaveInfo
+    //c_dataTypeWaveTarget
+	DialogControlSetPropertyAsString(DataTableContainer.messageBox,c_triggerControlPropertyEditText,pg,val);
+}
+
+
+bool UserDataContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    //string val = DialogControlGetPropertyAsString(DataTableContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    int page = UserDataListBoxGetPage(EventPlayer());
+    if(EventDialogControl()==DataTableContainer.addButton){
+        if(page>1){
+            page -= 1;
+        };
+    }
+    else if(EventDialogControl()==DataTableContainer.removeButton){
+        page += 1;
+    }
+    UserDataListBoxSetPage(EventPlayer(),page);
+    UserDataListRebuild(ItemList,EventPlayer(),page);
+    ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",PlayerGroupSingle(EventPlayer()));
+    return trigRan;
+}
+
+
+text UserDataListItemTextValue(ItemListStructRef itemList,int index){
+    string entry = ItemListGetVal(itemList,index);
+	return StringToText(entry);
+}
+
+
+
+void UserDataHandler_Init(){
+	playergroup pg = PlayerGroupAll();
+    ItemList.id = "DataTableList";
+    ItemListContainer_InitStandard(DataTableContainer, CONTAINERDLG_PATH, "DataTableContainerSendHandler");
+    UserDataListRebuild(ItemList,1,1);
+    ItemList_FilterListInitStandard(ListBoxFilter, "DataTableListBox", UserDataListBoxSetActive, UserDataListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

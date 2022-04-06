@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Portrait" name="PortraitTemplateFull">
+		<Anchor relative="$parent"/>
+	</Frame>
+	<Frame type="Frame" name="PortraitManager">
+		<Frame type="Frame" name="PortraitManager" template="CatalogManager/CatalogManager">
+			<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+			<Frame type="Label" name="Title">
+				<Text val="Portrait"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="PortraitContainer">
+			<Anchor side="Top" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Bottom" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent/PortraitManager" pos="Min" offset="0"/>
+			<Width val="791"/>
+			<Height val="1200"/>
+		</Frame>
+	</Frame>
+	
+</Desc>
