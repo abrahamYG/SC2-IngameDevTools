@@ -372,6 +372,23 @@ bool AbilityOrderContainerSendHandler(bool a, bool b){
        
     }
     else if(EventDialogControl()==AbilityOrderContainer.removeButton){
+        cmd = AbilityCommand(abilOrder,cmdIndex);
+        cmdAction = AbilityCommandGetAction(cmd);
+        if(cmdAction==c_cmdActionNone){
+            o = Order(cmd);
+        }
+        else if(cmdAction==c_cmdActionInstant){
+            o = Order(cmd);
+        }
+        else if(cmdAction==c_cmdActionTarget){
+            if(target==null){
+                o = OrderTargetingPoint(cmd,DevTools_GetSpawnPoint(EventPlayer()));
+            }
+            else{
+                o = OrderTargetingUnit(cmd,target);
+            }
+        }
+        UISetTargetingOrder(PlayerGroupSingle(EventPlayer()), libNtve_gf_ConvertUnitToUnitGroup(source), o, false);
     }
     else if(EventDialogControl()==AbilityOrderContainer.sourceButton){
         u = UnitGroupUnit(ug,1);

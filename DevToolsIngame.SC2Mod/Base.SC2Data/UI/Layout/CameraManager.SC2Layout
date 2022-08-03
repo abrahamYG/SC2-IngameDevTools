@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+
+	<Frame type="Frame" name="CameraManager" template="DevTools_Templates/PanelTemplateTitled">
+		<Height val="600"/>
+		<Width val="400"/>
+		<CollapseLayout val="True"/>
+		
+		<Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
+			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Height val="60"/>
+			<!--<RejectsFocus val="True"/>-->
+			<Enabled val="False"/>
+			<Frame type="Frame" name="EmptyLabelContainerFrame">
+				<Frame type="Label" name="Label">
+					<Text val="Empty..."/>
+				</Frame>
+			</Frame>
+		</Frame>
+
+	</Frame>
+	
+</Desc>

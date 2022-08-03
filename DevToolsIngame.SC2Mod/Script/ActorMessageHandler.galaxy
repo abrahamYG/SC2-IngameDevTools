@@ -1,6 +1,6 @@
 include "Script/debug_h";
 
-static const string ACTORMESSAGECONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/ActorMessageManager";
+static const string ACTORMESSAGECONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/ActorMessageManager";
 static const string ACTORMESSAGEEDITBOX_PATH = "ActorMessage";
 static const string ACTORMESSAGETARGETEDITBOX_PATH = "ActorTarget";
 static const string ACTORMESSAGESENDBTN_PATH = "ActorMessageSendButton";

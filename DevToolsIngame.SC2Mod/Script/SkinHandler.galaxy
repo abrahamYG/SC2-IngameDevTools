@@ -40,11 +40,17 @@ bool SkinContainerSendHandler(bool a, bool b){
     int player = EventPlayer();
     string val = DialogControlGetPropertyAsString(SkinContainer.messageBox,c_triggerControlPropertyEditText,player);
     string SkinType = SkinContainerSkin(val);
+    string ownerVal = ItemListContainer_PlayerListGetSelected(SkinContainer.ownerPlayerPulldown,EventPlayer());
+    int ownerIndex = ItemListFind(playerItemList,ownerVal);
+    int owner;
+    if(ownerIndex == -1){owner=EventPlayer();}
+    else {owner = StringToInt(ItemListGetVal(playerItemList,ownerIndex));}
+
     if(EventDialogControl()==SkinContainer.addButton){
-        libNtve_gf_PlayerApplySkinReplacingExistingUnit(player,val,true);
+        libNtve_gf_PlayerApplySkinReplacingExistingUnit(owner,val,true);
     }
     else if(EventDialogControl()==SkinContainer.removeButton){
-        libNtve_gf_PlayerApplySkinReplacingExistingUnit(player,val,false);
+        libNtve_gf_PlayerApplySkinReplacingExistingUnit(owner,val,false);
     }
     return trigRan;
 }

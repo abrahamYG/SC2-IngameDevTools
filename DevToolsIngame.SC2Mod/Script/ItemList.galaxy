@@ -45,6 +45,7 @@ typedef funcref<ItemListItemTextValue> ItemListItemTextValueFuncRef;
 
 
 
+
 struct ListBoxFilterStruct{
     string id;
     int panel;
@@ -64,24 +65,14 @@ struct ItemListContainerStruct{
     int messageBox;
     int addButton;
     int removeButton;
+	int ownerPlayerPulldown;
 };
 
 typedef structref<ItemListContainerStruct> ItemListContainerStructRef;
 static const string EDITBOX_PATH = "Item";
 static const string ADDBTN_PATH = "AddButton";
 static const string REMOVEBTN_PATH = "RemoveButton";
-
-void ItemListContainer_InitStandard(ItemListContainerStructRef ItemListContainer, string dlgPath, string triggerName){
-    trigger t;
-    ItemListContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,dlgPath);
-    ItemListContainer.messageBox = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
-    ItemListContainer.addButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
-    ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
-    t = TriggerCreate(triggerName);
-    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
-    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
-}
-
+static const string OWNERPLAYERPULLDOWN_PATH = "OwnerPlayer";
 
 // ## ItemListClear
 // Clears an `itemList` by setting all values to an empty `string`
@@ -163,7 +154,7 @@ void ItemListInitFromCatalog(ItemListStructRef itemList, int catalog, ItemListCa
 void ItemListInitFromPlayerGroup(ItemListStructRef itemList, playergroup pg){
     int i;
     int player;
-    int count = MinI(PlayerGroupCount(pg),ITEM_LIST_MAX);
+    int count = PlayerGroupCount(pg);
     for(i=1;i<=count;i+=1){
 		player = PlayerGroupPlayer(pg,i);//CatalogEntryGet(catalog,i);
 		ItemListAdd(itemList,IntToString(player));
@@ -272,20 +263,148 @@ bool ItemList_FilterBoxQuery(ItemListStructRef itemList, ListBoxFilterStructRef 
 	ItemList_FilterListRebuild(itemList,listBoxFilter,val,pg);
 	return true;
 }
-bool ItemList_FilterBoxSelectionChanged(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int player){
-	int listItem = DialogControlGetSelectedItem(listBoxFilter.list,player);
+
+bool ItemList_FilterBoxSelectionChangedBase(ItemListStructRef itemList, int listBoxFilterList, string listBoxFilterId, ItemListSetActiveCallback listBoxFilterSetActive, int player){
+	int listItem = DialogControlGetSelectedItem(listBoxFilterList,player);
 	string val;
 	int index;
-	string key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+	string key = listBoxFilterId+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
 	if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
     if(DataTableValueExists(true,key)){
 		val=DataTableGetString(true,key);
 		console(val);
 		index = ItemListFind(itemList,val);
 		if(index>=0){
-			ItemListSetActive(itemList,index,listBoxFilter.setActive,player);
+			ItemListSetActive(itemList,index,listBoxFilterSetActive,player);
 			return true;
 		}
 	}
 	return false;
+}
+
+bool ItemList_FilterBoxSelectionChanged(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int player){
+	return ItemList_FilterBoxSelectionChangedBase(
+		itemList,
+		listBoxFilter.list,
+		listBoxFilter.id,
+		listBoxFilter.setActive,
+		player
+	);
+	//int listItem = DialogControlGetSelectedItem(listBoxFilter.list,player);
+	//string val;
+	//int index;
+	//string key = listBoxFilter.id+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+	//if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
+    //if(DataTableValueExists(true,key)){
+	//	val=DataTableGetString(true,key);
+	//	console(val);
+	//	index = ItemListFind(itemList,val);
+	//	if(index>=0){
+	//		ItemListSetActive(itemList,index,listBoxFilter.setActive,player);
+	//		return true;
+	//	}
+	//}
+	//return false;
+}
+
+
+
+ItemListStruct playerItemList;
+bool playerItemListInitialized = false;
+
+void ItemListContainer_PlayerListSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	//itemList.current = index;
+	console(ItemListGetVal(itemList,index));
+}
+text ItemListContainer_PlayerListItemTextValue(ItemListStructRef itemList,int index){
+	int player = StringToInt(ItemListGetVal(itemList,index));
+    text name;
+    console(ItemListGetVal(itemList,index));
+    name = IntToText(player)+StringToText(":")+PlayerName(player);
+    //name = StringToText(ItemListGetVal(itemList,index)+": ")+name;
+	return name;
+}
+
+string ItemListContainer_PlayerListGetSelected(int list, int player){
+	int listItem = DialogControlGetSelectedItem(list,player);
+	string listId = IntToString(list)+".PlayerList";
+	string key = listId+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+	string val = "";
+	if(DataTableValueExists(true,key)){
+		val=DataTableGetString(true,key);
+	}
+	return val;
+}
+
+bool ItemListContainer_PlayerListSelectionChanged(bool a, bool b){
+	int player = EventPlayer();
+	int list = EventDialogControl();
+	int lv_playerListItem = DialogControlGetSelectedItem(list,player);
+	string listId = IntToString(list)+".PlayerList";
+	string val;
+	int index;
+	string key = listId+".Selected["+IntToString(player)+"]:"+IntToString(lv_playerListItem);
+	if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
+    if(DataTableValueExists(true,key)){
+		val=DataTableGetString(true,key);
+		console(val);
+		index = ItemListFind(playerItemList,val);
+		if(index>=0){
+			ItemListSetActive(playerItemList,index,ItemListContainer_PlayerListSetActive,player);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+void ItemListContainer_InitStandardPlayerList(){
+    playergroup pg = PlayerGroupAll();
+	if(!playerItemListInitialized){
+		playerItemList.id = "Players";
+		ItemListInitFromPlayerGroup(playerItemList, pg);
+		playerItemListInitialized = true;
+	}
+}
+
+void ItemListContainer_InitStandardPlayers(ItemListContainerStructRef ItemListContainer){
+	playergroup pg = PlayerGroupAll();
+	int list = ItemListContainer.ownerPlayerPulldown;
+	int listItem = 0;
+	string listId = IntToString(list)+".PlayerList";
+	int player;
+	int lv_i;
+	int lv_j;
+	string key;
+	trigger t = TriggerCreate("ItemListContainer_PlayerListSelectionChanged");
+	ItemListContainer_InitStandardPlayerList();
+	for(lv_i=0;lv_i<playerItemList.count;lv_i+=1){
+		for(lv_j=1;lv_j<=PlayerGroupCount(pg);lv_j+=1){
+			player = PlayerGroupPlayer(pg,lv_j);
+			if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){continue;}
+			DialogControlAddItem(list,pg,ItemListContainer_PlayerListItemTextValue(playerItemList,lv_i));
+			listItem = DialogControlGetItemCount(list,player);
+			key = listId+".Selected["+IntToString(player)+"]:"+IntToString(listItem);
+			DataTableSetString(true,key,ItemListGetVal(playerItemList,lv_i));
+		}
+	}
+	TriggerAddEventDialogControl(t,c_playerAny,list,c_triggerControlEventTypeSelectionChanged);
+}
+
+
+
+void ItemListContainer_InitStandard(ItemListContainerStructRef ItemListContainer, string dlgPath, string triggerName){
+    trigger t;
+    ItemListContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,dlgPath);
+    ItemListContainer.messageBox = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    ItemListContainer.addButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+	ItemListContainer.ownerPlayerPulldown = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypePulldown,OWNERPLAYERPULLDOWN_PATH);
+	
+	ItemListContainer_InitStandardPlayers(ItemListContainer);
+
+    t = TriggerCreate(triggerName);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
 }

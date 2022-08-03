@@ -172,11 +172,20 @@
             <Height val="60"/>
 			<Text val="@UI/CatalogManager/RemoveButton"/>
 		</Frame>
+		
+		<Frame type="Pulldown" name="OwnerPlayer" template="DevTools_Templates/PulldownTemplate">
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/AddButton" pos="Min" offset="-10"/>
+			<Width val="200"/>
+			<Height val="60"/>
+			<CollapseLayout val="True"/>
+		</Frame>
 		<Frame type="Frame" name="NavList" template="DevTools_NavListTemplate/NavList">
 			<Anchor side="Top" relative="$parent/Item" pos="Max" offset="10"/>
 			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
 			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="-0"/>
-			<Anchor side="Bottom" relative="$parent/AddButton" pos="Min" offset="-10"/>
+			<Anchor side="Bottom" relative="$parent/OwnerPlayer" pos="Min" offset="-10"/>
 			
 		</Frame>
 

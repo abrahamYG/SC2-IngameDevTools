@@ -8,19 +8,10 @@ static ItemListStruct ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 static ItemListContainerStruct DataTableContainer;
 
-bool DataTableListBoxFilterQuery(bool a, bool b){
-    int player = EventPlayer();
-	playergroup pg = PlayerGroupSingle(player);
-	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
-	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
-	return true;
-}
 
 bool DataTableListBoxPageIsSet(int player){
     return DataTableValueExists(true,"DataTableListPage."+IntToString(player));
 }
-
-
 void DataTableListBoxSetPage(int player, int page){
     DataTableSetInt(true,"DataTableListPage."+IntToString(player),page);
 }
@@ -29,22 +20,46 @@ int DataTableListBoxGetPage(int player){
     return DataTableGetInt(true,"DataTableListPage."+IntToString(player));
 }
 
-
-
-void DataTableListRebuild(ItemListStructRef itemList,int player,int page){
+void DataTableListRebuild(ItemListStructRef itemList,int player,string filter,int page){
     int i;
+    int counter =0;
     int startPoint = page*100;
     string entry;
     int count = MinI(DataTableValueCount(true),startPoint+100);
     console("DataTableValueCount:"+IntToString(DataTableValueCount(true)));
     ItemListClear(itemList);
     console("DataTable Count:"+IntToString(count));
-    for(i=startPoint;i<=count;i+=1){
+    for(i=startPoint;(counter<=count && i<=count);i+=1){
 		entry = DataTableValueName(true,i);
-		ItemListAdd(itemList,entry);
+        if(filter==""){
+            ItemListAdd(itemList,entry);
+            counter+=1;
+        }
+        else if(StringFind(entry,filter,false)>0){
+            ItemListAdd(itemList,entry);
+            counter+=1;
+        }
 	}
     
 }
+
+
+
+bool DataTableListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+    DataTableListBoxSetPage(player,1);
+    DataTableListRebuild(ItemList,player,val, DataTableListBoxGetPage(player));
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+
+
+
+
+
 
 bool DataTableListBoxSelectionChanged(bool a, bool b){
     return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
@@ -136,7 +151,7 @@ bool DataTableContainerSendHandler(bool a, bool b){
     //string val = DialogControlGetPropertyAsString(DataTableContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
     int page = DataTableListBoxGetPage(EventPlayer());
     if(EventDialogControl()==DataTableContainer.addButton){
-        if(page>1){
+        if(page>0){
             page -= 1;
         };
     }
@@ -144,7 +159,7 @@ bool DataTableContainerSendHandler(bool a, bool b){
         page += 1;
     }
     DataTableListBoxSetPage(EventPlayer(),page);
-    DataTableListRebuild(ItemList,EventPlayer(),page);
+    DataTableListRebuild(ItemList,EventPlayer(),"",page);
     ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",PlayerGroupSingle(EventPlayer()));
     return trigRan;
 }
@@ -161,7 +176,7 @@ void DataTableHandler_Init(){
 	playergroup pg = PlayerGroupAll();
     ItemList.id = "DataTableList";
     ItemListContainer_InitStandard(DataTableContainer, CONTAINERDLG_PATH, "DataTableContainerSendHandler");
-    DataTableListRebuild(ItemList,1,1);
+    DataTableListRebuild(ItemList,1,"",0);
     ItemList_FilterListInitStandard(ListBoxFilter, "DataTableListBox", DataTableListBoxSetActive, DataTableListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

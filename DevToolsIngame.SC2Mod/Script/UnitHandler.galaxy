@@ -6,7 +6,7 @@ static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogM
 
 ItemListContainerStruct UnitContainer;
 static ItemListStruct ItemList;
-static ItemListStruct PlayerList;
+//static ItemListStruct PlayerList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool UnitListBoxFilterQuery(bool a, bool b){
@@ -49,8 +49,13 @@ bool UnitContainerSendHandler(bool a, bool b){
     int i;
     int unitcount = 1;
     point p = UnitContainerPoint();
+    string ownerVal = ItemListContainer_PlayerListGetSelected(UnitContainer.ownerPlayerPulldown,EventPlayer());
+    int ownerIndex = ItemListFind(playerItemList,ownerVal);
+    int owner;
+    if(ownerIndex == -1){owner=EventPlayer();}
+    else {owner = StringToInt(ItemListGetVal(playerItemList,ownerIndex));}
     if(EventDialogControl()==UnitContainer.addButton){
-        ug = UnitCreate(unitcount,unitType,0,EventPlayer(),p,270.0);
+        ug = UnitCreate(unitcount,unitType,0,owner,p,270.0);
     }
     else if(EventDialogControl()==UnitContainer.removeButton){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
@@ -63,16 +68,16 @@ bool UnitContainerSendHandler(bool a, bool b){
     return trigRan;
 }
 
-void PlayerList_Init(){
-    int i;
-    string entry;
-    playergroup pg =PlayerGroupActive();
-    int count = PlayerGroupCount(pg);
-    for(i=1;i<=count;i+=1){
-        
-        ItemListAdd(PlayerList,entry);
-	}
-};
+//void PlayerList_Init(){
+//    int i;
+//    string entry;
+//    playergroup pg =PlayerGroupActive();
+//    int count = PlayerGroupCount(pg);
+//    for(i=1;i<=count;i+=1){
+//        
+//        ItemListAdd(PlayerList,entry);
+//	}
+//};
 
 
 
@@ -97,4 +102,5 @@ void UnitHandler_Init(){
     ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNormalUnitFilter);
 	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, UnitListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+    
 }

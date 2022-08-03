@@ -2,7 +2,7 @@ include "Script/debug_h";
 include "Script/split_string";
 include "Script/ItemList";
 
-static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogValueManager";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CatalogValueManager";
 static const string EDITBOX_PATH = "Item";
 static const string ADDBTN_PATH = "AddButton";
 static const string REMOVEBTN_PATH = "RemoveButton";

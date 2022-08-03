@@ -1,0 +1,118 @@
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CameraPanel";
+static const string EDITBOX_PATH = "Item";
+
+static const string NEARCLIP_PATH = "NearClip";
+static const string FARCLIP_PATH = "FarClip";
+static const string SHADOWCLIP_PATH = "ShadowClip";
+static const string DISTANCE_PATH = "Distance";
+static const string PITCH_PATH = "Pitch";
+static const string YAW_PATH = "Yaw";
+static const string ROLL_PATH = "Roll";
+static const string HEIGHTOFFSET_PATH = "HeightOffset";
+static const string DEPTHOFFIELD_PATH = "DepthOfField";
+static const string FOCALDEPTH_PATH = "FocalDepth";
+static const string FALLOFFSTART_PATH = "FalloffStart";
+static const string FALLOFFEND_PATH = "FalloffEnd";
+static const string FALLOFFSTARTNEAR_PATH = "FalloffStartNear";
+static const string FALLOFFENDNEAR_PATH = "FalloffEndNear";
+
+struct CameraPanelStruct {
+    int panel;
+    int nearClip;
+    int farClip;
+    int shadowClip;
+    int distance;
+    int pitch;
+    int yaw;
+    int roll;
+    int heightOffset;
+    int depthOfField;
+    int focalDepth;
+    int falloffStart;
+    int falloffEnd;
+    int falloffStartNear;
+    int falloffEndNear;
+};
+
+typedef structref<CameraPanelStruct> CameraPanelStructRef;
+static CameraPanelStruct CameraPanel;
+
+bool CameraHandler_ValueChanged(bool a, bool b){
+    int player = EventPlayer();
+    CameraSetValue(player,c_cameraValueNearClip,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.nearClip,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFarClip,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.farClip,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueShadowClip,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.shadowClip,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueDistance,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.distance,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValuePitch,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.pitch,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueYaw,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.yaw,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueRoll,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.roll,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueHeightOffset,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.heightOffset,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueDepthOfField,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.depthOfField,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFocalDepth,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.focalDepth,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFalloffStart,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.falloffStart,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFalloffEnd,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.falloffEnd,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFalloffStartNear,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.falloffStartNear,c_triggerControlPropertyEditText,player)),0,0,0);
+    CameraSetValue(player,c_cameraValueFalloffEndNear,StringToFixed(DialogControlGetPropertyAsString(CameraPanel.falloffEndNear,c_triggerControlPropertyEditText,player)),0,0,0);
+    return true;
+}
+
+
+void CameraHandler_InitValues(camerainfo cam, playergroup pg){
+    
+    DialogControlSetPropertyAsString(CameraPanel.nearClip,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueNearClip),2));
+    DialogControlSetPropertyAsString(CameraPanel.farClip,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFarClip),2));
+    DialogControlSetPropertyAsString(CameraPanel.shadowClip,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueShadowClip),2));
+    DialogControlSetPropertyAsString(CameraPanel.distance,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueDistance),2));
+    DialogControlSetPropertyAsString(CameraPanel.pitch,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValuePitch),2));
+    DialogControlSetPropertyAsString(CameraPanel.yaw,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueYaw),2));
+    DialogControlSetPropertyAsString(CameraPanel.roll,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueRoll),2));
+    DialogControlSetPropertyAsString(CameraPanel.heightOffset,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueHeightOffset),2));
+    DialogControlSetPropertyAsString(CameraPanel.depthOfField,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueDepthOfField),2));
+    DialogControlSetPropertyAsString(CameraPanel.focalDepth,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFocalDepth),2));
+    DialogControlSetPropertyAsString(CameraPanel.falloffStart,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFalloffStart),2));
+    DialogControlSetPropertyAsString(CameraPanel.falloffEnd,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFalloffEnd),2));
+    DialogControlSetPropertyAsString(CameraPanel.falloffStartNear,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFalloffStartNear),2));
+    DialogControlSetPropertyAsString(CameraPanel.falloffEndNear,c_triggerControlPropertyEditText,pg,FixedToString(CameraInfoGetValue(cam,c_cameraValueFalloffEndNear),2));
+}
+
+void CameraHandler_InitHookup(){
+    trigger t  = TriggerCreate("CameraHandler_ValueChanged");
+    CameraPanel.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    CameraPanel.nearClip = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,NEARCLIP_PATH);
+    CameraPanel.farClip = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FARCLIP_PATH);
+    CameraPanel.shadowClip = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,SHADOWCLIP_PATH);
+    CameraPanel.distance = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,DISTANCE_PATH);
+    CameraPanel.pitch = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,PITCH_PATH);
+    CameraPanel.yaw = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,YAW_PATH);
+    CameraPanel.roll = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,ROLL_PATH);
+    CameraPanel.heightOffset = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,HEIGHTOFFSET_PATH);
+    CameraPanel.depthOfField = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,DEPTHOFFIELD_PATH);
+    CameraPanel.focalDepth = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FOCALDEPTH_PATH);
+    CameraPanel.falloffStart = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FALLOFFSTART_PATH);
+    CameraPanel.falloffEnd = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FALLOFFEND_PATH);
+    CameraPanel.falloffStartNear = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FALLOFFSTARTNEAR_PATH);
+    CameraPanel.falloffEndNear = DialogControlHookup(CameraPanel.panel,c_triggerControlTypeEditBox,FALLOFFENDNEAR_PATH);
+
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.nearClip,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.farClip,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.shadowClip,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.distance,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.pitch,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.yaw,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.roll,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.heightOffset,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.depthOfField,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.focalDepth,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.falloffStart,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.falloffEnd,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.falloffStartNear,c_triggerControlEventTypeTextChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,CameraPanel.falloffEndNear,c_triggerControlEventTypeTextChanged);
+
+}
+
+
+void CameraHandler_Init(){
+    camerainfo cam = CameraInfoDefault ();
+    CameraHandler_InitHookup();
+    CameraHandler_InitValues(cam, PlayerGroupActive());
+}

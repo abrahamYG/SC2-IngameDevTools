@@ -78,4 +78,8 @@
     
     <Frame type="ListBox" name="ListBoxTemplate" template="StandardTemplates/StandardListBoxTemplate">
     </Frame>
+    
+    <Frame type="Pulldown" name="PulldownTemplate" template="StandardBattlenetTemplates/StandardBattlenetPulldownTemplate">
+        
+    </Frame>
 </Desc>

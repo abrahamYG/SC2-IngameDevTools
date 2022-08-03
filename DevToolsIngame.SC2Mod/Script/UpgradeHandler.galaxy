@@ -57,11 +57,17 @@ bool UpgradeContainerSendHandler(bool a, bool b){
     string UpgradeType = UpgradeContainerUpgrade(val);
     unitgroup ug = UpgradeContainerTarget();
     int i;
+    string ownerVal = ItemListContainer_PlayerListGetSelected(UpgradeContainer.ownerPlayerPulldown,EventPlayer());
+    int ownerIndex = ItemListFind(playerItemList,ownerVal);
+    int owner;
+    if(ownerIndex == -1){owner=EventPlayer();}
+    else {owner = StringToInt(ItemListGetVal(playerItemList,ownerIndex));}
+    
     if(EventDialogControl()==UpgradeContainer.addButton){
-        TechTreeUpgradeAddLevel(EventPlayer(),val,1);
+        TechTreeUpgradeAddLevel(owner,val,1);
     }
     else if(EventDialogControl()==UpgradeContainer.removeButton){
-        TechTreeUpgradeAddLevel(EventPlayer(),val,-1);
+        TechTreeUpgradeAddLevel(owner,val,-1);
     }
     return trigRan;
 }

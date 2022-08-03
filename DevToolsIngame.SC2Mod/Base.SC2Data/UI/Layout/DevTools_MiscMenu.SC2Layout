@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Button" name="MiscMenuButtonTemplate" template="DevTools_Templates/ButtonTemplate">
+		<Width val="360"/>
+		<Height val="60"/>
+		<Text val=""/>
+		<Toggleable val="True"/>
+	</Frame>
+    <Frame type="Frame" name="MiscMenuTemplate" template="DevTools_Templates/PanelTemplate">
+        <Height val="240"/>
+        <Width val="380"/>
+        <Frame type="Button" name="ShowActorMessageManager" template="DevTools_MiscMenu/MiscMenuButtonTemplate">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowActorMessageManager"/>
+        </Frame>
+        <Frame type="Button" name="ShowCatalogValueManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+            <Anchor side="Top" relative="$parent/ShowActorMessageManager" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowCatalogValueManager"/>
+        </Frame>
+    </Frame>
+</Desc>

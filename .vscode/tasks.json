@@ -9,9 +9,9 @@
 			"command": "G:\\Blizzard\\StarCraft II\\Support64\\SC2Switcher_x64.exe",
 			"args": [
 				"-run",
-				"DummyTestMap.SC2Map",
-				//"-testmod",
-				//"${workspaceFolder}\\DevToolsIngame.SC2Mod;ComponentList.SC2Components",
+				"${input:map}",
+				"-testmod",
+				"${workspaceFolder}\\DevToolsIngame.SC2Mod;ComponentList.SC2Components",
 				"-trigdebug"
 			],
 			"problemMatcher": [],
@@ -20,5 +20,14 @@
 				"isDefault": true
 			}
 		}
+	],
+	"inputs": [
+	  {
+		"id": "map",
+		"type": "promptString",
+		"description": "Map to use to run the mod",
+		"default": "meleetest.SC2Map"
+		// type specific configuration attributes
+	  }
 	]
 }
