@@ -9,6 +9,7 @@
     <Include path="UI/Layout/DataTableManager.SC2Layout"/>
     <Include path="UI/Layout/PortraitManager.SC2Layout"/>
     <Include path="UI/Layout/CheatManager.SC2Layout"/>
+    <Include path="UI/Layout/CameraManager.SC2Layout"/>
     <Include path="UI/Layout/DataEditor.SC2Layout"/>
     <Include path="UI/Layout/DevTools_MiscMenu.SC2Layout"/>
     <Include path="UI/Layout/DevTools_GameUI.SC2Layout"/>

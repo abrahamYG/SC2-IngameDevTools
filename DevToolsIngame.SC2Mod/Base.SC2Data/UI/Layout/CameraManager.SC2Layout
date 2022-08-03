@@ -2,24 +2,193 @@
 <Desc>
 
 	<Frame type="Frame" name="CameraManager" template="DevTools_Templates/PanelTemplateTitled">
-		<Height val="600"/>
-		<Width val="400"/>
+		<Height val="680"/>
+		<Width val="600"/>
 		<CollapseLayout val="True"/>
-		
-		<Frame type="EditBox" name="Item" template="DevTools_Templates/EditBoxTemplate">
+		<Frame type="Label" name="Title">
+			<Text val="Camera"/>
+		</Frame>
+		<Frame type="Frame" name="FieldOfView" template="DevTools_Templates/SliderContainer">
 			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
 			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
-			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
-			<Height val="60"/>
-			<!--<RejectsFocus val="True"/>-->
-			<Enabled val="False"/>
-			<Frame type="Frame" name="EmptyLabelContainerFrame">
-				<Frame type="Label" name="Label">
-					<Text val="Empty..."/>
-				</Frame>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Mid" offset="-1"/>
+			<Frame type="Label" name="Name">
+				<Text val="FieldOfView"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="NearClip" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FieldOfView" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FieldOfView" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="NearClip"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
 			</Frame>
 		</Frame>
 
+		<Frame type="Frame" name="FarClip" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/NearClip" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/NearClip" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FarClip"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="800"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="ShadowClip" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FarClip" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FarClip" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="ShadowClip"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Distance" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/ShadowClip" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/ShadowClip" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Distance"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Pitch" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Distance" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Distance" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Pitch"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="360"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Yaw" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Pitch" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Pitch" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Yaw"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="360"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Roll" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Yaw" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Yaw" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Roll"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="360"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="HeightOffset" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Mid" offset="1"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="HeightOffset"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="DepthOfField" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/HeightOffset" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/HeightOffset" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/HeightOffset" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="DepthOfField"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="1"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="FocalDepth" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/DepthOfField" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/DepthOfField" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/DepthOfField" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FocalDepth"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="FalloffStart" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FocalDepth" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/FocalDepth" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FocalDepth" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FalloffStart"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="FalloffEnd" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FalloffStart" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/FalloffStart" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FalloffStart" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FalloffEnd"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="FalloffStartNear" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FalloffEnd" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/FalloffEnd" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FalloffEnd" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FalloffStartNear"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="FalloffEndNear" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/FalloffStartNear" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/FalloffStartNear" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/FalloffStartNear" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="FalloffEndNear"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="400"/>
+			</Frame>
+		</Frame>
 	</Frame>
-	
+
 </Desc>

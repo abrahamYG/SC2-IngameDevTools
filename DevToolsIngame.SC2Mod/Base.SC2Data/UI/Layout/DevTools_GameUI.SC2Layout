@@ -249,8 +249,10 @@
 				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
 			</Frame>
 		</Frame>
-		
-		
+		<Frame type="Frame" name="CameraManager" template="CameraManager/CameraManager">
+			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Min" offset="0"/>
+		</Frame>
 	</Frame>
 	<Frame type="Frame" name="GameUI/UIContainer" file="GameUI">
 		

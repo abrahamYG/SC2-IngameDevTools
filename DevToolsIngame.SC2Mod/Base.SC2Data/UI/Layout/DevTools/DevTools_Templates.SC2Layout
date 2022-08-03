@@ -1,5 +1,134 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Desc>
+
+    <Frame type="Spinner" name="SpinnerTemplate" template="TeamResourcePanel/TeamResourceSpinnerTemplate">
+        <Width val="204"/>
+        <Height val="62"/>
+        <Maximum val="1000"/>
+        <Minimum val="-1000"/>
+        <MajorStep val="5"/> <!-- Ctrl + Click -->
+        <MinorStep val="1"/>
+        <Value val="0"/>
+        <DescFlags val=""/>
+
+        <Frame type="Image" name="StandardBackground">
+            <Visible val="False"/>
+        </Frame>
+
+        <Frame type="Label" name="Tooltip">
+            <Anchor relative="$parent"/>
+            <Visible val="False"/>
+            <Text val="Left Click +1 | Right Click -1 | Mouse Scroll"/>
+        </Frame>
+
+        <Frame type="Label" name="ButtonTitle">
+            <Anchor side="Top" relative="$parent" pos="Min" offset="5"/>
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="20"/>
+            <Anchor side="Right" relative="$parent" pos="Max" offset="-20"/>
+            <Style val="BattlenetMediumButton"/>
+            <Text val="Adjust"/>
+        </Frame>
+
+        <Frame type="Button" name="StandardIncrementButton">
+            <Anchor relative="$parent"/>
+            <AcceptsMouseTooltip val="True"/>
+            <Tooltip val="{$parent/Tooltip/@Text}"/>
+            <DisplayType val="ImageLayer"/>
+       <!-- <Shortcut val="T"/> -->
+
+            <Frame type="Image" name="NormalImage">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Width val="204"/>
+                <Height val="100"/>
+                <StateCount val="1"/>
+                <LayerCount val="4"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Normal" layer="0"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Down" layer="1"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Down" layer="2"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Disabled" layer="3"/>
+                <TextureType val="EndCap" layer="0"/>
+                <TextureType val="EndCap" layer="1"/>
+                <TextureType val="EndCap" layer="2"/>
+                <TextureType val="EndCap" layer="3"/>
+                <Tiled val="true"/>
+                <DesaturateOnDisable val="false"/>
+                <DescFlags val=""/>
+            </Frame>
+
+            <Frame type="Image" name="HoverImage">
+                <Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+                <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+                <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+                <Width val="204"/>
+                <Height val="100"/>
+                <StateCount val="1"/>
+                <LayerCount val="4"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Hover" layer="0"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Down" layer="1"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Down" layer="2"/>
+                <Texture val="@UI/Glues_Battlenet_MediumButton_Disabled" layer="3"/>
+                <TextureType val="EndCap" layer="0"/>
+                <TextureType val="EndCap" layer="1"/>
+                <TextureType val="EndCap" layer="2"/>
+                <TextureType val="EndCap" layer="3"/>
+                <Tiled val="true"/>
+                <DesaturateOnDisable val="false"/>
+                <DescFlags val=""/>
+            </Frame>       
+        </Frame>
+
+        <Frame type="Button" name="StandardDecrementButton">
+            <Visible val="False"/>
+       </Frame>
+
+        <Frame type="Label" name="StandardGlueSpinnerLabel">
+            <Alpha val="0"/>
+        </Frame>
+
+        <Animation name="ResetSpinner">
+            <Event event="Reset" action="Reset,Play"/>
+
+            <Controller type="Property" frame="$this" property="Value" end="Pause">
+                <Key type="Property" time="0" value="0"/>
+            </Controller>
+        </Animation>
+    </Frame>
+
+    <Frame type="Slider" name="SliderTemplate" template="StandardTemplates/StandardSliderTemplate">
+        
+    </Frame>
+
+    <Frame type="Frame" name="SliderContainer">
+        <Height val="75"/>
+        <Frame type="Label" name="Name">
+            <Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Mid" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/Slider" pos="Min" offset="0"/>
+            <Style val="StandardLabel"/>
+            <Height val="25"/>
+            <Text val="Name"/>
+        </Frame>
+        <Frame type="Label" name="Value">
+            <Anchor side="Left" relative="$parent" pos="Mid" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <Anchor side="Bottom" relative="$parent/Slider" pos="Min" offset="0"/>
+            <Style val="StandardLabel"/>
+            <Height val="25"/>
+            <Text val="{$parent/Slider/@Value}"/>
+        </Frame>
+        <Frame type="Slider" name="Slider" template="DevTools_Templates/SliderTemplate">
+            <Anchor side="Bottom" relative="$parent" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent" pos="Max" offset="0"/>
+            <MinValue val="0"/>
+            <MaxValue val="100"/>
+        </Frame>
+    </Frame>
     <Frame type="Frame" name="PanelTemplateold">
         <Frame type="Image" name="BG">
             <Anchor relative="$parent" offset="-4"/>

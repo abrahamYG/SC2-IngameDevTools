@@ -16,6 +16,7 @@ include "Script/CheatHandler";
 include "Script/PortraitHandler";
 include "Script/DataTableHandler";
 include "Script/DataEditorHandler";
+include "Script/CameraHandler";
 //include "Script/PortView";
 //include "Script/libGalExe_init";
 
@@ -37,6 +38,7 @@ void DevToolsMain_Init(){
     PortraitHandler_Init();
     DataTableHandler_Init();
     DataEditorHandler_Init();
+    CameraHandler_Init();
     //PortView_Init();
 	//gt_libGalExe_Init();
 }
