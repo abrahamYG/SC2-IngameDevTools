@@ -1,0 +1,62 @@
+include "Script/debug_h";
+include "Script/ItemList";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/SoundtrackManager";
+ItemListContainerStruct SoundtrackContainer;
+
+static ItemListStruct ItemList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool SoundtrackListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+
+bool SoundtrackListBoxSelectionChanged(bool a, bool b){
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
+}
+
+void SoundtrackListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	DialogControlSetPropertyAsString(SoundtrackContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
+}
+
+static unitgroup SoundtrackContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+}
+
+static string SoundtrackContainerSoundtrack(string val){
+    return val;
+}
+
+bool SoundtrackContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    int player = EventPlayer();
+    string val = DialogControlGetPropertyAsString(SoundtrackContainer.messageBox,c_triggerControlPropertyEditText,player);
+    string Soundtrack = SoundtrackContainerSoundtrack(val);
+    int i;
+    if(EventDialogControl()==SoundtrackContainer.addButton){
+        SoundtrackPlay (PlayerGroupSingle(player), 1, Soundtrack, 1, 1, false);
+        
+    }
+    else if(EventDialogControl()==SoundtrackContainer.removeButton){
+    }
+    return trigRan;
+}
+
+
+bool SoundtrackList_IsSoundtrackFilter(int catalog, string entry){
+    return true;
+}
+
+
+void SoundtrackHandler_Init(){
+	playergroup pg = PlayerGroupAll();
+    ItemList.id = "SoundtrackList";
+    ItemListContainer_InitStandard(SoundtrackContainer, CONTAINERDLG_PATH, "SoundtrackContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogLight, SoundtrackList_IsSoundtrackFilter);
+    ItemList_FilterListInitStandard(ListBoxFilter, "SoundtrackListBox", SoundtrackListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+}

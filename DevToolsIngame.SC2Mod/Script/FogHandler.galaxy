@@ -1,0 +1,126 @@
+include "Script/color/color";
+
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/FogManager";
+static const string EDITBOX_PATH = "Item";
+
+static const string DENSITY_PATH = "Density/Slider";
+static const string FALLOFF_PATH = "FallOff/Slider";
+static const string STARTHEIGHT_PATH = "StartHeight/Slider";
+static const string COLORPREVIEW_PATH = "ColorPreview";
+static const string COLORRED_PATH = "ColorRed/Slider";
+static const string COLORGREEN_PATH = "ColorGreen/Slider";
+static const string COLORBLUE_PATH = "ColorBlue/Slider";
+static const string COLORALPHA_PATH = "ColorAlpha/Slider";
+
+struct FogPanelStruct {
+    int panel;
+    int density;
+    int fallOff;
+    int startHeight;
+    int colorPreview;
+    int colorRed;
+    int colorGreen;
+    int colorBlue;
+    int colorAlpha;
+};
+
+typedef structref<FogPanelStruct> FogPanelStructRef;
+static FogPanelStruct FogPanel;
+
+bool FogHandler_ValueChanged(bool a, bool b){
+    int player = EventPlayer();
+    int control = EventDialogControl();
+    
+    fixed fogDensity = DialogControlGetPropertyAsFixed(FogPanel.density,c_triggerControlPropertyValue,player);
+    fixed fogFallOff = DialogControlGetPropertyAsFixed(FogPanel.fallOff,c_triggerControlPropertyValue,player);
+    fixed fogStartHeight = DialogControlGetPropertyAsFixed(FogPanel.startHeight,c_triggerControlPropertyValue,player);
+    fixed fogColorRed = DialogControlGetPropertyAsFixed(FogPanel.colorRed,c_triggerControlPropertyValue,player);
+    fixed fogColorGreen = DialogControlGetPropertyAsFixed(FogPanel.colorGreen,c_triggerControlPropertyValue,player);
+    fixed fogColorBlue = DialogControlGetPropertyAsFixed(FogPanel.colorBlue,c_triggerControlPropertyValue,player);
+    fixed fogColorAlpha = DialogControlGetPropertyAsFixed(FogPanel.colorAlpha,c_triggerControlPropertyValue,player);
+    color fogColor = ColorWithAlpha(fogColorRed,fogColorGreen,fogColorBlue,fogColorAlpha);
+
+    DialogControlSetPropertyAsColor(FogPanel.colorPreview,c_triggerControlPropertyColor,PlayerGroupSingle(player),fogColor);
+    
+    FogSetColorOverTime(fogColor,1.0);
+    FogSetDensityOverTime(fogDensity,1.0);
+    FogSetFallOffOverTime(fogFallOff,1.0);
+    FogSetStartHeightOverTime(fogStartHeight,1.0);
+    
+    return true;
+}
+
+
+void FogHandler_InitValues(string terrainSet, playergroup pg){
+    fixed fogDensity = StringToFixed(CatalogFieldValueGet(c_gameCatalogTerrain,terrainSet,"FogDensity",c_playerAny));
+    fixed fogFallOff = StringToFixed(CatalogFieldValueGet(c_gameCatalogTerrain,terrainSet,"FogFalloff",c_playerAny));
+    fixed fogStartHeight = StringToFixed(CatalogFieldValueGet(c_gameCatalogTerrain,terrainSet,"FogStartingHeight ",c_playerAny));
+    color fogColor = StringToColor(CatalogFieldValueGet(c_gameCatalogTerrain,terrainSet,"FogColor",c_playerAny));
+    fixed fogColorRed = ColorGetComponent(fogColor,c_colorComponentRed);
+    fixed fogColorGreen = ColorGetComponent(fogColor,c_colorComponentGreen);
+    fixed fogColorBlue = ColorGetComponent(fogColor,c_colorComponentBlue);
+    fixed fogColorAlpha = ColorGetComponent(fogColor,c_colorComponentAlpha);
+    //
+    //c_triggerControlPropertyColor
+    DialogControlSetPropertyAsFixed(FogPanel.density,c_triggerControlPropertyValue,pg,fogDensity);
+    DialogControlSetPropertyAsFixed(FogPanel.fallOff,c_triggerControlPropertyValue,pg,fogFallOff);
+    DialogControlSetPropertyAsFixed(FogPanel.startHeight,c_triggerControlPropertyValue,pg,fogStartHeight);
+    DialogControlSetPropertyAsFixed(FogPanel.colorRed,c_triggerControlPropertyValue,pg,Color255FromFixed(fogColorRed));
+    DialogControlSetPropertyAsFixed(FogPanel.colorGreen,c_triggerControlPropertyValue,pg,Color255FromFixed(fogColorGreen));
+    DialogControlSetPropertyAsFixed(FogPanel.colorBlue,c_triggerControlPropertyValue,pg,Color255FromFixed(fogColorBlue));
+    DialogControlSetPropertyAsFixed(FogPanel.colorAlpha,c_triggerControlPropertyValue,pg,Color255FromFixed(fogColorAlpha));
+    
+    
+}
+
+void FogHandler_InitHookup(){
+    trigger t  = TriggerCreate("FogHandler_ValueChanged");
+    FogPanel.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    FogPanel.density = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,DENSITY_PATH);
+    FogPanel.fallOff = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,FALLOFF_PATH);
+    FogPanel.startHeight = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,STARTHEIGHT_PATH);
+    FogPanel.colorRed = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,COLORRED_PATH);
+    FogPanel.colorGreen = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,COLORGREEN_PATH);
+    FogPanel.colorBlue = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,COLORBLUE_PATH);
+    FogPanel.colorAlpha = DialogControlHookup(FogPanel.panel,c_triggerControlTypeSlider,COLORALPHA_PATH);
+    FogPanel.colorPreview = DialogControlHookup(FogPanel.panel,c_triggerControlTypeImage,COLORPREVIEW_PATH);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.density,c_triggerControlEventTypeValueChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.fallOff,c_triggerControlEventTypeValueChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.startHeight,c_triggerControlEventTypeValueChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.colorRed,c_triggerControlEventTypeValueChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.colorGreen,c_triggerControlEventTypeValueChanged);
+    TriggerAddEventDialogControl(t,c_playerAny,FogPanel.colorBlue,c_triggerControlEventTypeValueChanged);
+    
+}
+
+
+bool FogHandler_CinematicModeEndHandler(bool a, bool b){
+    int player = EventPlayer();
+    libNtve_gf_CinematicMode(false,PlayerGroupSingle(player),0.0);
+    //CinematicMode(PlayerGroupSingle(player),false,0.0);
+    return true;
+}
+
+
+bool FogHandler_CinematicModeStartHandler(bool a, bool b){
+    int player = EventPlayer();
+    libNtve_gf_CinematicMode(true,PlayerGroupSingle(player),0.0);
+    //CinematicMode(PlayerGroupSingle(player),true,0.0);
+    return true;
+}
+
+
+void FogHandler_InitCinematicMode(){
+    trigger t;
+    t= TriggerCreate("FogHandler_CinematicModeStartHandler");
+    TriggerAddEventChatMessage(t,c_playerAny,"cineon",false);
+    t= TriggerCreate("FogHandler_CinematicModeEndHandler");
+    TriggerAddEventChatMessage(t,c_playerAny,"cineoff",false);
+}
+
+void FogHandler_Init(){
+    string terrainSet = GameTerrainSet ();
+    FogHandler_InitHookup();
+    FogHandler_InitValues(terrainSet, PlayerGroupActive());
+    FogHandler_InitCinematicMode();
+}

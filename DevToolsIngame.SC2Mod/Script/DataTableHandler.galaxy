@@ -1,5 +1,4 @@
 include "Script/debug_h";
-include "Script/split_string";
 include "Script/ItemList";
 include "Script/ItemListListBoxFormat";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/DataTableManager";

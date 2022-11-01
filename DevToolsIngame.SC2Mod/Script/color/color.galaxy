@@ -1,0 +1,25 @@
+include "Script/split_string";
+
+color StringToColor(string colorString){
+    color c;
+    int lv_i;
+	fixed red = 0;
+    fixed green = 0;
+    fixed blue = 0;
+    fixed alpha = 0;
+	data_split_t dsplit;
+
+    split_string(dsplit, colorString, ",");
+
+	//DialogControlRemoveAllItems(listBoxFilter.list,pg);
+	if(dsplit.count>2){
+        red = StringToFixed(dsplit.data[0])/255;
+        green = StringToFixed(dsplit.data[1])/255;
+        blue = StringToFixed(dsplit.data[2])/255;
+        if(dsplit.count>3){
+            alpha = StringToFixed(dsplit.data[3])/255;
+        }
+	}
+    
+    return ColorWithAlpha(red,green,blue,alpha);
+}

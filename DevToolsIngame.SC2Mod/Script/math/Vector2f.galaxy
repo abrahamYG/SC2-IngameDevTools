@@ -1,5 +1,5 @@
 include "TriggerLibs/NativeLib"
-include "scripts/math/math.galaxy"
+include "script/math/math.galaxy"
 point Vector2f_Scale (point v, fixed scalar);
 point Vector2f_Divide (point v, fixed scalar); 
 point Vector2f_Add (point v, fixed value);

@@ -1,42 +1,40 @@
 include "Script/debug_h";
 include "Script/ItemList";
 
-static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CatalogValueManager";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CatalogLinkManager";
 static const string EDITBOX_PATH = "Item";
 static const string ADDBTN_PATH = "AddButton";
 static const string REMOVEBTN_PATH = "RemoveButton";
 static const string TYPEPULLDOWN_PATH = "Type";
 static const string ENTRYBOX_PATH = "Entry";
-static const string FIELDBOX_PATH = "Field";
-static const string VALUEBOX_PATH = "Value";
+static const string REPLACEBOX_PATH = "Replace";
 static const string APPLYBUTTON_PATH = "Apply";
-static const string GETBUTTON_PATH = "Get";
+static const string RESTOREBUTTON_PATH = "Restore";
 
 
-struct CatalogValueContainerStruct{
+struct CatalogLinkContainerStruct{
 	int panel;
 	int typePull;
 	int entryBox;
-	int fieldBox;
-	int valueBox;
+	int replaceBox;
 	int applyBtn;
-	int getBtn;
+	int restoreBtn;
 };
 
-CatalogValueContainerStruct CatalogValueContainer;
+CatalogLinkContainerStruct CatalogLinkContainer;
 
 static ItemListStruct ItemList;
 static ListBoxFilterStruct ListBoxFilter;
-bool CatalogValueListBoxSelectionChanged(bool a, bool b){
+bool CatalogLinkListBoxSelectionChanged(bool a, bool b){
 	return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
 }
 
-void CatalogValueListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+void CatalogLinkListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
 	//itemList.current = index;
 	console(ItemListGetVal(itemList,index));
 }
 
-void CatalogValueList_Init(){
+void CatalogLinkList_Init(){
 	DataTableSetInt(true,"Catalog.Abil",c_gameCatalogAbil);
 	DataTableSetInt(true,"Catalog.Achievement",c_gameCatalogAchievement);
 	DataTableSetInt(true,"Catalog.AchievementTerm",c_gameCatalogAchievementTerm);
@@ -258,62 +256,32 @@ void CatalogValueList_Init(){
 };
 
 
-static int CatalogValueContainerCatalogValue(string val){
+static int CatalogLinkContainerCatalogLink(string val){
 	return DataTableGetInt(true,"Catalog."+val);
 	
 }
 
-bool CatalogValueContainerSendHandler(bool a, bool b){
+bool CatalogLinkContainerSendHandler(bool a, bool b){
 	bool trigRan = true;
 	int player = EventPlayer();
-	int type = DialogControlGetPropertyAsInt(CatalogValueContainer.typePull,c_triggerControlPropertySelectionIndex,player);
-	string entry = DialogControlGetPropertyAsString(CatalogValueContainer.entryBox,c_triggerControlPropertyEditText,player);
-	string field = DialogControlGetPropertyAsString(CatalogValueContainer.fieldBox,c_triggerControlPropertyEditText,player);
-	string value = DialogControlGetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,player);
-	int catalog = CatalogValueContainerCatalogValue(ItemListGetVal(ItemList,ItemListGetActive(ItemList,player)));
-	string scope;
+	int type = DialogControlGetPropertyAsInt(CatalogLinkContainer.typePull,c_triggerControlPropertySelectionIndex,player);
+	string entry = DialogControlGetPropertyAsString(CatalogLinkContainer.entryBox,c_triggerControlPropertyEditText,player);
+	string replace = DialogControlGetPropertyAsString(CatalogLinkContainer.replaceBox,c_triggerControlPropertyEditText,player);
+	int catalog = CatalogLinkContainerCatalogLink(ItemListGetVal(ItemList,ItemListGetActive(ItemList,player)));
 
-
-	string lv_a;
-
-    // Automatic Variable Declarations
-    int lv_catalog;
-    string lv_entry;
-    string lv_field;
-    string lv_scopeField;
-    int lv_player;
-    int lv_i;
-
-    // Variable Initialization
-    lv_a = "";
-    lv_catalog = c_gameCatalogAbil;
-    lv_entry = "CarrierHangar";
-    lv_field = "DefaultButtonCardId";
-    lv_scopeField = "DefaultButtonCardId";
-    lv_player = c_playerAny;
-    lv_i = 0;
-    for ( ; lv_i <= CatalogFieldValueCount(c_gameCatalogAbil,lv_entry,lv_field,lv_player)-1 ; lv_i += 1 ) {
-        lv_a = CatalogFieldValueGet(c_gameCatalogAbil,lv_entry,lv_field+"["+IntToString(lv_i)+"]."+lv_scopeField,lv_player);
-        libNtve_gv_visibleFilter = UnitFilter((1 << c_targetFilterCanHaveEnergy), 0, 0, 0);
-    }
 	if(CatalogEntryIsValid(catalog,entry)){
-		scope = CatalogEntryScope(catalog,entry);
-		console("Catalog Is Array "+IntToString(BoolToInt(CatalogFieldIsArray(scope,field))));
-		console("Catalog Is Scope "+IntToString(BoolToInt(CatalogFieldIsScope(scope,field))));
-		console("Catalog Field Type "+CatalogFieldType(scope,field));
-		if(EventDialogControl()==CatalogValueContainer.applyBtn){
-			if(CatalogFieldExists(scope,field)){
-				CatalogFieldValueSet(catalog,entry,field,player,value);
+		if(EventDialogControl()==CatalogLinkContainer.applyBtn){
+			if(CatalogEntryIsValid(catalog,entry) && CatalogEntryIsValid(catalog,replace)){
+				CatalogLinkReplace(player,catalog,entry,replace);
 				
 			}
 			else{
-				print("Catalog field: ["+field+"] could not be found in catalog type "+IntToString(catalog));
+				print("Catalog field: ["+replace+"] could not be found in catalog type "+IntToString(catalog));
 				trigRan = false;
 			}
 		}
-		else if(EventDialogControl()==CatalogValueContainer.getBtn){
-			value = CatalogFieldValueGet(catalog,entry,field,player);
-			DialogControlSetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,PlayerGroupSingle(player),value);
+		else if(EventDialogControl()==CatalogLinkContainer.restoreBtn){
+			CatalogLinkReplace(player,catalog,entry,entry);
 		}
 		
 		
@@ -325,28 +293,27 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	return trigRan;
 }
 
-void CatalogValueHandler_Init(){
+void CatalogLinkHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
-	ItemList.id = "CatalogValueList";
-	CatalogValueContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
-	CatalogValueContainer.typePull = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
-	CatalogValueContainer.entryBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);
-	CatalogValueContainer.fieldBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,FIELDBOX_PATH);
-	CatalogValueContainer.valueBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,VALUEBOX_PATH);
-	CatalogValueContainer.applyBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,APPLYBUTTON_PATH);
-	CatalogValueContainer.getBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,GETBUTTON_PATH);
-	t = TriggerCreate("CatalogValueContainerSendHandler");
-	TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.applyBtn,c_triggerControlEventTypeClick);
-	TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.getBtn,c_triggerControlEventTypeClick);
-	CatalogValueList_Init();
+	ItemList.id = "CatalogLinkList";
+	CatalogLinkContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+	CatalogLinkContainer.typePull = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
+	CatalogLinkContainer.entryBox = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);
+	CatalogLinkContainer.replaceBox = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypeEditBox,REPLACEBOX_PATH);
+	CatalogLinkContainer.applyBtn = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypeButton,APPLYBUTTON_PATH);
+	CatalogLinkContainer.restoreBtn = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypeButton,RESTOREBUTTON_PATH);
+	t = TriggerCreate("CatalogLinkContainerSendHandler");
+	TriggerAddEventDialogControl(t,c_playerAny,CatalogLinkContainer.applyBtn,c_triggerControlEventTypeClick);
+	TriggerAddEventDialogControl(t,c_playerAny,CatalogLinkContainer.restoreBtn,c_triggerControlEventTypeClick);
+	CatalogLinkList_Init();
 
-	ListBoxFilter.id = "CatalogValueList";
-	ListBoxFilter.setActive = CatalogValueListBoxSetActive;
-	ListBoxFilter.panel = CatalogValueContainer.panel;
-	ListBoxFilter.list = CatalogValueContainer.typePull;
+	ListBoxFilter.id = "CatalogLinkList";
+	ListBoxFilter.setActive = CatalogLinkListBoxSetActive;
+	ListBoxFilter.panel = CatalogLinkContainer.panel;
+	ListBoxFilter.list = CatalogLinkContainer.typePull;
 	ListBoxFilter.itemTextFunc = ItemListItemTextValue;
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
-	t = TriggerCreate("CatalogValueListBoxSelectionChanged");
+	t = TriggerCreate("CatalogLinkListBoxSelectionChanged");
 	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
 }

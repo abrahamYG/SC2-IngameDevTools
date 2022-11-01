@@ -4,7 +4,7 @@
 		<Width val="791"/>
 		<Height val="1200"/>
 	</Frame>
-	<Frame type="Button" name="NavButtonTemplate" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+	<Frame type="Button" name="NavButtonTemplate" template="DevTools_Templates/ButtonTemplate">
 		<Width val="60"/>
 		<Height val="60"/>
 	</Frame>
@@ -96,7 +96,7 @@
                 <Width val="200"/>
                 <Height val="60"/>
             </Frame>
-            <Frame type="Button" name="ButtonFilter" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+            <Frame type="Button" name="ButtonFilter" template="DevTools_Templates/ButtonTemplate">
                 <Anchor side="Top" relative="$parent/BoxFilter" pos="Min" offset="0"/>
                 <Anchor side="Left" relative="$parent/BoxFilter" pos="Max" offset="0"/>
                 <Anchor side="Right" relative="$parent" pos="Max" offset="0"/>

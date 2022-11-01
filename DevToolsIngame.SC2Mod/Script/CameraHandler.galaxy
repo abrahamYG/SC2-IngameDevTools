@@ -1,4 +1,4 @@
-static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CameraManager";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CameraManager";
 static const string EDITBOX_PATH = "Item";
 
 static const string FIELDOFVIEW_PATH = "FieldOfView/Slider";

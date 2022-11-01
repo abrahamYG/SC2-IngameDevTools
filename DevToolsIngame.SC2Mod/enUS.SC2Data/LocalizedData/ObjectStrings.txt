@@ -1,3 +1,7 @@
 ﻿Actor/Name/DevToolsBeaconSpawnUnit=DevTools Beacon SpawnUnit
+Actor/Name/dumpcrap=dumpcrap
 Model/Name/DevToolsBeaconSpawnUnit=DevTools Beacon SpawnUnit
 User/Name/DevTools_AbilClass=DevTools_AbilClass
+User/Name/DevTools_ActorMsg=DevTools_ActorMsg
+User/Name/DevTools_ActorMsgParams=DevTools_ActorMsgParams
+User/Name/DevTools_ActorMsgTargets=DevTools_ActorMsgTargets

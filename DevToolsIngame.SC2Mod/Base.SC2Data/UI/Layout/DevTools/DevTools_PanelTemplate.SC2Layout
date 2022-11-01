@@ -2,11 +2,7 @@
 <Desc>
     <Frame type="Frame" name="ContainerTemplate">
         
-        <Frame type="BlurFrame" name="BackgroundBlur">
-            <Anchor relative="$parent/Background"/>
-            <BlurAmount val="0.35"/>
-            <Alpha val="255"/>
-        </Frame>
+        
         
         <Frame type="Frame" name="AnchorFrame">
             <Anchor side="Top" relative="$parent" pos="Min" offset="8"/>
@@ -39,7 +35,12 @@
             <Color val="9,12,21"/>
             <Alpha val="153"/>
         </Frame>
-        
+        <Frame type="BlurFrame" name="BackgroundBlur">
+            <Anchor relative="$parent/Background"/>
+            <Blur val="True"/>
+            <BlurAmount val="0.8"/>
+            <Alpha val="255"/>
+        </Frame>
         
         <Frame type="Image" name="BorderInner">
             <Anchor relative="$parent/Background"/>

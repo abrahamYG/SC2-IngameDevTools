@@ -19,3 +19,6 @@ UI/CatalogManager/PrevButton=Prev
 UI/CatalogManager/NextButton=Next
 UI/MiscManager/ShowActorMessageManager=Actor Messages
 UI/MiscManager/ShowCatalogValueManager=Catalog Value Editor
+UI/MiscManager/ShowCameraManager=Camera Editor
+UI/MiscManager/ShowCatalogLinkManager=Catalog Link Editor
+UI/MiscManager/ShowFogManager=Fog Editor

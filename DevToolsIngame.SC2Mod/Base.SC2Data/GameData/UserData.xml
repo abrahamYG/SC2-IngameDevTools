@@ -687,4 +687,481 @@
             </String>
         </Instances>
     </CUser>
+    <CUser id="DevTools_ActorMsg">
+        <Fields>
+            <Id value="Params"/>
+            <Type value="User"/>
+            <UserType value="DevTools_ActorMsgParams"/>
+            <Count value="5"/>
+            <EditorColumn value="2"/>
+        </Fields>
+        <Fields>
+            <Id value="Target"/>
+            <Type value="User"/>
+            <UserType value="DevTools_ActorMsgTargets"/>
+            <EditorColumn value="1"/>
+        </Fields>
+        <Instances Id="[Default]">
+            <User Type="DevTools_ActorMsgParams" Instance="[Default]">
+                <Field Id="Params"/>
+            </User>
+            <User Type="DevTools_ActorMsgParams" Instance="[Default]">
+                <Field Id="Params" Index="1"/>
+            </User>
+            <User Type="DevTools_ActorMsgParams" Instance="[Default]">
+                <Field Id="Params" Index="2"/>
+            </User>
+            <User Type="DevTools_ActorMsgParams" Instance="[Default]">
+                <Field Id="Params" Index="3"/>
+            </User>
+            <User Type="DevTools_ActorMsgParams" Instance="[Default]">
+                <Field Id="Params" Index="4"/>
+            </User>
+        </Instances>
+        <Instances Id="$Birth"/>
+        <Instances Id="$Death"/>
+        <Instances Id="$Spell"/>
+        <Instances Id="$Stand"/>
+        <Instances Id="ActionDamage">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorAction">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="ActionDamagePhysics">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorAction">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="ActionImpact">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorAction">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="ActionImpactPhysics">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorAction">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="ActionOverrideApplyTo">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorAction">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AddPitch">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorBearings">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AddRoll">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorBearings">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AddYaw">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorBearings">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AliasAdd"/>
+        <Instances Id="AliasRemove"/>
+        <Instances Id="AnimBaselineStart">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorUnit">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBaselineStop">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorUnit">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBaselineSuppressWalk">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorUnit">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBlendTimeApply">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBlendTimeRemove">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBracketClear">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBracketResume">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBracketStart">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimBracketStop">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+            <User Type="DevTools_ActorMsgParams" Instance="AnimName">
+                <Field Id="Params"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimCancelActiveBlends">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimClear">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimClearAllBut">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimClearTimeScaleGlobal">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimContinue">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimCopy">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimDumpDB">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGlobalLoopsClear">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGlobalLoopsStart">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGlobalLoopsStop">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGroupApply">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGroupApplyFrom">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGroupRemove">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimGroupRemoveAll">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimHookClear">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimHookDump">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimHookSet">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimPlay">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimPlaySequence">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetCompletion">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetDuration">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetLockedAll">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetPaused">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetPausedAll">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTime">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTimeScale">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTimeScaleAbsolute">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTimeScaleFrom">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTimeScaleGlobal">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetTimeScaleGlobalFrom">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimSetUserWeight">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorModel">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="ArcSetAngle">
+            <User Type="DevTools_ActorMsgTargets" Instance="CActorArc">
+                <Field Id="Target"/>
+            </User>
+        </Instances>
+        <Instances Id="Attach"/>
+        <Instances Id="AttachSetBearingsFrom"/>
+        <Instances Id="AttachSetRotationFrom"/>
+        <Instances Id="ClearOpacity"/>
+        <Instances Id="ClearScale"/>
+        <Instances Id="ClearTeamColor"/>
+        <Instances Id="ClearTintColor"/>
+        <Instances Id="CombatRevealClearTimers"/>
+        <Instances Id="CombatRevealComplete"/>
+        <Instances Id="Create">
+            <User Type="DevTools_ActorMsgParams" Instance="ActorName">
+                <Field Id="Params"/>
+            </User>
+        </Instances>
+        <Instances Id="CreepEngulfmentStart"/>
+        <Instances Id="CreepEngulfmentStartTransition"/>
+        <Instances Id="CreepEngulfmentStop"/>
+        <Instances Id="CreepEngulfmentStopTransition"/>
+        <Instances Id="DeathCustomize"/>
+        <Instances Id="DeathCustomsEnablePhysics"/>
+        <Instances Id="Destroy"/>
+        <Instances Id="DestroyParticles"/>
+        <Instances Id="ExternalFinderAdd"/>
+        <Instances Id="ForceSetAngle"/>
+        <Instances Id="ForceSetHeight"/>
+        <Instances Id="ForceSetLength"/>
+        <Instances Id="ForceSetMagnitude"/>
+        <Instances Id="ForceSetRadius"/>
+        <Instances Id="ForceSetWidth"/>
+        <Instances Id="HaloSetColor"/>
+        <Instances Id="HaloSetColorFromAllianceType"/>
+        <Instances Id="HaloStart"/>
+        <Instances Id="HaloStop"/>
+        <Instances Id="HideWorkerCount"/>
+        <Instances Id="HostSiteOpsAdd"/>
+        <Instances Id="HostSiteOpsRemove"/>
+        <Instances Id="HostSiteOpsSet"/>
+        <Instances Id="LightSetRange"/>
+        <Instances Id="ListAdd"/>
+        <Instances Id="ListRemove"/>
+        <Instances Id="LookAtDisengage"/>
+        <Instances Id="LookAtEngage"/>
+        <Instances Id="LookAtStart"/>
+        <Instances Id="LookAtStop"/>
+        <Instances Id="MessageForward"/>
+        <Instances Id="MessageThinkActivate"/>
+        <Instances Id="MinimapIcon"/>
+        <Instances Id="MinimapIconScale"/>
+        <Instances Id="ModelAnimateInvisible"/>
+        <Instances Id="ModelLinkCustomize"/>
+        <Instances Id="ModelMaterialApply"/>
+        <Instances Id="ModelMaterialApplyTo"/>
+        <Instances Id="ModelMaterialMaximizePriority"/>
+        <Instances Id="ModelMaterialRemove"/>
+        <Instances Id="ModelMaterialRemoveFrom"/>
+        <Instances Id="ModelSuddenMotionStart"/>
+        <Instances Id="ModelSuddenMotionStop"/>
+        <Instances Id="ModelSwap"/>
+        <Instances Id="ModelSwapStackPop"/>
+        <Instances Id="ModelSwapStackPush"/>
+        <Instances Id="MoverMove"/>
+        <Instances Id="MoverSetDestination2D"/>
+        <Instances Id="MoverSetDestinationFrom"/>
+        <Instances Id="MoverSetDestinationH"/>
+        <Instances Id="PhysicsImpactCustomize"/>
+        <Instances Id="PlayUnitSound"/>
+        <Instances Id="PortraitAnimSetTimeFrom"/>
+        <Instances Id="PortraitCustomize"/>
+        <Instances Id="PreTargetingUpdate"/>
+        <Instances Id="Print"/>
+        <Instances Id="PropertyCurveAdd"/>
+        <Instances Id="PropertyCurveAddLabel"/>
+        <Instances Id="PropertyCurveAddPoint"/>
+        <Instances Id="QueryPersistent"/>
+        <Instances Id="QueryRadius"/>
+        <Instances Id="QueryRegion"/>
+        <Instances Id="RefClear"/>
+        <Instances Id="RefSet"/>
+        <Instances Id="RefSetFromMsg"/>
+        <Instances Id="RefSetFromRequest"/>
+        <Instances Id="SceneStrobeSetHeight"/>
+        <Instances Id="SetCastShadows"/>
+        <Instances Id="SetFacing"/>
+        <Instances Id="SetFilter"/>
+        <Instances Id="SetGroupIcon"/>
+        <Instances Id="SetHeight"/>
+        <Instances Id="SetHeroIcon"/>
+        <Instances Id="SetLocalTintColor"/>
+        <Instances Id="SetMinimapVisibility"/>
+        <Instances Id="SetOpacity"/>
+        <Instances Id="SetPosition"/>
+        <Instances Id="SetPositionFrom"/>
+        <Instances Id="SetRotation"/>
+        <Instances Id="SetRotationFrom"/>
+        <Instances Id="SetScale"/>
+        <Instances Id="SetScaleFromWeaponRange"/>
+        <Instances Id="SetShowStatusBar"/>
+        <Instances Id="SetSoundSuffix"/>
+        <Instances Id="SetStatusBarOn"/>
+        <Instances Id="SetTeamColor"/>
+        <Instances Id="SetTextLocalized"/>
+        <Instances Id="SetTintColor"/>
+        <Instances Id="SetTintColorBlendPair"/>
+        <Instances Id="SetTransferOverrideAnim"/>
+        <Instances Id="SetUnitIcon"/>
+        <Instances Id="SetVisibility"/>
+        <Instances Id="SetWalkAnimMoveSpeed"/>
+        <Instances Id="SetWireframe"/>
+        <Instances Id="SetWireframeShield"/>
+        <Instances Id="Signal"/>
+        <Instances Id="SoundLinkCustomize"/>
+        <Instances Id="SoundSetMuted"/>
+        <Instances Id="SoundSetPaused"/>
+        <Instances Id="SoundSetPitch"/>
+        <Instances Id="SoundSetVolume"/>
+        <Instances Id="SplatEmitterAddBlob"/>
+        <Instances Id="SplatEmitterUpdateTint"/>
+        <Instances Id="StatusDecrement"/>
+        <Instances Id="StatusIncrement"/>
+        <Instances Id="StatusSet"/>
+        <Instances Id="StrobeStart"/>
+        <Instances Id="TerrainSquibActivateGroup"/>
+        <Instances Id="TerrainSquibDeactivate"/>
+        <Instances Id="TextureGroupApply"/>
+        <Instances Id="TextureSelectById"/>
+        <Instances Id="TextureSelectByMatch"/>
+        <Instances Id="TextureSelectBySlot"/>
+        <Instances Id="TextureSelectDecalByPlayer"/>
+        <Instances Id="TimerKill"/>
+        <Instances Id="TimerSet"/>
+        <Instances Id="Transition"/>
+        <Instances Id="UIStatusFlagSet"/>
+    </CUser>
+    <CUser id="DevTools_ActorMsgParams">
+        <Fields Id="Name" Type="String" EditorColumn="2"/>
+        <Fields Id="Type" Type="String" EditorColumn="3"/>
+        <Fields Id="Value" Type="String" EditorColumn="4"/>
+        <Fields>
+            <Id value="ParentMsg"/>
+            <Type value="User"/>
+            <UserType value="DevTools_ActorMsg"/>
+            <EditorColumn value="1"/>
+        </Fields>
+        <Instances Id="[Default]">
+            <String String="Null">
+                <Field Id="Name"/>
+            </String>
+            <String String="String">
+                <Field Id="Type"/>
+            </String>
+        </Instances>
+        <Instances Id="ActorName">
+            <String String="ActorName">
+                <Field Id="Name"/>
+            </String>
+            <String String="GameLink_Actor">
+                <Field Id="Type"/>
+            </String>
+            <User Type="DevTools_ActorMsg" Instance="[Default]">
+                <Field Id="ParentMsg"/>
+            </User>
+        </Instances>
+        <Instances Id="AnimName">
+            <String String="AnimName">
+                <Field Id="Name"/>
+            </String>
+            <User Type="DevTools_ActorMsg" Instance="[Default]">
+                <Field Id="ParentMsg"/>
+            </User>
+        </Instances>
+    </CUser>
+    <CUser id="DevTools_ActorMsgTargets">
+        <Instances Id="[Default]"/>
+        <Instances Id="CActor"/>
+        <Instances Id="CActorAction"/>
+        <Instances Id="CActorArc"/>
+        <Instances Id="CActorBearings"/>
+        <Instances Id="CActorCamera"/>
+        <Instances Id="CActorCutscene"/>
+        <Instances Id="CActorCylinder"/>
+        <Instances Id="CActorDoodad"/>
+        <Instances Id="CActorForce"/>
+        <Instances Id="CActorForceBox"/>
+        <Instances Id="CActorForceConeRoundedEnd"/>
+        <Instances Id="CActorLight"/>
+        <Instances Id="CActorLookAt"/>
+        <Instances Id="CActorModel"/>
+        <Instances Id="CActorModelMaterial"/>
+        <Instances Id="CActorScene"/>
+        <Instances Id="CActorSiteBillboard"/>
+        <Instances Id="CActorUnit"/>
+    </CUser>
 </Catalog>

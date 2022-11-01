@@ -9,7 +9,7 @@
         <On Terms="Effect.DevToolsBeaconSpawnUnit.Start" Send="TimerSet 6.000000 OnMyWayBeaconDuration"/>
         <HostSiteOps Ops="SOpTargetPoint SOpShadow"/>
     </CActorModel>
-      <CActorModel id="PointNormal">
+    <CActorModel id="PointNormal">
         <On Terms="TimerExpired; TimerName Fade" Send="SetOpacity 1.000000 0.062500"/>
         <On Terms="TimerExpired; TimerName Fade" Send="TimerSet 0.125000 Kill"/>
         <On Terms="TimerExpired; TimerName Kill" Send="Destroy"/>
@@ -42,4 +42,10 @@
         <Aliases value="_Text"/>
         <On Terms="ActorOrphan" Send="Destroy"/>
     </CActorText>
+    <CActorAction id="dumpcrap" parent="GenericAttack">
+        <Terms value="AbilCmd"/>
+        <EditorCategories value=""/>
+        <On Terms="ActionDamage" Send="AnimBracketStop Cover"/>
+        <On Terms="AnimPlay" Send="ActionDamagePhysics"/>
+    </CActorAction>
 </Catalog>

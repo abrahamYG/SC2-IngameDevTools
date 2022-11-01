@@ -232,6 +232,7 @@
                 </Controller>
             </Animation>
         </Frame>
+        
 
         <Frame type="Button" name="MiscButton" template="DevTools_MenuBar/MenuItemTemplate">
             <Text val="Misc"/>

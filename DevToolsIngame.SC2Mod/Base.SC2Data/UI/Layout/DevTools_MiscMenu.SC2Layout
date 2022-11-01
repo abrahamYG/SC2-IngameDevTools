@@ -7,7 +7,7 @@
 		<Toggleable val="True"/>
 	</Frame>
     <Frame type="Frame" name="MiscMenuTemplate" template="DevTools_Templates/PanelTemplate">
-        <Height val="240"/>
+        <Height val="340"/>
         <Width val="380"/>
         <Frame type="Button" name="ShowActorMessageManager" template="DevTools_MiscMenu/MiscMenuButtonTemplate">
             <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
@@ -18,6 +18,23 @@
             <Anchor side="Top" relative="$parent/ShowActorMessageManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
             <Text val="@UI/MiscManager/ShowCatalogValueManager"/>
+        </Frame>
+        <Frame type="Button" name="ShowCatalogLinkManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+            <Anchor side="Top" relative="$parent/ShowCatalogValueManager" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowCatalogLinkManager"/>
+        </Frame>
+        
+        <Frame type="Button" name="ShowCameraManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+            <Anchor side="Top" relative="$parent/ShowCatalogLinkManager" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowCameraManager"/>
+        </Frame>
+        
+        <Frame type="Button" name="ShowFogManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+            <Anchor side="Top" relative="$parent/ShowCameraManager" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowFogManager"/>
         </Frame>
     </Frame>
 </Desc>

@@ -1,5 +1,5 @@
 include "TriggerLibs/NativeLib"
-include "scripts/math/math.galaxy"
+include "script/math/math.galaxy"
 
 point Vector3f_Scale (point v, fixed value);
 point Vector3f_Divide (point v, fixed value); 
@@ -13,7 +13,9 @@ point Vector3f_Empty() { return PointFromXYZ(0,0,0); }
 point Vector3f_AddVec (point v1, point v2);
 point Vector3f_SubVec (point v1, point v2);
 point Vector3f_ScaleVec (point v1, point v2);
-
+static fixed PointGetZ(point p){
+    return PointGetHeight(p);
+}
 text Vector3f_ToText(point v, int precision) { 
     return  FixedToText(PointGetX(v), precision)+StringToText(" ")+
             FixedToText(PointGetY(v), precision)+StringToText(" ")+

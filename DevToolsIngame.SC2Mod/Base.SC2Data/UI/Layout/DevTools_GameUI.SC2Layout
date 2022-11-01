@@ -200,8 +200,14 @@
 				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
 				<TabListItem val="$this/ShowActorMessageManager"/>
 				<TabListItem val="$this/ShowCatalogValueManager"/>
+				<TabListItem val="$this/ShowCatalogLinkManager"/>
+				<TabListItem val="$this/ShowCameraManager"/>
+				<TabListItem val="$this/ShowFogManager"/>
 				<PanelListItem val="$parent/ActorMessageManager"/>
 				<PanelListItem val="$parent/CatalogValueManager"/>
+				<PanelListItem val="$parent/CatalogLinkManager"/>
+				<PanelListItem val="$parent/CameraManager"/>
+				<PanelListItem val="$parent/FogManager"/>
 				<Handle val="$MiscMenuList"/>
 			</Frame>
 			<Frame type="Control" name="ActorMessageManager" template="DevTools_Templates/PanelTemplateTitled">
@@ -229,7 +235,7 @@
 					<Text val="::Main"/>
 				</Frame>
 	
-				<Frame type="Button" name="ActorMessageSendButton" template="StandardBattlenetTemplates/BattlenetStandardButtonTemplate">
+				<Frame type="Button" name="ActorMessageSendButton" template="DevTools_Templates/ButtonTemplate">
 					<Anchor side="Top" relative="$parent/ActorTarget" pos="Max" offset="5"/>
 					<Anchor side="Left" relative="$parent/ActorTarget" pos="Min" offset="0"/>
 					<Width val="200"/>
@@ -248,11 +254,30 @@
 				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
 				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
 			</Frame>
+			<Frame type="Control" name="CatalogLinkManager" template="CatalogManager/CatalogLinkManager">
+				<CollapseLayout val="True"/>
+				
+				<Frame type="Label" name="Title">
+					<Text val="CatalogLinkManager"/>
+				</Frame>
+				<Visible val="{$parent/MiscMenuList/ShowCatalogLinkManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+			</Frame>
+			
+			<Frame type="Frame" name="CameraManager" template="CameraManager/CameraManager">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+				<Visible val="{$parent/MiscMenuList/ShowCameraManager/@Toggled}"/>
+			</Frame>
+			
+			<Frame type="Frame" name="FogManager" template="FogManager/FogManager">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+				<Visible val="{$parent/MiscMenuList/ShowFogManager/@Toggled}"/>
+			</Frame>
 		</Frame>
-		<Frame type="Frame" name="CameraManager" template="CameraManager/CameraManager">
-			<Anchor side="Top" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Max" offset="0"/>
-			<Anchor side="Left" relative="$parent/DevToolsMenuContainer/CheatManagerButton/HitTestFrame" pos="Min" offset="0"/>
-		</Frame>
+		
 	</Frame>
 	<Frame type="Frame" name="GameUI/UIContainer" file="GameUI">
 		

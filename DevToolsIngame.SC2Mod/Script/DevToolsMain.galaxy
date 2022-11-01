@@ -9,6 +9,7 @@ include "Script/WeaponHandler";
 include "Script/AbilityHandler";
 include "Script/AbilityOrderHandler";
 include "Script/CatalogValueHandler";
+include "Script/CatalogLinkHandler";
 include "Script/LightingHandler";
 include "Script/RaceHandler";
 include "Script/SkinHandler";
@@ -17,6 +18,7 @@ include "Script/PortraitHandler";
 include "Script/DataTableHandler";
 include "Script/DataEditorHandler";
 include "Script/CameraHandler";
+include "Script/FogHandler";
 //include "Script/PortView";
 //include "Script/libGalExe_init";
 
@@ -24,6 +26,7 @@ void DevToolsMain_Init(){
     
     ActorMessageHandler_Init();
     CatalogValueHandler_Init();
+    CatalogLinkHandler_Init();
     AbilityHandler_Init();
     AbilityOrderHandler_Init();
     BehaviorHandler_Init();
@@ -39,6 +42,7 @@ void DevToolsMain_Init(){
     DataTableHandler_Init();
     DataEditorHandler_Init();
     CameraHandler_Init();
+    FogHandler_Init();
     //PortView_Init();
 	//gt_libGalExe_Init();
 }
