@@ -22,7 +22,7 @@ int DataTableListBoxGetPage(int player){
 void DataTableListRebuild(ItemListStructRef itemList,int player,string filter,int page){
     int i;
     int counter =0;
-    int startPoint = page*100;
+    int startPoint = MaxI(page*100,1);
     string entry;
     int count = MinI(DataTableValueCount(true),startPoint+100);
     console("DataTableValueCount:"+IntToString(DataTableValueCount(true)));
