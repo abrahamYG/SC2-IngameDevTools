@@ -7,7 +7,7 @@
 		<Toggleable val="True"/>
 	</Frame>
     <Frame type="Frame" name="MiscMenuTemplate" template="DevTools_Templates/PanelTemplate">
-        <Height val="340"/>
+        <Height val="400"/>
         <Width val="380"/>
         <Frame type="Button" name="ShowActorMessageManager" template="DevTools_MiscMenu/MiscMenuButtonTemplate">
             <Anchor side="Top" relative="$parent" pos="Min" offset="10"/>
@@ -31,8 +31,13 @@
             <Text val="@UI/MiscManager/ShowCameraManager"/>
         </Frame>
         
-        <Frame type="Button" name="ShowFogManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+        <Frame type="Button" name="ShowCameraShakeManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
             <Anchor side="Top" relative="$parent/ShowCameraManager" pos="Max" offset="0"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Text val="@UI/MiscManager/ShowCameraShakeManager"/>
+        </Frame>
+        <Frame type="Button" name="ShowFogManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+            <Anchor side="Top" relative="$parent/ShowCameraShakeManager" pos="Max" offset="0"/>
             <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
             <Text val="@UI/MiscManager/ShowFogManager"/>
         </Frame>
