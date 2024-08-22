@@ -1,0 +1,235 @@
+const int ITEM_LIST_MAX = 60000;
+const string ITEM_LIST_PREFIX = "ItemList";
+//static string[MAX_ITEM_LIST] ItemList;
+//static int ItemList.count = 0;
+//static int ItemList.current = 0;
+
+struct ItemListStruct{
+	string id;
+    //string[ITEM_LIST_MAX] list;
+    int count;
+    int current;
+};
+
+//Reference to an `ItemList` struct
+typedef structref<ItemListStruct> ItemListStructRef;
+
+
+static string ItemListGetKey(ItemListStructRef itemList, int index){
+	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
+	return ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]";
+}
+
+
+int ItemListGetCount(ItemListStructRef itemList){
+	return itemList.count;
+}
+
+static void ItemListSetCount(ItemListStructRef itemList, int count){
+	itemList.count = count;
+}
+
+void ItemListSetVal(ItemListStructRef itemList, int index, string val){
+	if(ItemListGetCount(itemList)<index){
+		err("Error setting a ItemList value higher than itemlist count");
+		err("ItemList: "+itemList.id);
+		err("ItemList Index: "+IntToString(index));
+		err("ItemList Count: "+IntToString(ItemListGetCount(itemList)));
+		return;
+	}
+	DataTableSetString(true,ItemListGetKey(itemList,index),val);
+}
+
+string ItemListGetVal(ItemListStructRef itemList, int index){
+	if(ItemListGetCount(itemList)<index){
+		err("Error getting a ItemList value higher than itemlist count");
+		err("ItemList: "+itemList.id);
+		err("ItemList Index: "+IntToString(index));
+		err("ItemList Count: "+IntToString(ItemListGetCount(itemList)));
+		return null;
+	}
+	return DataTableGetString(true,ItemListGetKey(itemList,index));
+}
+
+
+
+text ItemListItemTextValue(ItemListStructRef itemList,int index){
+	return StringToText(ItemListGetVal(itemList,index));
+}
+typedef funcref<ItemListItemTextValue> ItemListItemTextValueFuncRef;
+
+
+
+// ## ItemListClear
+// Clears an `itemList` by setting all values to an empty `string`
+void ItemListClear(ItemListStructRef itemList){
+	int i =0;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		DataTableValueRemove(true,ItemListGetKey(itemList,i));
+		//itemList.list[i] = "";
+	}
+	ItemListSetCount(itemList,0);
+	itemList.current = -1;
+}
+
+// ## ItemListAdd
+// Adds a new item to the `itemList` and returns its index.
+// If the list has reached its max capacity, it will return -1
+int ItemListAdd(ItemListStructRef itemList, string itemId){
+	if(ItemListGetCount(itemList)<ITEM_LIST_MAX){
+		ItemListSetVal(itemList,ItemListGetCount(itemList),itemId);
+		ItemListSetCount(itemList,ItemListGetCount(itemList)+1);
+		return ItemListGetCount(itemList);
+	}
+	else{return -1;}
+}
+
+
+// ## ItemListFind
+// Finds an item on the `itemList` and returns its index.
+// If the item can't be found, it will return -1
+int ItemListFind(ItemListStructRef itemList, string itemId){
+	int i;
+	int index = -1;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		//if(itemList.list[i]==itemId){index=i;break;}
+		if(ItemListGetVal(itemList,i)==itemId){index=i;break;}
+	}
+	return index;
+}
+
+
+
+
+void ItemListForEachCallBack(string element, int currentIndex,ItemListStructRef itemList);
+typedef funcref<ItemListForEachCallBack> ItemListForEachCallBackRef;
+
+int ItemListForEach(ItemListStructRef itemList,ItemListForEachCallBackRef callback){
+	int i=0;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		callback( ItemListGetVal(itemList,i),i,itemList);
+	}
+	return i;
+}
+
+
+
+int ItemListReduceIntCallBack(int accumulator, string currentValue, int currentIndex,ItemListStructRef itemList);
+typedef funcref<ItemListReduceIntCallBack> ItemListReduceIntCallBackRef;
+int ItemListReduceInt(ItemListStructRef itemList,ItemListReduceIntCallBackRef callback, int initialValue){
+	int i=0;
+	int accumulator = initialValue;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		accumulator=callback(accumulator,ItemListGetVal(itemList,i),i,itemList);
+	}
+	return accumulator;
+}
+
+fixed ItemListReduceFixedCallBack(fixed accumulator, string currentValue, int currentIndex,ItemListStructRef itemList);
+typedef funcref<ItemListReduceFixedCallBack> ItemListReduceFixedCallBackRef;
+fixed ItemListReduceFixed(ItemListStructRef itemList,ItemListReduceFixedCallBackRef callback, fixed initialValue){
+	int i=0;
+	fixed accumulator = initialValue;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		accumulator=callback(accumulator,ItemListGetVal(itemList,i),i,itemList);
+	}
+	return accumulator;
+}
+
+
+string ItemListReduceStringCallBack(string accumulator, string currentValue, int currentIndex,ItemListStructRef itemList);
+typedef funcref<ItemListReduceStringCallBack> ItemListReduceStringCallBackRef;
+string ItemListReduceString(ItemListStructRef itemList,ItemListReduceStringCallBackRef callback, string initialValue){
+	int i=0;
+	string accumulator = initialValue;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		accumulator=callback(accumulator,ItemListGetVal(itemList,i),i,itemList);
+	}
+	return accumulator;
+}
+
+
+bool ItemListReduceBoolCallBack(bool accumulator, string currentValue, int currentIndex,ItemListStructRef itemList);
+typedef funcref<ItemListReduceBoolCallBack> ItemListReduceBoolCallBackRef;
+bool ItemListReduceBool(ItemListStructRef itemList,ItemListReduceBoolCallBackRef callback, bool initialValue){
+	int i=0;
+	bool accumulator = initialValue;
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
+		accumulator=callback(accumulator,ItemListGetVal(itemList,i),i,itemList);
+	}
+	return accumulator;
+}
+
+
+
+void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
+typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
+
+int ItemListGetActive(ItemListStructRef itemList, int player){
+    return DataTableGetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"");
+	//return 0;
+}
+
+void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveCallback callback, int player){
+    if(index==ItemListGetCount(itemList)){return;}
+	else if(index>=ItemListGetCount(itemList)){index=0;}
+	else if(index<0){index=ItemListGetCount(itemList)-1;}
+
+	//itemList.current = index;
+	DataTableSetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"",index);
+	callback(itemList,index,PlayerGroupSingle(player));
+}
+
+
+
+
+bool ItemListCatalogFilterDef(int catalog, string entry){
+	return true;
+}
+// ## ItemListCatalogFilterFunc
+// Function Definition to filter entries from a given catalog to add into the list when using `ItemListInitFromCatalog`
+typedef funcref<ItemListCatalogFilterDef> ItemListCatalogFilterFunc;
+
+bool ItemListCatalogFilter(int catalog, string entry){return true;}
+
+
+//Populates an ItemList from a given catalog type. You can exclude items to add using the `filterFunc` parameter
+//* **itemList**:  The `ItemList` to populate
+//* **catalog**:  The catalog type to use. EG: `c_gameCatalogUnit`
+//* **filterFunc**:  A function that will exclude a given catalog entry to be added to the ItemList. 
+//It returns boolean to determine a given entry is included or excluded
+// You can use the default ItemListCatalogFilterDef function if you want to include all entries.
+// It has the following params:
+//    * **_catalog_**: The catalog type being evaluated, used to more generically feed the catalog type to Catalog related functions.
+//    * **_entry_**: the current entry id being evaluated
+// Here is an example of a filter function:
+//```
+// bool UnitList_IsNormalUnitFilter(int catalog, string entry){
+//     bool isUnit = true;
+//     isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0);
+//     isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"EditorFlags[NoPlacement]",c_playerAny) == 0);
+//     isUnit = isUnit && (!StringContains(CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny),"ObjectFamily:Storymode",c_stringAnywhere,false));//ObjectFamily:Storymode
+//     return isUnit;
+// }
+//```
+void ItemListInitFromCatalog(ItemListStructRef itemList, int catalog, ItemListCatalogFilterFunc filterFunc){
+    int i;
+    string entry;
+    int count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
+    for(i=1;i<=count;i+=1){
+        entry = CatalogEntryGet(catalog,i);
+        if(filterFunc(catalog,entry)){
+            ItemListAdd(itemList,entry);
+        }
+	}
+}
+
+void ItemListInitFromPlayerGroup(ItemListStructRef itemList, playergroup pg){
+    int i;
+    int player;
+    int count = PlayerGroupCount(pg);
+    for(i=1;i<=count;i+=1){
+		player = PlayerGroupPlayer(pg,i);//CatalogEntryGet(catalog,i);
+		ItemListAdd(itemList,IntToString(player));
+	}
+}

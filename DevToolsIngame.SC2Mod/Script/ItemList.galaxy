@@ -1,47 +1,6 @@
 include "Script/split_string";
-const int ITEM_LIST_MAX = 60000;
-const string ITEM_LIST_PREFIX = "ItemList";
-//static string[MAX_ITEM_LIST] ItemList;
-//static int ItemList.count = 0;
-//static int ItemList.current = 0;
-
-struct ItemListStruct{
-	string id;
-    //string[ITEM_LIST_MAX] list;
-    int count;
-    int current;
-};
-
-typedef structref<ItemListStruct> ItemListStructRef;
-void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
-typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
-
-
-
-static string ItemListGetKey(ItemListStructRef itemList, int index){
-	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
-	return ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]";
-}
-
-void ItemListSetVal(ItemListStructRef itemList, int index, string val){
-	if(itemList.count<index){
-		err("Error setting a ItemList value higher than itemlist count");
-		err("ItemList: "+itemList.id);
-		err("ItemList Index: "+IntToString(index));
-		err("ItemList COunt: "+IntToString(itemList.count));
-		return;
-	}
-	DataTableSetString(true,ItemListGetKey(itemList,index),val);
-}
-
-string ItemListGetVal(ItemListStructRef itemList, int index){
-	return DataTableGetString(true,ItemListGetKey(itemList,index));
-}
-
-text ItemListItemTextValue(ItemListStructRef itemList,int index){
-	return StringToText(ItemListGetVal(itemList,index));
-}
-typedef funcref<ItemListItemTextValue> ItemListItemTextValueFuncRef;
+include "Script/ItemList/index"
+include "Script/ItemList/Listbox"
 
 
 
@@ -74,92 +33,7 @@ static const string ADDBTN_PATH = "AddButton";
 static const string REMOVEBTN_PATH = "RemoveButton";
 static const string OWNERPLAYERPULLDOWN_PATH = "OwnerPlayer";
 
-// ## ItemListClear
-// Clears an `itemList` by setting all values to an empty `string`
-void ItemListClear(ItemListStructRef itemList){
-	int i =0;
-	for(i=0;i<itemList.count;i+=1){
-		DataTableValueRemove(true,ItemListGetKey(itemList,i));
-		//itemList.list[i] = "";
-	}
-	itemList.count=0;
-	itemList.current = -1;
-}
 
-// ## ItemListAdd
-// Adds a new item to the `itemList` and returns its index.
-// If the list has reached its max capacity, it will return -1
-int ItemListAdd(ItemListStructRef itemList, string itemId){
-	if(itemList.count<ITEM_LIST_MAX){
-		ItemListSetVal(itemList,itemList.count,itemId);
-		//itemList.list[itemList.count] = itemId;
-		itemList.count+=1;
-		return itemList.count;
-	}
-	else{return -1;}
-}
-
-
-// ## ItemListFind
-// Finds an item on the `itemList` and returns its index.
-// If the item can't be found, it will return -1
-int ItemListFind(ItemListStructRef itemList, string itemId){
-	int i;
-	int index = -1;
-	for(i=0;i<itemList.count;i+=1){
-		//if(itemList.list[i]==itemId){index=i;break;}
-		if(ItemListGetVal(itemList,i)==itemId){index=i;break;}
-	}
-	return index;
-}
-
-
-int ItemListGetActive(ItemListStructRef itemList, int player){
-    return DataTableGetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"");
-	//return 0;
-}
-
-void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveCallback callback, int player){
-    if(index==itemList.count){return;}
-	else if(index>=itemList.count){index=0;}
-	else if(index<0){index=itemList.count-1;}
-
-	//itemList.current = index;
-	DataTableSetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"",index);
-	callback(itemList,index,PlayerGroupSingle(player));
-}
-
-
-bool ItemListCatalogFilterDef(int catalog, string entry){
-	return true;
-}
-// ## ItemListCatalogFilterFunc
-// Function Definition to filter entries from a given catalog to add into the list when using `ItemListInitFromCatalog`
-typedef funcref<ItemListCatalogFilterDef> ItemListCatalogFilterFunc;
-
-bool ItemListCatalogFilter(int catalog, string entry){return true;}
-
-void ItemListInitFromCatalog(ItemListStructRef itemList, int catalog, ItemListCatalogFilterFunc filterFunc){
-    int i;
-    string entry;
-    int count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
-    for(i=1;i<=count;i+=1){
-        entry = CatalogEntryGet(catalog,i);
-        if(filterFunc(catalog,entry)){
-            ItemListAdd(itemList,entry);
-        }
-	}
-}
-
-void ItemListInitFromPlayerGroup(ItemListStructRef itemList, playergroup pg){
-    int i;
-    int player;
-    int count = PlayerGroupCount(pg);
-    for(i=1;i<=count;i+=1){
-		player = PlayerGroupPlayer(pg,i);//CatalogEntryGet(catalog,i);
-		ItemListAdd(itemList,IntToString(player));
-	}
-}
 
 int ItemList_FilterListAddItem(ItemListStructRef itemList, ListBoxFilterStructRef listBoxFilter, int index, playergroup pg){
     int listItem = 0;
@@ -207,7 +81,7 @@ void ItemList_FilterListRebuild(ItemListStructRef itemList, ListBoxFilterStructR
     split_string(dsplit, filter, ",");
 	//DialogControlRemoveAllItems(listBoxFilter.list,pg);
 	ItemList_FilterListClear(listBoxFilter,pg);
-	for(i=0;i<itemList.count;i+=1){
+	for(i=0;i<ItemListGetCount(itemList);i+=1){
         if(filter==""){
             ItemList_FilterListAddItem(itemList,listBoxFilter,i,pg);
         }
@@ -272,7 +146,7 @@ bool ItemList_FilterBoxSelectionChangedBase(ItemListStructRef itemList, int list
 	if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
     if(DataTableValueExists(true,key)){
 		val=DataTableGetString(true,key);
-		console(val);
+		//console(val);
 		index = ItemListFind(itemList,val);
 		if(index>=0){
 			ItemListSetActive(itemList,index,listBoxFilterSetActive,player);
@@ -314,12 +188,12 @@ bool playerItemListInitialized = false;
 
 void ItemListContainer_PlayerListSetActive(ItemListStructRef itemList, int index,playergroup pg){
 	//itemList.current = index;
-	console(ItemListGetVal(itemList,index));
+	//console(ItemListGetVal(itemList,index));
 }
 text ItemListContainer_PlayerListItemTextValue(ItemListStructRef itemList,int index){
 	int player = StringToInt(ItemListGetVal(itemList,index));
     text name;
-    console(ItemListGetVal(itemList,index));
+    //console(ItemListGetVal(itemList,index));
     name = IntToText(player)+StringToText(":")+PlayerName(player);
     //name = StringToText(ItemListGetVal(itemList,index)+": ")+name;
 	return name;
@@ -347,7 +221,7 @@ bool ItemListContainer_PlayerListSelectionChanged(bool a, bool b){
 	if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){return false;}
     if(DataTableValueExists(true,key)){
 		val=DataTableGetString(true,key);
-		console(val);
+		//console(val);
 		index = ItemListFind(playerItemList,val);
 		if(index>=0){
 			ItemListSetActive(playerItemList,index,ItemListContainer_PlayerListSetActive,player);
@@ -368,9 +242,9 @@ void ItemListContainer_InitStandardPlayerList(){
 	}
 }
 
-void ItemListContainer_InitStandardPlayers(ItemListContainerStructRef ItemListContainer){
+void ItemListContainer_InitStandardPlayers(int listcontrol){
 	playergroup pg = PlayerGroupAll();
-	int list = ItemListContainer.ownerPlayerPulldown;
+	int list = listcontrol;
 	int listItem = 0;
 	string listId = IntToString(list)+".PlayerList";
 	int player;
@@ -379,7 +253,7 @@ void ItemListContainer_InitStandardPlayers(ItemListContainerStructRef ItemListCo
 	string key;
 	trigger t = TriggerCreate("ItemListContainer_PlayerListSelectionChanged");
 	ItemListContainer_InitStandardPlayerList();
-	for(lv_i=0;lv_i<playerItemList.count;lv_i+=1){
+	for(lv_i=0;lv_i<ItemListGetCount(playerItemList);lv_i+=1){
 		for(lv_j=1;lv_j<=PlayerGroupCount(pg);lv_j+=1){
 			player = PlayerGroupPlayer(pg,lv_j);
 			if(PlayerType(player)!=c_playerTypeUser || PlayerStatus(player)!=c_playerStatusActive){continue;}
@@ -402,7 +276,7 @@ void ItemListContainer_InitStandard(ItemListContainerStructRef ItemListContainer
     ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
 	ItemListContainer.ownerPlayerPulldown = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypePulldown,OWNERPLAYERPULLDOWN_PATH);
 	
-	ItemListContainer_InitStandardPlayers(ItemListContainer);
+	ItemListContainer_InitStandardPlayers(ItemListContainer.ownerPlayerPulldown);
 
     t = TriggerCreate(triggerName);
     TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
