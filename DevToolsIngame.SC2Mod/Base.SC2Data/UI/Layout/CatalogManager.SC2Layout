@@ -237,6 +237,37 @@
 		</Frame>
 
 	</Frame>
+	<Frame type="Control" name="CatalogManagerAllowTech" template="CatalogManager/CatalogManager">
+		<Frame type="Button" name="AllowButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Bottom" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+            <Width val="190"/>
+			<Height val="60"/>
+			<Text val="@UI/CatalogManager/AllowButton"/>
+		</Frame>
+		<Frame type="Button" name="DisallowButton" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Bottom" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+            <Width val="190"/>
+			<Height val="60"/>
+			<Text val="@UI/CatalogManager/DisallowButton"/>
+		</Frame>
+		<Frame type="Button" name="AddButton">
+			<Anchor side="Bottom" relative="$parent/AllowButton" pos="Min" offset="-10"/>
+		</Frame>
+		<Frame type="Button" name="RemoveButton">
+			<Anchor side="Bottom" relative="$parent/DisallowButton" pos="Min" offset="-10"/>
+		</Frame>
+		
+		<Frame type="Pulldown" name="OwnerPlayer" template="DevTools_Templates/PulldownTemplate">
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Anchor side="Bottom" relative="$parent/AddButton" pos="Min" offset="-10"/>
+			<Width val="200"/>
+			<Height val="60"/>
+			<CollapseLayout val="True"/>
+		</Frame>
+	</Frame>
 	<Frame type="Control" name="CatalogManagerSourceTarget" template="CatalogManager/CatalogManager">
 		<Frame type="Button" name="AddButton">
 			<Anchor side="Bottom" relative="$parent/SetSourceUnit" pos="Min" offset="-10"/>
