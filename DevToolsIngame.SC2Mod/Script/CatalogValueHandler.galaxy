@@ -12,6 +12,15 @@ static const string VALUEBOX_PATH = "Value";
 static const string APPLYBUTTON_PATH = "Apply";
 static const string GETBUTTON_PATH = "Get";
 
+static const string DEBUG_TYPE_ANY_FILENAME = "UnitTest";
+static const int DEBUG_TYPE_INFO = 12;
+
+
+static void CatalogValueHandler_console(string s){
+	TriggerDebugOutput(DEBUG_TYPE_INFO,StringToText(s),false);
+}
+
+
 
 struct CatalogValueContainerStruct{
 	int panel;
@@ -263,6 +272,59 @@ static int CatalogValueContainerCatalogValue(string val){
 	
 }
 
+static string tabsFromIdentLevel(int indentLevel){
+	string tab = "";
+	int indentLevelIterator = indentLevel;
+	while (indentLevelIterator>1){tab+="\t"; indentLevelIterator-=1;}
+	return tab;
+}
+
+static string printFieldsfromScope(string scope, int indentLevel){
+	int count = 0;
+	int index = 0;
+	int typeCategory = c_catalogFieldTypeUnknown;
+	string type = "";
+	string entry = "";
+	string row = "";
+	string output = "";
+	string tab = tabsFromIdentLevel(indentLevel);
+	string fieldFormat = "{type}{array} {name}; //{fieldType}";
+	count = CatalogFieldCount (scope);
+	output = "\n"+tab+"{";
+	for(index=0;index<count;index+=1){
+		
+		
+		tab = tabsFromIdentLevel(indentLevel+1);
+		row = "\n"+tab+fieldFormat;
+		entry = CatalogFieldGet (scope, index);
+		if(CatalogFieldIsScope (scope, entry)){
+			row = StringReplaceWord(row,"{name}",entry,1,false);
+			if(CatalogFieldIsArray (scope, entry)){
+				row = StringReplaceWord(row,"{array}","[]",1,false);
+			}
+			else{row = StringReplaceWord(row,"{array}","",1,false);}
+			type = CatalogFieldType(scope,entry);
+			typeCategory = CatalogFieldTypeCategory (scope, entry);
+			row = StringReplaceWord(row,"{type}",type,1,false);
+			if(typeCategory==c_catalogFieldTypeStruct){
+				row = StringReplaceWord(row,"{fieldType}","struct",1,false);
+				row = StringReplaceWord(row,";","",1,false);
+				row += printFieldsfromScope(type,indentLevel+1);
+			}
+			else if(typeCategory==c_catalogFieldTypeEnum){
+				row = StringReplaceWord(row,"{fieldType}","enum",1,false);
+			}
+			else {
+				row = StringReplaceWord(row,"{fieldType}","fieldtype: "+IntToString(typeCategory),1,false);
+			}
+			output += row;
+		}
+	}
+	tab = tabsFromIdentLevel(indentLevel);
+	output += "\n"+tab+"}";
+	return output;
+}
+
 bool CatalogValueContainerSendHandler(bool a, bool b){
 	bool trigRan = true;
 	int player = EventPlayer();
@@ -283,6 +345,13 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
     string lv_scopeField;
     int lv_player;
     int lv_i;
+	
+	int fieldCount = 0;
+	int fieldIndex = 0;
+	int fieldTypeCategory = c_catalogFieldTypeUnknown;
+	string fieldType = "";
+	string fieldEntry = "";
+	string consoleDebugOutput;
 
     // Variable Initialization
     lv_a = "";
@@ -292,10 +361,10 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
     lv_scopeField = "DefaultButtonCardId";
     lv_player = c_playerAny;
     lv_i = 0;
-    for ( ; lv_i <= CatalogFieldValueCount(c_gameCatalogAbil,lv_entry,lv_field,lv_player)-1 ; lv_i += 1 ) {
-        lv_a = CatalogFieldValueGet(c_gameCatalogAbil,lv_entry,lv_field+"["+IntToString(lv_i)+"]."+lv_scopeField,lv_player);
-        libNtve_gv_visibleFilter = UnitFilter((1 << c_targetFilterCanHaveEnergy), 0, 0, 0);
-    }
+    //for ( ; lv_i <= CatalogFieldValueCount(c_gameCatalogAbil,lv_entry,lv_field,lv_player)-1 ; lv_i += 1 ) {
+    //    lv_a = CatalogFieldValueGet(c_gameCatalogAbil,lv_entry,lv_field+"["+IntToString(lv_i)+"]."+lv_scopeField,lv_player);
+    //    libNtve_gv_visibleFilter = UnitFilter((1 << c_targetFilterCanHaveEnergy), 0, 0, 0);
+    //}
 	if(CatalogEntryIsValid(catalog,entry)){
 		scope = CatalogEntryScope(catalog,entry);
 		console("Catalog Is Array "+IntToString(BoolToInt(CatalogFieldIsArray(scope,field))));
@@ -307,13 +376,25 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 				
 			}
 			else{
-				print("Catalog field: ["+field+"] could not be found in catalog type "+IntToString(catalog));
+				print("Catalog field: ["+field+"] could not be found in catalog scope "+scope);
 				trigRan = false;
 			}
 		}
 		else if(EventDialogControl()==CatalogValueContainer.getBtn){
-			value = CatalogFieldValueGet(catalog,entry,field,player);
-			DialogControlSetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,PlayerGroupSingle(player),value);
+			if(CatalogFieldExists(scope,field)){
+				value = CatalogFieldValueGet(catalog,entry,field,player);
+				DialogControlSetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,PlayerGroupSingle(player),value);
+			}
+			else{
+				print("Catalog field: ["+field+"] could not be found in catalog scope  "+scope);
+				TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, scope);
+				CatalogValueHandler_console(scope+" Valid Fields:");
+				
+					consoleDebugOutput += printFieldsfromScope(scope,1);
+					CatalogValueHandler_console(consoleDebugOutput);
+					
+				trigRan = false;
+			}
 		}
 		
 		
@@ -325,9 +406,75 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	return trigRan;
 }
 
+string getAbilsFromUnit(unit u){
+    string s;
+    int count = UnitAbilityCount(u);
+    int i;
+    s = UnitGetType(u)+IntToString(UnitGetTag(u))+"\n";
+	for(i=1;i<=count;i+=1){
+		s+=UnitAbilityGet(u,i)+"\n";
+	}
+    return s;
+}
+
+bool getAbilsFromSelectedUnits(bool a, bool b){
+	string msg = EventChatMessage(false);
+	string log = "UnitAbils";
+	int i;
+	unitgroup ug = UnitGroupSelected(EventPlayer());
+	unit u;
+	if(StringWord(msg,1)==EventChatMessage(true)){
+		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+		for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+			CatalogValueHandler_console(getAbilsFromUnit(u));
+		}
+	}
+	return true;
+}
+
+bool printPropertyFromCatalogTrig(bool a, bool b){
+	string msg = EventChatMessage(false);
+	int catalog;
+	int count; int i;
+	string catalogName = "";
+	string property = "";
+	string log = "CatalogVal";
+	string entry;
+	string value;
+	if(StringWord(msg,1)==EventChatMessage(true)){
+		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+		catalogName = StringWord(msg,2);
+		property = StringWord(msg,3);
+		catalog= DataTableGetInt(true,"Catalog."+catalogName);
+    	count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
+    	for(i=1;i<=count;i+=1){
+        	entry = CatalogEntryGet(catalog,i);
+			value = CatalogFieldValueGet(catalog,entry,property,EventPlayer());
+			CatalogValueHandler_console(entry+"."+property+": "+value);
+		}
+	}
+	return true;
+}
+
+bool printFieldsfromScopeTrig(bool a, bool b){
+	string msg = EventChatMessage(false);
+	string scope = "";
+	string log = "Misc";
+	if(StringWord(msg,1)==EventChatMessage(true)){
+		scope = StringWord(msg,2);
+	}
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+	CatalogValueHandler_console("\nclass "+scope+printFieldsfromScope(scope,1));
+	return true;
+}
+
 void CatalogValueHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
+
+	
+
 	ItemList.id = "CatalogValueList";
 	CatalogValueContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	CatalogValueContainer.typePull = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
@@ -336,6 +483,9 @@ void CatalogValueHandler_Init(){
 	CatalogValueContainer.valueBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,VALUEBOX_PATH);
 	CatalogValueContainer.applyBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,APPLYBUTTON_PATH);
 	CatalogValueContainer.getBtn = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeButton,GETBUTTON_PATH);
+	
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, DEBUG_TYPE_ANY_FILENAME);
+
 	t = TriggerCreate("CatalogValueContainerSendHandler");
 	TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.applyBtn,c_triggerControlEventTypeClick);
 	TriggerAddEventDialogControl(t,c_playerAny,CatalogValueContainer.getBtn,c_triggerControlEventTypeClick);
@@ -349,4 +499,13 @@ void CatalogValueHandler_Init(){
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 	t = TriggerCreate("CatalogValueListBoxSelectionChanged");
 	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
+	t =TriggerCreate("printFieldsfromScopeTrig");
+	TriggerAddEventChatMessage(t,c_playerAny,"scopedump",false);
+	t =TriggerCreate("printPropertyFromCatalogTrig");
+	TriggerAddEventChatMessage(t,c_playerAny,"fetchval",false);
+	t =TriggerCreate("getAbilsFromSelectedUnits");
+	TriggerAddEventChatMessage(t,c_playerAny,"getabils",false);
+	//TriggerExecute(t,true,false);
+	
+
 }
