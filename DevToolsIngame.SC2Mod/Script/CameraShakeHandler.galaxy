@@ -1,0 +1,159 @@
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CameraShakeManager";
+static const string POSITION_PATH = "Position";
+static const string DIRECTION_PATH = "Direction";
+static const string AMPLITUDE_PATH = "Amplitude/Slider";
+static const string FREQUENCY_PATH = "Frequency/Slider";
+static const string RANDOMPERCENT_PATH = "RandomPercent/Slider";
+static const string DURATION_PATH = "Duration/Slider";
+static const string APPLYBUTTON_PATH = "Apply";
+static const string RESTOREBUTTON_PATH = "Restore";
+
+static ItemListStruct PositionItemList;
+static ItemListStruct DirectionItemList;
+static ListBoxFilterStruct PositionListBoxFilter;
+static ListBoxFilterStruct DirectionListBoxFilter;
+
+struct CameraShakePanelStruct {
+    int panel;
+    int position;
+    int direction;
+    int amplitude;
+    int frequency;
+    int randomPercent;
+    int duration;
+	int applyBtn;
+	int restoreBtn;
+};
+
+typedef structref<CameraShakePanelStruct> CameraShakePanelStructRef;
+static CameraShakePanelStruct CameraShakePanel;
+
+
+static int CameraShakePosition(string val){
+	return DataTableGetInt(true,"CameraShake.Position."+val);
+	
+}
+static int CameraShakeDirection(string val){
+	return DataTableGetInt(true,"CameraShake.Direction."+val);
+	
+}
+bool CameraShakePositionListBoxSelectionChanged(bool a, bool b){
+	return ItemList_FilterBoxSelectionChanged(PositionItemList, PositionListBoxFilter, EventPlayer());
+}
+bool CameraShakeDirectionListBoxSelectionChanged(bool a, bool b){
+	return ItemList_FilterBoxSelectionChanged(DirectionItemList, DirectionListBoxFilter, EventPlayer());
+}
+static void DirectionListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	console(ItemListGetVal(itemList,index));
+}
+static void PositionListBoxSetActive(ItemListStructRef itemList, int index,playergroup pg){
+	console(ItemListGetVal(itemList,index));
+}
+
+void CameraShakeLinkList_Init(){
+	DataTableSetInt(true,"CameraShake.Position.Eye",c_cameraPositionEye);
+	DataTableSetInt(true,"CameraShake.Position.Target",c_cameraPositionTarget);
+	DataTableSetInt(true,"CameraShake.Position.Both",c_cameraPositionBoth);
+	DataTableSetInt(true,"CameraShake.Direction.X",c_cameraDirectionX);
+	DataTableSetInt(true,"CameraShake.Direction.Y",c_cameraDirectionY);
+	DataTableSetInt(true,"CameraShake.Direction.Z",c_cameraDirectionZ);
+	DataTableSetInt(true,"CameraShake.Direction.XY",c_cameraDirectionXY);
+	DataTableSetInt(true,"CameraShake.Direction.XZ",c_cameraDirectionXZ);
+	DataTableSetInt(true,"CameraShake.Direction.YZ",c_cameraDirectionYZ);
+	DataTableSetInt(true,"CameraShake.Direction.XYZ",c_cameraDirectionXYZ);
+	
+	ItemListAdd(PositionItemList,"Eye");
+	ItemListAdd(PositionItemList,"Target");
+	ItemListAdd(PositionItemList,"Both");
+
+	ItemListAdd(DirectionItemList,"X");
+	ItemListAdd(DirectionItemList,"Y");
+	ItemListAdd(DirectionItemList,"Z");
+	ItemListAdd(DirectionItemList,"XY");
+	ItemListAdd(DirectionItemList,"XZ");
+	ItemListAdd(DirectionItemList,"YZ");
+	ItemListAdd(DirectionItemList,"XYZ");	
+};
+
+bool CameraShakePanelSendHandler(bool a, bool b){
+	bool trigRan = true;
+	int player = EventPlayer();
+    int direction = CameraShakeDirection(ItemListGetVal(DirectionItemList,ItemListGetActive(DirectionItemList,player)));
+    int position = CameraShakePosition(ItemListGetVal(PositionItemList,ItemListGetActive(PositionItemList,player)));
+    
+    fixed amplitude = DialogControlGetPropertyAsFixed(CameraShakePanel.amplitude,c_triggerControlPropertyValue,player);
+    fixed frequency = DialogControlGetPropertyAsFixed(CameraShakePanel.frequency,c_triggerControlPropertyValue,player);
+    fixed randomPercent = DialogControlGetPropertyAsFixed(CameraShakePanel.randomPercent,c_triggerControlPropertyValue,player);
+    fixed duration = DialogControlGetPropertyAsFixed(CameraShakePanel.duration,c_triggerControlPropertyValue,player);
+    if(EventDialogControl()==CameraShakePanel.applyBtn){
+        CameraShakeStart(player,position,direction,amplitude,frequency,randomPercent,duration);
+    }
+    else if(EventDialogControl()==CameraShakePanel.restoreBtn){
+        CameraShakeStop(player);
+    }
+	return trigRan;
+}
+
+
+void CameraShakeHandler_InitValues(playergroup pg){
+    DialogControlSetPropertyAsFixed(CameraShakePanel.position,c_triggerControlPropertyValue,pg,0);
+    DialogControlSetPropertyAsFixed(CameraShakePanel.direction,c_triggerControlPropertyValue,pg,0);
+    DialogControlSetPropertyAsFixed(CameraShakePanel.amplitude,c_triggerControlPropertyValue,pg,0);
+    DialogControlSetPropertyAsFixed(CameraShakePanel.frequency,c_triggerControlPropertyValue,pg,0);
+    DialogControlSetPropertyAsFixed(CameraShakePanel.randomPercent,c_triggerControlPropertyValue,pg,0);
+    DialogControlSetPropertyAsFixed(CameraShakePanel.duration,c_triggerControlPropertyValue,pg,0);
+}
+
+void CameraShakeHandler_InitHookup(){
+	playergroup pg = PlayerGroupAll();
+    trigger t;
+
+    CameraShakePanel.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
+    CameraShakePanel.position = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypePulldown,POSITION_PATH);
+    CameraShakePanel.direction = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypePulldown,DIRECTION_PATH);
+    CameraShakePanel.amplitude = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeSlider,AMPLITUDE_PATH);
+    CameraShakePanel.frequency = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeSlider,FREQUENCY_PATH);
+    CameraShakePanel.randomPercent = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeSlider,RANDOMPERCENT_PATH);
+    CameraShakePanel.duration = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeSlider,DURATION_PATH);
+    
+	CameraShakePanel.applyBtn = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeButton,APPLYBUTTON_PATH);
+	CameraShakePanel.restoreBtn = DialogControlHookup(CameraShakePanel.panel,c_triggerControlTypeButton,RESTOREBUTTON_PATH);
+
+    CameraShakeHandler_InitValues(pg);
+
+    t = TriggerCreate("CameraShakePanelSendHandler");
+	TriggerAddEventDialogControl(t,c_playerAny,CameraShakePanel.applyBtn,c_triggerControlEventTypeClick);
+	TriggerAddEventDialogControl(t,c_playerAny,CameraShakePanel.restoreBtn,c_triggerControlEventTypeClick);
+	
+    
+    DirectionItemList.id = "CameraShakeDirectionList";
+    PositionItemList.id = "CameraShakePositionList";
+
+	PositionListBoxFilter.id = "CameraShakePositionListBox";
+	PositionListBoxFilter.setActive = PositionListBoxSetActive;
+	PositionListBoxFilter.panel = CameraShakePanel.panel;
+	PositionListBoxFilter.list = CameraShakePanel.position;
+	PositionListBoxFilter.itemTextFunc = ItemListItemTextValue;
+
+    DirectionListBoxFilter.id = "CameraShakeDirectionListBox";
+    DirectionListBoxFilter.setActive = DirectionListBoxSetActive;
+    DirectionListBoxFilter.panel = CameraShakePanel.panel;
+    DirectionListBoxFilter.list = CameraShakePanel.direction;
+    DirectionListBoxFilter.itemTextFunc = ItemListItemTextValue;
+    
+    CameraShakeLinkList_Init();
+
+    ItemList_FilterListRebuild(PositionItemList,PositionListBoxFilter,"",pg);
+	ItemList_FilterListRebuild(DirectionItemList,DirectionListBoxFilter,"",pg);
+
+	t = TriggerCreate("CameraShakePositionListBoxSelectionChanged");
+	TriggerAddEventDialogControl(t,c_playerAny,PositionListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
+    t = TriggerCreate("CameraShakeDirectionListBoxSelectionChanged");
+	TriggerAddEventDialogControl(t,c_playerAny,DirectionListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
+}
+
+
+void CameraShakeHandler_Init(){
+    CameraShakeHandler_InitHookup();
+    CameraShakeHandler_InitValues(PlayerGroupActive());
+}
