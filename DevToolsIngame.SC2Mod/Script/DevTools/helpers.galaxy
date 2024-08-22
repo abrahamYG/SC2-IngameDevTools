@@ -2,9 +2,25 @@ include "Script/DevTools/helpers_h";
 
 static const string PREFIX="DevToolsHelper";
 
+static const string DEBUG_TYPE_ANY_FILENAME = "UnitTest";
+static const int DEBUG_TYPE_INFO = 11;
+
+
 static string GetSpawnPointKey(int player){
 	return PREFIX+".SpawnPoint["+IntToString(player)+"]";
 }
+
+
+static void helpers_print(string s){
+	TriggerDebugOutput(DEBUG_TYPE_INFO,StringToText(s),true);
+}
+
+
+static void helpers_console(string s){
+	TriggerDebugOutput(DEBUG_TYPE_INFO,StringToText(s),false);
+}
+
+
 
 point DevTools_GetSpawnPoint(int player){
 	point p;
@@ -28,4 +44,42 @@ void DevTools_ClearSpawnPoint(int player){
 		GameDestroyEffects(p,1.0,1,"DevToolsBeaconSpawnUnit");
 	}
 	DataTableValueRemove(true,GetSpawnPointKey(player));
+}
+
+
+string getBehaviorsFromUnit(unit u){
+    string s;
+    int count = UnitBehaviorCountAll(u);
+    int i;
+    s = UnitGetType(u)+IntToString(UnitGetTag(u))+"\n";
+	for(i=1;i<=count;i+=1){
+		s+=UnitBehaviorGet(u,i)+"\n";
+	}
+    return s;
+}
+
+bool getBehaviorsFromSelectedUnits(bool a, bool b){
+	string msg = EventChatMessage(false);
+	string log = "UnitBehaviors";
+	int i;
+	unitgroup ug = UnitGroupSelected(EventPlayer());
+	unit u;
+	if(StringWord(msg,1)==EventChatMessage(true)){
+		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+		for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+			print(getBehaviorsFromUnit(u));
+		}
+	}
+	return true;
+}
+
+void helpersInit(){
+	trigger t;
+	
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, DEBUG_TYPE_ANY_FILENAME);
+
+	t =TriggerCreate("getBehaviorsFromSelectedUnits");
+	TriggerAddEventChatMessage(t,c_playerAny,"getbehaviors",false);
+	
 }
