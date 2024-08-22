@@ -6,10 +6,12 @@
     <Include path="UI/Layout/DevTools/DevTools_MenuBar.SC2Layout"/>
     <!--<Include path="UI/Layout/PortView.SC2Layout"/>-->
     <Include path="UI/Layout/CatalogManager.SC2Layout"/>
+    <Include path="UI/Layout/ActorMessageManager.SC2Layout"/>
     <Include path="UI/Layout/DataTableManager.SC2Layout"/>
     <Include path="UI/Layout/PortraitManager.SC2Layout"/>
     <Include path="UI/Layout/CheatManager.SC2Layout"/>
     <Include path="UI/Layout/CameraManager.SC2Layout"/>
+    <Include path="UI/Layout/CameraShakeManager.SC2Layout"/>
     <Include path="UI/Layout/FogManager.SC2Layout"/>
     <Include path="UI/Layout/DataEditor.SC2Layout"/>
     <Include path="UI/Layout/DevTools_MiscMenu.SC2Layout"/>

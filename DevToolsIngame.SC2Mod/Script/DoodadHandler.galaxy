@@ -1,0 +1,137 @@
+include "Script/debug_h";
+include "Script/ItemList";
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+static const string ALLOWBTN_PATH = "AllowButton";
+static const string DISALLOWBTN_PATH = "DisallowButton";
+static const string OWNERPLAYERPULLDOWN_PATH = "OwnerPlayer";
+static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/DoodadManager";
+
+struct DoodadContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+	int allowButton;
+    int disallowButton;
+	int ownerPlayerPulldown;
+};
+
+typedef structref<DoodadContainerStruct> DoodadContainerStructRef;
+DoodadContainerStruct DoodadContainer;
+static ItemListStruct ItemList;
+//static ItemListStruct PlayerList;
+static ListBoxFilterStruct ListBoxFilter;
+
+bool DoodadListBoxFilterQuery(bool a, bool b){
+    int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+	string val = DialogControlGetPropertyAsString(ListBoxFilter.editbox,c_triggerControlPropertyEditText,EventPlayer());
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,val,pg);
+	return true;
+}
+bool DoodadListBoxSelectionChanged(bool a, bool b){
+	int player = EventPlayer();
+	playergroup pg = PlayerGroupSingle(player);
+    return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, player);
+}
+
+void DoodadListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
+    DialogControlSetPropertyAsString(DoodadContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
+}
+
+static unitgroup ContainerTarget(){
+    return UnitGroupSelected(EventPlayer());
+}
+
+static string ContainerUnit(string val){
+    return val;
+}
+
+static point ContainerPoint(){
+    return CameraGetTarget(EventPlayer());
+}
+
+bool DoodadContainerSendHandler(bool a, bool b){
+    bool trigRan = true;
+    string val = DialogControlGetPropertyAsString(DoodadContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string unitType = ContainerUnit(val);
+    unitgroup ug = ContainerTarget();
+    unit u;
+    int i;
+    int unitcount = 1;
+    point p = ContainerPoint();
+    string ownerVal = ItemListContainer_PlayerListGetSelected(DoodadContainer.ownerPlayerPulldown,EventPlayer());
+    int ownerIndex = ItemListFind(playerItemList,ownerVal);
+    int owner;
+    if(ownerIndex == -1){owner=EventPlayer();}
+    else {owner = StringToInt(ItemListGetVal(playerItemList,ownerIndex));}
+    if(EventDialogControl()==DoodadContainer.addButton){
+        ug = UnitCreate(unitcount,unitType,0,owner,p,270.0);
+    }
+    else if(EventDialogControl()==DoodadContainer.removeButton){
+        for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+            u = UnitGroupUnit(ug,i);
+            if(UnitGetType(u)==unitType){
+                UnitKill(u);
+            }
+        }
+    }
+    else if(EventDialogControl()==DoodadContainer.allowButton){
+        //TechTreeRestrictionsEnable(owner, true);
+        TechTreeUnitAllow(owner,unitType,true);
+        TechTreeAbilityAllow(owner,AbilityCommand("DarkArchonSCBWFeedback",c_abilEffectTargetCmdExecute),true);
+        
+    }
+    else if(EventDialogControl()==DoodadContainer.disallowButton){
+        //TechTreeRestrictionsEnable(owner, true);
+        TechTreeUnitAllow(owner,unitType,false);
+        TechTreeAbilityAllow(owner,AbilityCommand("DarkArchonSCBWFeedback",c_abilEffectTargetCmdExecute),false);
+    }
+    return trigRan;
+}
+
+
+
+static bool ConatinerList_IsDoodadFilter(int catalog, string entry){
+    bool isDoodad = true;
+    isDoodad = isDoodad && (CatalogEntryScope(catalog,entry) == "CActorDoodad");
+    return isDoodad;
+}
+static text ContainerListItemTextValue(ItemListStructRef itemList,int index){
+    text name;
+    //console(ItemListGetVal(itemList,index));
+    name = StringExternal(CatalogFieldValueGet(c_gameCatalogActor,ItemListGetVal(itemList,index),"Name",c_playerAny));
+    name = StringToText(ItemListGetVal(itemList,index)+": ")+name;
+	return name;
+}
+
+void Container_Init(DoodadContainerStructRef ItemListContainer, string dlgPath, string triggerName){
+    trigger t;
+    ItemListContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,dlgPath);
+    ItemListContainer.messageBox = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    ItemListContainer.addButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+	ItemListContainer.allowButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ALLOWBTN_PATH);
+    ItemListContainer.disallowButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,DISALLOWBTN_PATH);
+	ItemListContainer.ownerPlayerPulldown = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypePulldown,OWNERPLAYERPULLDOWN_PATH);
+	
+	ItemListContainer_InitStandardPlayers(ItemListContainer.ownerPlayerPulldown);
+
+    t = TriggerCreate(triggerName);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.allowButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.disallowButton,c_triggerControlEventTypeClick);
+}
+
+void UnitHandler_Init(){
+    playergroup pg = PlayerGroupAll();
+    ItemList.id = "DoodadList";
+    Container_Init(DoodadContainer, CONTAINERDLG_PATH, "DoodadContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogActor, ConatinerList_IsDoodadFilter);
+	ItemList_FilterListInitStandard(ListBoxFilter, "DoodadListBox", DoodadListBoxSetActive, ContainerListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+    
+}
