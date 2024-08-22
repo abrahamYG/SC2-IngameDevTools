@@ -51,6 +51,13 @@ bool LightingList_IsTilesetFilter(int catalog, string entry){
     return CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny) =="LightGroup:Tilesets";
 }
 
+static void LightingItemListForEachCallBack(string element, int currentIndex,ItemListStructRef itemList){
+    console("callback: "+element);
+}
+
+static string LightingItemListReduceStringCallBack(string accumulator, string currentValue, int currentIndex,ItemListStructRef itemList){
+    return accumulator+currentValue+";";
+}
 
 void LightingHandler_Init(){
 	playergroup pg = PlayerGroupAll();
@@ -59,4 +66,7 @@ void LightingHandler_Init(){
     ItemListInitFromCatalog(ItemList, c_gameCatalogLight, LightingList_IsTilesetFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
+
+    ItemListForEach(ItemList,LightingItemListForEachCallBack);
+    console(ItemListReduceString(ItemList,LightingItemListReduceStringCallBack, ""));
 }
