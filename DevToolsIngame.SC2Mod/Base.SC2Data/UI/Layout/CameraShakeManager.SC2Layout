@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+
+	<Frame type="Frame" name="CameraShakeManager" template="DevTools_Templates/PanelTemplateTitled">
+		<Height val="680"/>
+		<Width val="600"/>
+		<CollapseLayout val="True"/>
+		<Frame type="Label" name="Title">
+			<Text val="CameraShake"/>
+		</Frame>
+		
+		<Frame type="Pulldown" name="Position" template="DevTools_Templates/PulldownTemplate">
+			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Mid" offset="-1"/>
+			<Height val="60"/>
+		</Frame>
+		<Frame type="Pulldown" name="Direction" template="DevTools_Templates/PulldownTemplate">
+			<Anchor side="Top" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Mid" offset="1"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Max" offset="0"/>
+			<Height val="60"/>
+		</Frame>
+		<Frame type="Frame" name="Amplitude" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Position" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/Position" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/AnchorContainerFrame" pos="Mid" offset="-1"/>
+			<Frame type="Label" name="Name">
+				<Text val="Amplitude"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="50"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Frequency" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Amplitude" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/Amplitude" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Amplitude" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Frequency"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="100"/>
+			</Frame>
+		</Frame>
+
+		<Frame type="Frame" name="RandomPercent" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/Direction" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/Direction" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/Direction" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="RandomPercent"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="100"/>
+			</Frame>
+		</Frame>
+		<Frame type="Frame" name="Duration" template="DevTools_Templates/SliderContainer">
+			<Anchor side="Top" relative="$parent/RandomPercent" pos="Max" offset="2"/>
+			<Anchor side="Left" relative="$parent/RandomPercent" pos="Min" offset="0"/>
+			<Anchor side="Right" relative="$parent/RandomPercent" pos="Max" offset="0"/>
+			<Frame type="Label" name="Name">
+				<Text val="Duration"/>
+			</Frame>
+			<Frame type="Slider" name="Slider">
+				<MinValue val="0"/>
+				<MaxValue val="10"/>
+			</Frame>
+		</Frame>
+		<Frame type="Button" name="Apply" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/Duration" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent/AnchorContainerFrame" pos="Min" offset="0"/>
+			<Width val="150"/>
+			<Height val="60"/>
+			<Text val="Apply"/>
+		</Frame>
+		
+		<Frame type="Button" name="Restore" template="DevTools_Templates/ButtonTemplate">
+			<Anchor side="Top" relative="$parent/Apply" pos="Min" offset="0"/>
+			<Anchor side="Left" relative="$parent/Apply" pos="Max" offset="5"/>
+			<Width val="150"/>
+			<Height val="60"/>
+			<Text val="Restore"/>
+		</Frame>
+	</Frame>
+
+</Desc>
