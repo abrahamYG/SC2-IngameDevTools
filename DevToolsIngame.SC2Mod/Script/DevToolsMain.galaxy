@@ -18,12 +18,13 @@ include "Script/PortraitHandler";
 include "Script/DataTableHandler";
 include "Script/DataEditorHandler";
 include "Script/CameraHandler";
+include "Script/CameraShakeHandler";
 include "Script/FogHandler";
 //include "Script/PortView";
 //include "Script/libGalExe_init";
 
 void DevToolsMain_Init(){
-    
+    helpersInit();
     ActorMessageHandler_Init();
     CatalogValueHandler_Init();
     CatalogLinkHandler_Init();
@@ -42,7 +43,10 @@ void DevToolsMain_Init(){
     DataTableHandler_Init();
     DataEditorHandler_Init();
     CameraHandler_Init();
+    CameraShakeHandler_Init();
     FogHandler_Init();
+    PlayerSetAlliance(2,c_allianceIdControl,1,true);
+    PlayerSetAlliance(2,c_allianceIdSpend,1,true);
     //PortView_Init();
 	//gt_libGalExe_Init();
 }

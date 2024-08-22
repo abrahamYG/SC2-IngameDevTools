@@ -96,7 +96,7 @@
 				</Frame>
 				
 			</Frame>
-			<Frame type="Control" name="UnitManager" template="CatalogManager/CatalogManager">
+			<Frame type="Control" name="UnitManager" template="CatalogManager/CatalogManagerAllowTech">
 				<Visible val="{$parent/CatalogManagerList/ShowUnitManager/@Toggled}"/>
 				<Anchor side="Top" relative="$parent/EffectManager" pos="Min" offset="0"/>
 				<Anchor side="Right" relative="$parent/EffectManager" pos="Min" offset="-10"/>
@@ -198,55 +198,31 @@
 			<Frame type="TabControl" name="MiscMenuList" template="DevTools_MiscMenu/MiscMenuTemplate">
 				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
 				<Anchor side="Left" relative="$parent" pos="Min" offset="0"/>
+
 				<TabListItem val="$this/ShowActorMessageManager"/>
-				<TabListItem val="$this/ShowCatalogValueManager"/>
-				<TabListItem val="$this/ShowCatalogLinkManager"/>
-				<TabListItem val="$this/ShowCameraManager"/>
-				<TabListItem val="$this/ShowFogManager"/>
 				<PanelListItem val="$parent/ActorMessageManager"/>
+				<TabListItem val="$this/ShowCatalogValueManager"/>
 				<PanelListItem val="$parent/CatalogValueManager"/>
+				<TabListItem val="$this/ShowCatalogLinkManager"/>
 				<PanelListItem val="$parent/CatalogLinkManager"/>
+				<TabListItem val="$this/ShowCameraManager"/>
 				<PanelListItem val="$parent/CameraManager"/>
+				<TabListItem val="$this/ShowCameraShakeManager"/>
+				<PanelListItem val="$parent/CameraShakeManager"/>
+				<TabListItem val="$this/ShowFogManager"/>
 				<PanelListItem val="$parent/FogManager"/>
+
 				<Handle val="$MiscMenuList"/>
 			</Frame>
-			<Frame type="Control" name="ActorMessageManager" template="DevTools_Templates/PanelTemplateTitled">
+			<Frame type="Control" name="ActorMessageManager" template="ActorMessageManager/ActorMessageManager">
 				<Visible val="{$parent/MiscMenuList/ShowActorMessageManager/@Toggled}"/>
 				<CollapseLayout val="True"/>
 				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
 				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
-				<Height val="350"/>
-				<Width val="400"/>
-				<Frame type="Label" name="Title">
-					<Text val="ActorMessage"/>
-				</Frame>
-	
-				<Frame type="EditBox" name="ActorMessage" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
-					<Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
-					<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
-					<Width val="300"/>
-					<Height val="60"/>
-				</Frame>
-				<Frame type="EditBox" name="ActorTarget" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
-					<Anchor side="Top" relative="$parent/ActorMessage" pos="Max" offset="5"/>
-					<Anchor side="Left" relative="$parent/ActorMessage" pos="Min" offset="0"/>
-					<Width val="300"/>
-					<Height val="60"/>
-					<Text val="::Main"/>
-				</Frame>
-	
-				<Frame type="Button" name="ActorMessageSendButton" template="DevTools_Templates/ButtonTemplate">
-					<Anchor side="Top" relative="$parent/ActorTarget" pos="Max" offset="5"/>
-					<Anchor side="Left" relative="$parent/ActorTarget" pos="Min" offset="0"/>
-					<Width val="200"/>
-					<Height val="60"/>
-					<Text val="Send"/>
-				</Frame>
 			</Frame>
 			
 			<Frame type="Control" name="CatalogValueManager" template="CatalogManager/CatalogValueManager">
 				<CollapseLayout val="True"/>
-				
 				<Frame type="Label" name="Title">
 					<Text val="CatalogValueManager"/>
 				</Frame>
@@ -256,7 +232,6 @@
 			</Frame>
 			<Frame type="Control" name="CatalogLinkManager" template="CatalogManager/CatalogLinkManager">
 				<CollapseLayout val="True"/>
-				
 				<Frame type="Label" name="Title">
 					<Text val="CatalogLinkManager"/>
 				</Frame>
@@ -269,6 +244,11 @@
 				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
 				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
 				<Visible val="{$parent/MiscMenuList/ShowCameraManager/@Toggled}"/>
+			</Frame>
+			<Frame type="Frame" name="CameraShakeManager" template="CameraShakeManager/CameraShakeManager">
+				<Anchor side="Top" relative="$parent" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent" pos="Max" offset="-10"/>
+				<Visible val="{$parent/MiscMenuList/ShowCameraShakeManager/@Toggled}"/>
 			</Frame>
 			
 			<Frame type="Frame" name="FogManager" template="FogManager/FogManager">
