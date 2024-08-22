@@ -1,9 +1,25 @@
 include "Script/debug_h";
 include "Script/ItemList";
-
+static const string EDITBOX_PATH = "Item";
+static const string ADDBTN_PATH = "AddButton";
+static const string REMOVEBTN_PATH = "RemoveButton";
+static const string ALLOWBTN_PATH = "AllowButton";
+static const string DISALLOWBTN_PATH = "DisallowButton";
+static const string OWNERPLAYERPULLDOWN_PATH = "OwnerPlayer";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/UnitManager";
 
-ItemListContainerStruct UnitContainer;
+struct UnitContainerStruct{
+    int panel;
+    int messageBox;
+    int addButton;
+    int removeButton;
+	int allowButton;
+    int disallowButton;
+	int ownerPlayerPulldown;
+};
+
+typedef structref<UnitContainerStruct> UnittainerStructRef;
+static UnitContainerStruct Container;
 static ItemListStruct ItemList;
 //static ItemListStruct PlayerList;
 static ListBoxFilterStruct ListBoxFilter;
@@ -23,15 +39,15 @@ bool UnitListBoxSelectionChanged(bool a, bool b){
     return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, player);
 }
 
-void UnitListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
-    DialogControlSetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
+static void ContainerListBoxSetActive(ItemListStructRef itemList, int index, playergroup pg){
+    DialogControlSetPropertyAsString(Container.messageBox,c_triggerControlPropertyEditText,pg,ItemListGetVal(itemList,index));
 }
 
-static unitgroup UnitContainerTarget(){
+static unitgroup ContainerTarget(){
     return UnitGroupSelected(EventPlayer());
 }
 
-static string UnitContainerUnit(string val){
+static string ContainerUnit(string val){
     return val;
 }
 
@@ -41,28 +57,39 @@ static point UnitContainerPoint(){
 
 bool UnitContainerSendHandler(bool a, bool b){
     bool trigRan = true;
-    string val = DialogControlGetPropertyAsString(UnitContainer.messageBox,c_triggerControlPropertyEditText,EventPlayer());
-    string unitType = UnitContainerUnit(val);
-    unitgroup ug = UnitContainerTarget();
+    string val = DialogControlGetPropertyAsString(Container.messageBox,c_triggerControlPropertyEditText,EventPlayer());
+    string unitType = ContainerUnit(val);
+    unitgroup ug = ContainerTarget();
     unit u;
     int i;
     int unitcount = 1;
     point p = UnitContainerPoint();
-    string ownerVal = ItemListContainer_PlayerListGetSelected(UnitContainer.ownerPlayerPulldown,EventPlayer());
+    string ownerVal = ItemListContainer_PlayerListGetSelected(Container.ownerPlayerPulldown,EventPlayer());
     int ownerIndex = ItemListFind(playerItemList,ownerVal);
     int owner;
     if(ownerIndex == -1){owner=EventPlayer();}
     else {owner = StringToInt(ItemListGetVal(playerItemList,ownerIndex));}
-    if(EventDialogControl()==UnitContainer.addButton){
+    if(EventDialogControl()==Container.addButton){
         ug = UnitCreate(unitcount,unitType,0,owner,p,270.0);
     }
-    else if(EventDialogControl()==UnitContainer.removeButton){
+    else if(EventDialogControl()==Container.removeButton){
         for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
             u = UnitGroupUnit(ug,i);
             if(UnitGetType(u)==unitType){
                 UnitKill(u);
             }
         }
+    }
+    else if(EventDialogControl()==Container.allowButton){
+        //TechTreeRestrictionsEnable(owner, true);
+        TechTreeUnitAllow(owner,unitType,true);
+        TechTreeAbilityAllow(owner,AbilityCommand("DarkArchonSCBWFeedback",c_abilEffectTargetCmdExecute),true);
+        
+    }
+    else if(EventDialogControl()==Container.disallowButton){
+        //TechTreeRestrictionsEnable(owner, true);
+        TechTreeUnitAllow(owner,unitType,false);
+        TechTreeAbilityAllow(owner,AbilityCommand("DarkArchonSCBWFeedback",c_abilEffectTargetCmdExecute),false);
     }
     return trigRan;
 }
@@ -80,26 +107,46 @@ bool UnitContainerSendHandler(bool a, bool b){
 
 
 
-bool UnitList_IsNormalUnitFilter(int catalog, string entry){
-    bool isUnit = true;
-    isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0);
-    isUnit = isUnit && (CatalogFieldValueGetAsInt(catalog,entry,"EditorFlags[NoPlacement]",c_playerAny) == 0);
-    isUnit = isUnit && (!StringContains(CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny),"ObjectFamily:Storymode",c_stringAnywhere,false));//ObjectFamily:Storymode
-    return isUnit;
+static bool ContainerList_IsUnitFilter(int catalog, string entry){
+    bool isDoodad = true;
+    isDoodad = isDoodad && (CatalogFieldValueGetAsInt(catalog,entry,"FlagArray[Missile]",c_playerAny) == 0);
+    isDoodad = isDoodad && (CatalogFieldValueGetAsInt(catalog,entry,"EditorFlags[NoPlacement]",c_playerAny) == 0);
+    isDoodad = isDoodad && (!StringContains(CatalogFieldValueGet(catalog,entry,"EditorCategories",c_playerAny),"ObjectFamily:Storymode",c_stringAnywhere,false));//ObjectFamily:Storymode
+    return isDoodad;
 }
-text UnitListItemTextValue(ItemListStructRef itemList,int index){
+static text ContainerListItemTextValue(ItemListStructRef itemList,int index){
     text name;
-    console(ItemListGetVal(itemList,index));
+    //console(ItemListGetVal(itemList,index));
     name = StringExternal(CatalogFieldValueGet(c_gameCatalogUnit,ItemListGetVal(itemList,index),"Name",c_playerAny));
     name = StringToText(ItemListGetVal(itemList,index)+": ")+name;
 	return name;
 }
+
+static void Container_Init(UnittainerStructRef ItemListContainer, string dlgPath, string triggerName){
+    trigger t;
+    ItemListContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,dlgPath);
+    ItemListContainer.messageBox = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
+    ItemListContainer.addButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);
+    ItemListContainer.removeButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,REMOVEBTN_PATH);
+	ItemListContainer.allowButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,ALLOWBTN_PATH);
+    ItemListContainer.disallowButton = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypeButton,DISALLOWBTN_PATH);
+	ItemListContainer.ownerPlayerPulldown = DialogControlHookup(ItemListContainer.panel,c_triggerControlTypePulldown,OWNERPLAYERPULLDOWN_PATH);
+	
+	ItemListContainer_InitStandardPlayers(ItemListContainer.ownerPlayerPulldown);
+
+    t = TriggerCreate(triggerName);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.addButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.removeButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.allowButton,c_triggerControlEventTypeClick);
+    TriggerAddEventDialogControl(t,c_playerAny,ItemListContainer.disallowButton,c_triggerControlEventTypeClick);
+}
+
 void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
     ItemList.id = "UnitList";
-    ItemListContainer_InitStandard(UnitContainer, CONTAINERDLG_PATH, "UnitContainerSendHandler");
-    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, UnitList_IsNormalUnitFilter);
-	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", UnitListBoxSetActive, UnitListItemTextValue, CONTAINERDLG_PATH+"/NavList");
+    Container_Init(Container, CONTAINERDLG_PATH, "UnitContainerSendHandler");
+    ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ContainerList_IsUnitFilter);
+	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", ContainerListBoxSetActive, ContainerListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
     
 }
