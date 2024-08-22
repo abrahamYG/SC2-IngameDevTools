@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Desc>
+    <Frame type="Control" name="ActorMessageManager" template="DevTools_Templates/PanelTemplateTitled">
+        <Height val="350"/>
+        <Width val="400"/>
+        <Frame type="Label" name="Title">
+            <Text val="ActorMessage"/>
+        </Frame>
+
+        <Frame type="EditBox" name="ActorMessage" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+            <Anchor side="Top" relative="$parent/Title" pos="Max" offset="10"/>
+            <Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+            <Width val="300"/>
+            <Height val="60"/>
+        </Frame>
+        <Frame type="EditBox" name="ActorTarget" template="StandardBattlenetTemplates/BattlenetEditBoxTemplate">
+            <Anchor side="Top" relative="$parent/ActorMessage" pos="Max" offset="5"/>
+            <Anchor side="Left" relative="$parent/ActorMessage" pos="Min" offset="0"/>
+            <Width val="300"/>
+            <Height val="60"/>
+            <Text val="::Main"/>
+        </Frame>
+
+        <Frame type="Button" name="ActorMessageSendButton" template="DevTools_Templates/ButtonTemplate">
+            <Anchor side="Top" relative="$parent/ActorTarget" pos="Max" offset="5"/>
+            <Anchor side="Left" relative="$parent/ActorTarget" pos="Min" offset="0"/>
+            <Width val="200"/>
+            <Height val="60"/>
+            <Text val="Send"/>
+        </Frame>
+    </Frame>
+
+</Desc>
