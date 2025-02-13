@@ -288,7 +288,7 @@ static string printFieldsfromScope(string scope, int indentLevel){
 	string row = "";
 	string output = "";
 	string tab = tabsFromIdentLevel(indentLevel);
-	string fieldFormat = "{type}{array} {name}; //{fieldType}";
+	string fieldFormat = "[{type}{array}] ${name}; #{fieldType}";
 	count = CatalogFieldCount (scope);
 	output = "\n"+tab+"{";
 	for(index=0;index<count;index+=1){
@@ -308,8 +308,8 @@ static string printFieldsfromScope(string scope, int indentLevel){
 			row = StringReplaceWord(row,"{type}",type,1,false);
 			if(typeCategory==c_catalogFieldTypeStruct){
 				row = StringReplaceWord(row,"{fieldType}","struct",1,false);
-				row = StringReplaceWord(row,";","",1,false);
-				row += printFieldsfromScope(type,indentLevel+1);
+				//row = StringReplaceWord(row,";","",1,false);
+				//row += printFieldsfromScope(type,indentLevel+1);
 			}
 			else if(typeCategory==c_catalogFieldTypeEnum){
 				row = StringReplaceWord(row,"{fieldType}","enum",1,false);
@@ -335,17 +335,6 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	int catalog = CatalogValueContainerCatalogValue(ItemListGetVal(ItemList,ItemListGetActive(ItemList,player)));
 	string scope;
 
-
-	string lv_a;
-
-    // Automatic Variable Declarations
-    int lv_catalog;
-    string lv_entry;
-    string lv_field;
-    string lv_scopeField;
-    int lv_player;
-    int lv_i;
-	
 	int fieldCount = 0;
 	int fieldIndex = 0;
 	int fieldTypeCategory = c_catalogFieldTypeUnknown;
@@ -353,18 +342,6 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	string fieldEntry = "";
 	string consoleDebugOutput;
 
-    // Variable Initialization
-    lv_a = "";
-    lv_catalog = c_gameCatalogAbil;
-    lv_entry = "CarrierHangar";
-    lv_field = "DefaultButtonCardId";
-    lv_scopeField = "DefaultButtonCardId";
-    lv_player = c_playerAny;
-    lv_i = 0;
-    //for ( ; lv_i <= CatalogFieldValueCount(c_gameCatalogAbil,lv_entry,lv_field,lv_player)-1 ; lv_i += 1 ) {
-    //    lv_a = CatalogFieldValueGet(c_gameCatalogAbil,lv_entry,lv_field+"["+IntToString(lv_i)+"]."+lv_scopeField,lv_player);
-    //    libNtve_gv_visibleFilter = UnitFilter((1 << c_targetFilterCanHaveEnergy), 0, 0, 0);
-    //}
 	if(CatalogEntryIsValid(catalog,entry)){
 		scope = CatalogEntryScope(catalog,entry);
 		console("Catalog Is Array "+IntToString(BoolToInt(CatalogFieldIsArray(scope,field))));
@@ -392,7 +369,8 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 				
 					consoleDebugOutput += printFieldsfromScope(scope,1);
 					CatalogValueHandler_console(consoleDebugOutput);
-					
+					value = CatalogFieldValueGet(catalog,entry,field,player);
+				DialogControlSetPropertyAsString(CatalogValueContainer.valueBox,c_triggerControlPropertyEditText,PlayerGroupSingle(player),value);
 				trigRan = false;
 			}
 		}
@@ -448,6 +426,8 @@ bool printPropertyFromCatalogTrig(bool a, bool b){
 		property = StringWord(msg,3);
 		catalog= DataTableGetInt(true,"Catalog."+catalogName);
     	count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
+		log += "."+catalogName+"."+property;
+		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
     	for(i=1;i<=count;i+=1){
         	entry = CatalogEntryGet(catalog,i);
 			value = CatalogFieldValueGet(catalog,entry,property,EventPlayer());
@@ -464,10 +444,96 @@ bool printFieldsfromScopeTrig(bool a, bool b){
 	if(StringWord(msg,1)==EventChatMessage(true)){
 		scope = StringWord(msg,2);
 	}
+	log = "printFieldsfromScope."+scope;
 	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
 	CatalogValueHandler_console("\nclass "+scope+printFieldsfromScope(scope,1));
 	return true;
 }
+
+
+
+
+bool resolveRequirementGT(string reqNode){return false;}
+bool resolveRequirementLT(string reqNode){return false;}
+bool resolveRequirementGTE(string reqNode){return false;}
+bool resolveRequirementLTE(string reqNode){return false;}
+bool resolveRequirementEq(string reqNode){return false;}
+bool resolveRequirementNE(string reqNode){return false;}
+bool resolveRequirementAnd(string reqNode){return false;}
+bool resolveRequirementOr(string reqNode){return false;}
+bool resolveRequirementXor(string reqNode){return false;}
+bool resolveRequirementNot(string reqNode){return false;}
+bool resolveRequirementOdd(string reqNode){return false;}
+bool resolveRequirementDiv(string reqNode){return false;}
+bool resolveRequirementMod(string reqNode){return false;}
+bool resolveRequirementMul(string reqNode){return false;}
+bool resolveRequirementSum(string reqNode){return false;}
+bool resolveRequirementConst(string reqNode){return false;}
+bool resolveRequirementAllowAbil(string reqNode){return false;}
+bool resolveRequirementAllowBehavior(string reqNode){return false;}
+bool resolveRequirementAllowUnit(string reqNode){return false;}
+bool resolveRequirementAllowUpgrade(string reqNode){return false;}
+bool resolveRequirementCountAbil(string reqNode){return false;}
+bool resolveRequirementCountBehavior(string reqNode){return false;}
+bool resolveRequirementCountEffect(string reqNode){return false;}
+bool resolveRequirementCountUnit(string reqNode){return false;}
+bool resolveRequirementCountUpgrade(string reqNode){return false;}
+
+bool resolveReqNode(string reqNode){
+	bool valid = true;
+	int type = CatalogEntryClass(c_gameCatalogRequirementNode,reqNode);
+	if(type == c_classIdCRequirementGT){valid = valid && resolveRequirementGT(reqNode);}
+	if(type == c_classIdCRequirementLT){valid = valid && resolveRequirementLT(reqNode);}
+	if(type == c_classIdCRequirementGTE){valid = valid && resolveRequirementGTE(reqNode);}
+	if(type == c_classIdCRequirementLTE){valid = valid && resolveRequirementLTE(reqNode);}
+	if(type == c_classIdCRequirementEq){valid = valid && resolveRequirementEq(reqNode);}
+	if(type == c_classIdCRequirementNE){valid = valid && resolveRequirementNE(reqNode);}
+	if(type == c_classIdCRequirementAnd){valid = valid && resolveRequirementAnd(reqNode);}
+	if(type == c_classIdCRequirementOr){valid = valid && resolveRequirementOr(reqNode);}
+	if(type == c_classIdCRequirementXor){valid = valid && resolveRequirementXor(reqNode);}
+	if(type == c_classIdCRequirementNot){valid = valid && resolveRequirementNot(reqNode);}
+	if(type == c_classIdCRequirementOdd){valid = valid && resolveRequirementOdd(reqNode);}
+	if(type == c_classIdCRequirementDiv){valid = valid && resolveRequirementDiv(reqNode);}
+	if(type == c_classIdCRequirementMod){valid = valid && resolveRequirementMod(reqNode);}
+	if(type == c_classIdCRequirementMul){valid = valid && resolveRequirementMul(reqNode);}
+	if(type == c_classIdCRequirementSum){valid = valid && resolveRequirementSum(reqNode);}
+	if(type == c_classIdCRequirementConst){valid = valid && resolveRequirementConst(reqNode);}
+	if(type == c_classIdCRequirementAllowAbil){valid = valid && resolveRequirementAllowAbil(reqNode);}
+	if(type == c_classIdCRequirementAllowBehavior){valid = valid && resolveRequirementAllowBehavior(reqNode);}
+	if(type == c_classIdCRequirementAllowUnit){valid = valid && resolveRequirementAllowUnit(reqNode);}
+	if(type == c_classIdCRequirementAllowUpgrade){valid = valid && resolveRequirementAllowUpgrade(reqNode);}
+	if(type == c_classIdCRequirementCountAbil){valid = valid && resolveRequirementCountAbil(reqNode);}
+	if(type == c_classIdCRequirementCountBehavior){valid = valid && resolveRequirementCountBehavior(reqNode);}
+	if(type == c_classIdCRequirementCountEffect){valid = valid && resolveRequirementCountEffect(reqNode);}
+	if(type == c_classIdCRequirementCountUnit){valid = valid && resolveRequirementCountUnit(reqNode);}
+	if(type == c_classIdCRequirementCountUpgrade){valid = valid && resolveRequirementCountUpgrade(reqNode);}
+	return valid;
+}
+
+
+bool resolveRequirement(string req, bool checkUse, bool checkShow){
+	int catalog = c_gameCatalogRequirement;
+	string reqNodeUse;
+	string reqNodeShow;
+	if(!CatalogEntryIsValid(c_gameCatalogRequirement,req)){return false;}
+	reqNodeUse = CatalogFieldValueGet(catalog, req,"NodeArray[Use].Link",c_playerAny);
+	return true;
+	
+}
+
+bool resolveRequirementTrig(bool a, bool b){
+	string msg = EventChatMessage(false);
+	string req = "";
+	string log = "Misc";
+	if(StringWord(msg,1)==EventChatMessage(true)){
+		req = StringWord(msg,2);
+	}
+	log = "resolveRequirement."+req;
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+	resolveRequirement(req,true,true);
+	return true;
+}
+
 
 void CatalogValueHandler_Init(){
 	playergroup pg = PlayerGroupAll();
@@ -501,6 +567,8 @@ void CatalogValueHandler_Init(){
 	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
 	t =TriggerCreate("printFieldsfromScopeTrig");
 	TriggerAddEventChatMessage(t,c_playerAny,"scopedump",false);
+	t =TriggerCreate("resolveRequirementTrig");
+	TriggerAddEventChatMessage(t,c_playerAny,"resreq",false);
 	t =TriggerCreate("printPropertyFromCatalogTrig");
 	TriggerAddEventChatMessage(t,c_playerAny,"fetchval",false);
 	t =TriggerCreate("getAbilsFromSelectedUnits");
