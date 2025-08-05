@@ -4,7 +4,7 @@ include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/WeaponManager";
 
 ItemListContainerStruct WeaponContainer;
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool WeaponListBoxFilterQuery(bool a, bool b){
@@ -58,7 +58,7 @@ bool WeaponContainerSendHandler(bool a, bool b){
 
 void WeaponHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "WeaponList";
+    ItemList = "WeaponList";
     ItemListContainer_InitStandard(WeaponContainer, CONTAINERDLG_PATH, "WeaponContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogWeapon, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "WeaponListBox", WeaponListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

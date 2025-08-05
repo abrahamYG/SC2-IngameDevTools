@@ -28,7 +28,7 @@ struct EffectContainerStruct{
 EffectContainerStruct EffectContainer;
 
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 
@@ -116,7 +116,7 @@ void EffectList_Init(){
 void EffectHandler_Init(){
     trigger t;
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "EffectList";
+    ItemList = "EffectList";
     EffectContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     EffectContainer.messageBox = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     EffectContainer.addButton = DialogControlHookup(EffectContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);

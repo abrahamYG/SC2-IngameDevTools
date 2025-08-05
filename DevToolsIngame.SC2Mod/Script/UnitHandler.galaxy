@@ -20,7 +20,7 @@ struct UnitContainerStruct{
 
 typedef structref<UnitContainerStruct> UnittainerStructRef;
 static UnitContainerStruct Container;
-static ItemListStruct ItemList;
+static string ItemList;
 //static ItemListStruct PlayerList;
 static ListBoxFilterStruct ListBoxFilter;
 
@@ -143,7 +143,7 @@ static void Container_Init(UnittainerStructRef ItemListContainer, string dlgPath
 
 void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "UnitList";
+    ItemList = "UnitList";
     Container_Init(Container, CONTAINERDLG_PATH, "UnitContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUnit, ContainerList_IsUnitFilter);
 	ItemList_FilterListInitStandard(ListBoxFilter, "UnitListBox", ContainerListBoxSetActive, ContainerListItemTextValue, CONTAINERDLG_PATH+"/NavList");

@@ -5,7 +5,7 @@ static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogM
 static const string PORTRAITCONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager/PortraitContainer";
 
 ItemListContainerStruct PortraitContainer;
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 static int PortraitFrame;
 static int PortraitFrameContainer;
@@ -88,7 +88,7 @@ bool PortraitList_IsPortrait(int catalog, string entry){
 void PortraitHandler_Init(){
     
 	playergroup pg = PlayerGroupAll();
-	ItemList.id = "PortraitList";
+	ItemList = "PortraitList";
 	PortraitFrame = -1;
 	PortraitFrameContainer = DialogControlHookupStandard(c_triggerControlTypePanel,PORTRAITCONTAINERDLG_PATH);
 	PortraitList_RebuildPortrait();

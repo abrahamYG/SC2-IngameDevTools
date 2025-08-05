@@ -29,7 +29,7 @@ struct AbilityOrderContainerStruct{
 AbilityOrderContainerStruct AbilityOrderContainer;
 
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 
@@ -464,7 +464,7 @@ void AbilityOrderHandler_Init(){
     trigger t;
     playergroup pg = PlayerGroupAll();
     int player;
-    ItemList.id = "AbilityOrderList";
+    ItemList = "AbilityOrderList";
     AbilityOrderContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
     AbilityOrderContainer.messageBox = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);
     AbilityOrderContainer.addButton = DialogControlHookup(AbilityOrderContainer.panel,c_triggerControlTypeButton,ADDBTN_PATH);

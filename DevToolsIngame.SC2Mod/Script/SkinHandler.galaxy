@@ -4,7 +4,7 @@ include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/SkinManager";
 
 ItemListContainerStruct SkinContainer;
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool SkinListBoxFilterQuery(bool a, bool b){
@@ -56,7 +56,7 @@ bool SkinContainerSendHandler(bool a, bool b){
 
 void SkinHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "SkinList";
+    ItemList = "SkinList";
     ItemListContainer_InitStandard(SkinContainer, CONTAINERDLG_PATH, "SkinContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogSkin, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "SkinListBox", SkinListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

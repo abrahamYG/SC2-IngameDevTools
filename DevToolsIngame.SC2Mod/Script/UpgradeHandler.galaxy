@@ -16,7 +16,7 @@ struct UpgradeContainerStruct{
 ItemListContainerStruct UpgradeContainer;
 
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 
@@ -73,7 +73,7 @@ bool UpgradeContainerSendHandler(bool a, bool b){
 
 void UpgradeHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "UpgradeList";
+    ItemList = "UpgradeList";
     ItemListContainer_InitStandard(UpgradeContainer, CONTAINERDLG_PATH, "UpgradeContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogUpgrade, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "UpgradeListBox", UpgradeListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

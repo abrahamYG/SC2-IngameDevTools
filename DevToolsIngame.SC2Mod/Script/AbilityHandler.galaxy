@@ -5,7 +5,7 @@ static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogM
 
 ItemListContainerStruct AbilityContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool AbilityListBoxFilterQuery(bool a, bool b){
@@ -62,7 +62,7 @@ bool AbilityContainerSendHandler(bool a, bool b){
 
 void AbilityHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "AbilityList";
+    ItemList = "AbilityList";
     ItemListContainer_InitStandard(AbilityContainer, CONTAINERDLG_PATH, "AbilityContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogAbil, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "AbilityListBox", AbilityListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

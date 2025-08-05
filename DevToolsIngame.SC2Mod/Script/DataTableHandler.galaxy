@@ -3,7 +3,7 @@ include "Script/ItemList";
 include "Script/ItemListListBoxFormat";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/DataTableManager";
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 static ItemListContainerStruct DataTableContainer;
 
@@ -173,7 +173,7 @@ text DataTableListItemTextValue(ItemListStructRef itemList,int index){
 
 void DataTableHandler_Init(){
 	playergroup pg = PlayerGroupAll();
-    ItemList.id = "DataTableList";
+    ItemList = "DataTableList";
     ItemListContainer_InitStandard(DataTableContainer, CONTAINERDLG_PATH, "DataTableContainerSendHandler");
     DataTableListRebuild(ItemList,1,"",0);
     ItemList_FilterListInitStandard(ListBoxFilter, "DataTableListBox", DataTableListBoxSetActive, DataTableListItemTextValue, CONTAINERDLG_PATH+"/NavList");

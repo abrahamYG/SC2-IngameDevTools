@@ -32,7 +32,7 @@ bool ActorMessageContainerSendHandler(bool a, bool b){
     actor unitactor = ActorMessageContainerTarget();
     string target =DialogControlGetPropertyAsString(ActorMessageContainer.targetBox,c_triggerControlPropertyEditText,EventPlayer());//"::Main";
     ActorSendTo(unitactor, target, val);
-    ActorCreate(null,"","","","");
+    //ActorCreate(null,"","","","");
     //ActorSend(unitactor,val);
     //ConsoleCommand(val,true,true);
     console(val);

@@ -34,7 +34,7 @@ struct CatalogValueContainerStruct{
 
 CatalogValueContainerStruct CatalogValueContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 bool CatalogValueListBoxSelectionChanged(bool a, bool b){
 	return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
@@ -541,7 +541,7 @@ void CatalogValueHandler_Init(){
 
 	
 
-	ItemList.id = "CatalogValueList";
+	ItemList = "CatalogValueList";
 	CatalogValueContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	CatalogValueContainer.typePull = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
 	CatalogValueContainer.entryBox = DialogControlHookup(CatalogValueContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);

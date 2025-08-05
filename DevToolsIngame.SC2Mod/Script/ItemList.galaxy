@@ -183,7 +183,7 @@ bool ItemList_FilterBoxSelectionChanged(ItemListStructRef itemList, ListBoxFilte
 
 
 
-ItemListStruct playerItemList;
+string playerItemList;
 bool playerItemListInitialized = false;
 
 void ItemListContainer_PlayerListSetActive(ItemListStructRef itemList, int index,playergroup pg){
@@ -236,7 +236,7 @@ bool ItemListContainer_PlayerListSelectionChanged(bool a, bool b){
 void ItemListContainer_InitStandardPlayerList(){
     playergroup pg = PlayerGroupAll();
 	if(!playerItemListInitialized){
-		playerItemList.id = "Players";
+		playerItemList = "Players";
 		ItemListInitFromPlayerGroup(playerItemList, pg);
 		playerItemListInitialized = true;
 	}

@@ -176,9 +176,13 @@
 			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowLightingManager"/>
 		</Frame>
-		
-		<Frame type="Button" name="ShowRaceManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+		<Frame type="Button" name="ShowSoundtrackManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
 			<Anchor side="Top" relative="$parent/ShowLightingManager" pos="Max" offset="0"/>
+			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
+			<Text val="@UI/CatalogManager/ShowSoundtrackManager"/>
+		</Frame>
+		<Frame type="Button" name="ShowRaceManager" template="CatalogManager/ShowCatalogTypeManagerTemplate">
+			<Anchor side="Top" relative="$parent/ShowSoundtrackManager" pos="Max" offset="0"/>
 			<Anchor side="Left" relative="$parent" pos="Min" offset="10"/>
 			<Text val="@UI/CatalogManager/ShowRaceManager"/>
 		</Frame>

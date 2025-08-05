@@ -4,7 +4,7 @@ include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/RaceManager";
 
 ItemListContainerStruct RaceContainer;
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool RaceListBoxFilterQuery(bool a, bool b){
@@ -53,7 +53,7 @@ bool RaceContainerSendHandler(bool a, bool b){
 
 void RaceHandler_Init(){
 	playergroup pg = PlayerGroupAll();
-    ItemList.id = "RaceList";
+    ItemList = "RaceList";
     ItemListContainer_InitStandard(RaceContainer, CONTAINERDLG_PATH, "RaceContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogRace, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "RaceListBox", RaceListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

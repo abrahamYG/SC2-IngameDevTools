@@ -20,7 +20,7 @@ struct DoodadContainerStruct{
 
 typedef structref<DoodadContainerStruct> DoodadContainerStructRef;
 DoodadContainerStruct DoodadContainer;
-static ItemListStruct ItemList;
+static string ItemList;
 //static ItemListStruct PlayerList;
 static ListBoxFilterStruct ListBoxFilter;
 
@@ -128,7 +128,7 @@ void Container_Init(DoodadContainerStructRef ItemListContainer, string dlgPath, 
 
 void UnitHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "DoodadList";
+    ItemList = "DoodadList";
     Container_Init(DoodadContainer, CONTAINERDLG_PATH, "DoodadContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogActor, ConatinerList_IsDoodadFilter);
 	ItemList_FilterListInitStandard(ListBoxFilter, "DoodadListBox", DoodadListBoxSetActive, ContainerListItemTextValue, CONTAINERDLG_PATH+"/NavList");

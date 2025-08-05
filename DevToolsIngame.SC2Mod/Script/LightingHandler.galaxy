@@ -4,7 +4,7 @@ include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/LightingManager";
 ItemListContainerStruct LightingContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool LightingListBoxFilterQuery(bool a, bool b){
@@ -61,7 +61,7 @@ static string LightingItemListReduceStringCallBack(string accumulator, string cu
 
 void LightingHandler_Init(){
 	playergroup pg = PlayerGroupAll();
-    ItemList.id = "LightingList";
+    ItemList = "LightingList";
     ItemListContainer_InitStandard(LightingContainer, CONTAINERDLG_PATH, "LightingContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogLight, LightingList_IsTilesetFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "LightingListBox", LightingListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

@@ -5,7 +5,7 @@ static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogM
 
 ItemListContainerStruct BehaviorContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool BehaviorListBoxFilterQuery(bool a, bool b){
@@ -60,7 +60,7 @@ bool BehaviorContainerSendHandler(bool a, bool b){
 
 void BehaviorHandler_Init(){
     playergroup pg = PlayerGroupAll();
-    ItemList.id = "BehaviorList";
+    ItemList = "BehaviorList";
     ItemListContainer_InitStandard(BehaviorContainer, CONTAINERDLG_PATH, "BehaviorContainerSendHandler");
     ItemListInitFromCatalog(ItemList, c_gameCatalogBehavior, ItemListCatalogFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "BehaviorListBox", BehaviorListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

@@ -8,8 +8,8 @@ static const string DURATION_PATH = "Duration/Slider";
 static const string APPLYBUTTON_PATH = "Apply";
 static const string RESTOREBUTTON_PATH = "Restore";
 
-static ItemListStruct PositionItemList;
-static ItemListStruct DirectionItemList;
+static string PositionItemList;
+static string DirectionItemList;
 static ListBoxFilterStruct PositionListBoxFilter;
 static ListBoxFilterStruct DirectionListBoxFilter;
 
@@ -126,8 +126,8 @@ void CameraShakeHandler_InitHookup(){
 	TriggerAddEventDialogControl(t,c_playerAny,CameraShakePanel.restoreBtn,c_triggerControlEventTypeClick);
 	
     
-    DirectionItemList.id = "CameraShakeDirectionList";
-    PositionItemList.id = "CameraShakePositionList";
+    DirectionItemList = "CameraShakeDirectionList";
+    PositionItemList = "CameraShakePositionList";
 
 	PositionListBoxFilter.id = "CameraShakePositionListBox";
 	PositionListBoxFilter.setActive = PositionListBoxSetActive;

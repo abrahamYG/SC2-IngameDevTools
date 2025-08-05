@@ -12,6 +12,7 @@ include "Script/CatalogValueHandler";
 include "Script/CatalogLinkHandler";
 include "Script/LightingHandler";
 include "Script/RaceHandler";
+include "Script/SoundtrackHandler";
 include "Script/SkinHandler";
 include "Script/CheatHandler";
 include "Script/PortraitHandler";
@@ -37,6 +38,7 @@ void DevToolsMain_Init(){
     UpgradeHandler_Init();
     WeaponHandler_Init();
     SkinHandler_Init();
+    SoundtrackHandler_Init();
     RaceHandler_Init();
     CheatHandler_Init();
     PortraitHandler_Init();

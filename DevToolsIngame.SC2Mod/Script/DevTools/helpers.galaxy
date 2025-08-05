@@ -58,6 +58,121 @@ string getBehaviorsFromUnit(unit u){
     return s;
 }
 
+static trigger t_MovementTracker;
+
+static string formatTimeDiff(fixed diff){
+	string key = "Diff: {diff}; Ticks: {ticks}";
+	key = StringReplaceWord(key,"{diff}",FixedToString(diff,6),1,true);
+	key = StringReplaceWord(key,"{ticks}",FixedToString(diff*16.0,6),1,true);
+	return key;
+}
+
+static fixed updateTimeStamp(string key, fixed stamp){
+    fixed oldstamp = 0.0;
+	key = key+".Stamp";
+    if(DataTableValueExists(true,key)){
+        oldstamp = DataTableGetFixed(true,key);
+    }
+    DataTableSetFixed(true,key,stamp);
+	return stamp-oldstamp;
+    
+}
+
+static fixed updateSpeedStamp(string key, fixed speed){
+    fixed oldstamp = 0.0;
+	key = key+".Speed";
+    if(DataTableValueExists(true,key)){
+        oldstamp = DataTableGetFixed(true,key);
+    }
+    DataTableSetFixed(true,key,speed);
+	return speed-oldstamp;
+    
+}
+static string MovementTrackerKey(){
+	return "MovementTracker.Unit";
+}
+
+bool MovementTracker(bool a, bool b){
+    unit u = null;
+    fixed diff = 0.0;
+	fixed speed = 0.0;
+	fixed speeddiff = 0.0;
+    string key = "Unit({type}#{tag}).Speed: {speed}; Speed Diff: {speeddiff};";
+	if(DataTableValueExists(true,MovementTrackerKey())){
+		u = DataTableGetUnit(true,MovementTrackerKey());
+    }
+	if(u==null){return false;}
+	speed = UnitGetPropertyFixed(u,c_unitPropMovementSpeedCurrent,true);
+	speeddiff = updateSpeedStamp(key,speed);
+
+	key = StringReplaceWord(key,"{type}",UnitGetType(u),1,true);
+	key = StringReplaceWord(key,"{tag}",IntToString(UnitGetTag(u)),1,true);
+	diff = updateTimeStamp(key,GameGetMissionTime());
+	key = StringReplaceWord(key,"{speed}",FixedToString(speed,6),1,true);
+	key = StringReplaceWord(key,"{speeddiff}",FixedToString(speeddiff,6),1,true);
+    TriggerDebugOutput(1,StringToText(key+formatTimeDiff(diff)),true);
+    return true;
+}
+
+
+bool MovementTrackerAdd(bool a, bool b){
+    string msg = EventChatMessage(false);
+	unitgroup ug = UnitGroupSelected(EventPlayer());
+	unit u = UnitGroupUnit(ug,1);
+	if(StringWord(msg,1)=="trackmovementstart"){
+		DataTableSetUnit(true,MovementTrackerKey(),u);
+	}
+    if(StringWord(msg,1)=="trackmovementstop"){
+		DataTableSetUnit(true,MovementTrackerKey(),null);
+	}
+    return true;
+}
+
+
+bool EffectTracker(bool a, bool b){
+    string effect = EventPlayerEffectUsed();
+    unit u = EventPlayerEffectUsedUnit(c_effectUnitCaster);
+    fixed diff = 0.0;
+    string key = "Unit({type}#{tag}).Effect: {effect};";
+	key = StringReplaceWord(key,"{type}",UnitGetType(u),1,true);
+	key = StringReplaceWord(key,"{tag}",IntToString(UnitGetTag(u)),1,true);
+	key = StringReplaceWord(key,"{effect}",effect,1,true);
+    diff = updateTimeStamp(key,GameGetMissionTime());
+    TriggerDebugOutput(1,StringToText(key+formatTimeDiff(diff)),true);
+    return true;
+}
+
+static void EffectTrackerInit(){
+    trigger t; 
+    int player = c_playerAny;
+    string effect;
+	timer lv_timer = TimerCreate();
+    t = TriggerCreate("EffectTracker");
+    effect = "GuassRifle";
+    TriggerAddEventPlayerEffectUsed(t,player,effect);
+    effect = "MarineSCBWWeapon@Damage";
+    TriggerAddEventPlayerEffectUsed(t,player,effect);
+
+    t = TriggerCreate("MovementTracker");
+	TriggerAddEventTimer(t,lv_timer);
+	TimerStart(lv_timer,1.0/8.0,true,c_timeGame);
+	t = TriggerCreate("MovementTrackerAdd");
+	TriggerAddEventChatMessage(t,c_playerAny,"trackmovementstart",false);
+	TriggerAddEventChatMessage(t,c_playerAny,"trackmovementstop",false);
+    //effect = "StaggerUDStepIncreasePhase1";
+    //TriggerAddEventPlayerEffectUsed(t,player,effect);
+    //effect = "StaggerUDStepIncreasePhase2";
+    //TriggerAddEventPlayerEffectUsed(t,player,effect);
+    //effect = "StaggerUDStepIncreasePhase3";
+    //TriggerAddEventPlayerEffectUsed(t,player,effect);
+    
+    // t = TriggerCreate("SCBW_UnitAbilityPrintTrig");
+    // TriggerAddEventUnitRegion(t,null,RegionEntireMap(),true);
+    
+}
+
+
+
 bool getBehaviorsFromSelectedUnits(bool a, bool b){
 	string msg = EventChatMessage(false);
 	string log = "UnitBehaviors";
@@ -81,5 +196,7 @@ void helpersInit(){
 
 	t =TriggerCreate("getBehaviorsFromSelectedUnits");
 	TriggerAddEventChatMessage(t,c_playerAny,"getbehaviors",false);
+	
+    EffectTrackerInit();
 	
 }

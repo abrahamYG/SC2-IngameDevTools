@@ -8,6 +8,7 @@ UI/CatalogManager/ShowEffectManager=Effects
 UI/CatalogManager/ShowLightingManager=Lightings
 UI/CatalogManager/ShowRaceManager=Races
 UI/CatalogManager/ShowSkinManager=Skins
+UI/CatalogManager/ShowSoundtrackManager=Soundtracks
 UI/CatalogManager/ShowUnitManager=Units
 UI/CatalogManager/ShowUpgradeManager=Upgrades
 UI/CatalogManager/ShowWeaponManager=Weapons

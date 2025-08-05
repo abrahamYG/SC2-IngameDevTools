@@ -4,7 +4,7 @@ include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/SoundtrackManager";
 ItemListContainerStruct SoundtrackContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 bool SoundtrackListBoxFilterQuery(bool a, bool b){
@@ -37,12 +37,18 @@ bool SoundtrackContainerSendHandler(bool a, bool b){
     string val = DialogControlGetPropertyAsString(SoundtrackContainer.messageBox,c_triggerControlPropertyEditText,player);
     string Soundtrack = SoundtrackContainerSoundtrack(val);
     int i;
+    console(Soundtrack);
     if(EventDialogControl()==SoundtrackContainer.addButton){
-        SoundtrackPlay (PlayerGroupSingle(player), 1, Soundtrack, 1, 1, false);
+        console("Addbutton");
+        SoundtrackStop(PlayerGroupSingle(player), c_soundtrackCategoryMusic,true);
+        SoundtrackPlay (PlayerGroupSingle(player), c_soundtrackCategoryMusic, Soundtrack, c_soundtrackCueAny, c_soundtrackIndexAny, false);
         
     }
     else if(EventDialogControl()==SoundtrackContainer.removeButton){
+        SoundtrackStop(PlayerGroupSingle(player), c_soundtrackCategoryAmbience,true);
+        SoundtrackPlay (PlayerGroupSingle(player), c_soundtrackCategoryAmbience, Soundtrack, c_soundtrackCueAny, c_soundtrackIndexAny, false);
     }
+    else{console("invalidbutton");}
     return trigRan;
 }
 
@@ -54,9 +60,9 @@ bool SoundtrackList_IsSoundtrackFilter(int catalog, string entry){
 
 void SoundtrackHandler_Init(){
 	playergroup pg = PlayerGroupAll();
-    ItemList.id = "SoundtrackList";
+    ItemList = "SoundtrackList";
     ItemListContainer_InitStandard(SoundtrackContainer, CONTAINERDLG_PATH, "SoundtrackContainerSendHandler");
-    ItemListInitFromCatalog(ItemList, c_gameCatalogLight, SoundtrackList_IsSoundtrackFilter);
+    ItemListInitFromCatalog(ItemList, c_gameCatalogSoundtrack, SoundtrackList_IsSoundtrackFilter);
     ItemList_FilterListInitStandard(ListBoxFilter, "SoundtrackListBox", SoundtrackListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 }

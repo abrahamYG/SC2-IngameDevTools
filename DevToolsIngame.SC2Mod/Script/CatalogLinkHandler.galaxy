@@ -23,7 +23,7 @@ struct CatalogLinkContainerStruct{
 
 CatalogLinkContainerStruct CatalogLinkContainer;
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 bool CatalogLinkListBoxSelectionChanged(bool a, bool b){
 	return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
@@ -296,7 +296,7 @@ bool CatalogLinkContainerSendHandler(bool a, bool b){
 void CatalogLinkHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
-	ItemList.id = "CatalogLinkList";
+	ItemList = "CatalogLinkList";
 	CatalogLinkContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	CatalogLinkContainer.typePull = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypePulldown,TYPEPULLDOWN_PATH);
 	CatalogLinkContainer.entryBox = DialogControlHookup(CatalogLinkContainer.panel,c_triggerControlTypeEditBox,ENTRYBOX_PATH);

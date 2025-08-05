@@ -25,7 +25,7 @@ struct DataEditorAttributeContainerStruct{
 DataEditorContainerStruct DataEditorContainer;
 
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 
 static const int ATTR_COUNT = 10;
@@ -145,7 +145,7 @@ void DataEditorAttributeHookup_Init(){
 void DataEditorHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
-	ItemList.id = "DataEditorList";
+	ItemList = "DataEditorList";
 	DataEditorContainer.panel = DialogControlHookupStandard(c_triggerControlTypePanel,CONTAINERDLG_PATH);
 	DataEditorContainer.entryIdBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,ENTRYIDBOX_PATH);
 	//DataEditorContainer.messageBox = DialogControlHookup(DataEditorContainer.panel,c_triggerControlTypeEditBox,EDITBOX_PATH);

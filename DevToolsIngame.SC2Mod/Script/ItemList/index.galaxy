@@ -12,27 +12,35 @@ struct ItemListStruct{
 };
 
 //Reference to an `ItemList` struct
-typedef structref<ItemListStruct> ItemListStructRef;
+//typedef structref<ItemListStruct> ItemListStructRef;
+typedef string ItemListStructRef;
 
 
 static string ItemListGetKey(ItemListStructRef itemList, int index){
-	//console(ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]");
-	return ITEM_LIST_PREFIX+"::"+itemList.id+"["+IntToString(index)+"]";
+	//console(ITEM_LIST_PREFIX+"::"+itemList+"["+IntToString(index)+"]");
+	return ITEM_LIST_PREFIX+"::"+itemList+"["+IntToString(index)+"]";
 }
 
 
+static string ItemListGetCountKey(ItemListStructRef itemList){
+	//console(ITEM_LIST_PREFIX+"::"+itemList+"["+IntToString(index)+"]");
+	return ITEM_LIST_PREFIX+"::"+itemList+".Count";
+}
+
 int ItemListGetCount(ItemListStructRef itemList){
-	return itemList.count;
+	//return itemList.count;
+	return DataTableGetInt(true,ItemListGetCountKey(itemList));
 }
 
 static void ItemListSetCount(ItemListStructRef itemList, int count){
-	itemList.count = count;
+	//itemList.count = count;
+	DataTableSetInt(true,ItemListGetCountKey(itemList),count);
 }
 
 void ItemListSetVal(ItemListStructRef itemList, int index, string val){
 	if(ItemListGetCount(itemList)<index){
 		err("Error setting a ItemList value higher than itemlist count");
-		err("ItemList: "+itemList.id);
+		err("ItemList: "+itemList);
 		err("ItemList Index: "+IntToString(index));
 		err("ItemList Count: "+IntToString(ItemListGetCount(itemList)));
 		return;
@@ -43,7 +51,7 @@ void ItemListSetVal(ItemListStructRef itemList, int index, string val){
 string ItemListGetVal(ItemListStructRef itemList, int index){
 	if(ItemListGetCount(itemList)<index){
 		err("Error getting a ItemList value higher than itemlist count");
-		err("ItemList: "+itemList.id);
+		err("ItemList: "+itemList);
 		err("ItemList Index: "+IntToString(index));
 		err("ItemList Count: "+IntToString(ItemListGetCount(itemList)));
 		return null;
@@ -60,6 +68,31 @@ typedef funcref<ItemListItemTextValue> ItemListItemTextValueFuncRef;
 
 
 
+void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
+typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
+
+int ItemListGetActive(ItemListStructRef itemList, int player){
+    return DataTableGetInt(true,"ItemList["+itemList+"].Active.Player"+IntToString(player)+"");
+	//return 0;
+}
+
+
+
+void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveCallback callback, int player){
+    int i=0;
+	if(index==ItemListGetCount(itemList)){return;}
+	else if(index>=ItemListGetCount(itemList)){index=0;}
+	else if(index<0){index=ItemListGetCount(itemList)-1;}
+
+	//itemList.current = index;
+	DataTableSetInt(true,"ItemList["+itemList+"].Active.Player"+IntToString(player)+"",index);
+	if(callback!=null){
+		callback(itemList,index,PlayerGroupSingle(player));
+	}
+}
+
+
+
 // ## ItemListClear
 // Clears an `itemList` by setting all values to an empty `string`
 void ItemListClear(ItemListStructRef itemList){
@@ -69,7 +102,8 @@ void ItemListClear(ItemListStructRef itemList){
 		//itemList.list[i] = "";
 	}
 	ItemListSetCount(itemList,0);
-	itemList.current = -1;
+	//itemList.current = -1;
+	ItemListSetActive(itemList, -1, null, c_playerAny);
 }
 
 // ## ItemListAdd
@@ -159,28 +193,6 @@ bool ItemListReduceBool(ItemListStructRef itemList,ItemListReduceBoolCallBackRef
 	}
 	return accumulator;
 }
-
-
-
-void ItemListSetActiveCallbackDef(ItemListStructRef itemList, int index, playergroup pg);
-typedef funcref<ItemListSetActiveCallbackDef> ItemListSetActiveCallback;
-
-int ItemListGetActive(ItemListStructRef itemList, int player){
-    return DataTableGetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"");
-	//return 0;
-}
-
-void ItemListSetActive(ItemListStructRef itemList, int index, ItemListSetActiveCallback callback, int player){
-    if(index==ItemListGetCount(itemList)){return;}
-	else if(index>=ItemListGetCount(itemList)){index=0;}
-	else if(index<0){index=ItemListGetCount(itemList)-1;}
-
-	//itemList.current = index;
-	DataTableSetInt(true,"ItemList["+itemList.id+"].Active.Player"+IntToString(player)+"",index);
-	callback(itemList,index,PlayerGroupSingle(player));
-}
-
-
 
 
 bool ItemListCatalogFilterDef(int catalog, string entry){

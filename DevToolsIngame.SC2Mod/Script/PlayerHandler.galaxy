@@ -2,7 +2,7 @@ include "Script/debug_h";
 include "Script/ItemList";
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/CatalogManager/PortraitManager";
 
-static ItemListStruct ItemList;
+static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
 ItemListContainerStruct PlayerContainer;
 
@@ -30,7 +30,7 @@ text PlayerListItemTextValue(ItemListStructRef itemList,int index){
 
 void PlayerHandler_Init(){
 	playergroup pg = PlayerGroupAll();
-    ItemList.id = "PlayerList";
+    ItemList = "PlayerList";
     ItemListContainer_InitStandard(PlayerContainer, CONTAINERDLG_PATH, "PlayerContainerSendHandler");
     ItemListInitFromPlayerGroup(ItemList, PlayerGroupActive());
     ItemList_FilterListInitStandard(ListBoxFilter, "PlayerListBox", PlayerListBoxSetActive, ItemListItemTextValue, CONTAINERDLG_PATH+"/NavList");

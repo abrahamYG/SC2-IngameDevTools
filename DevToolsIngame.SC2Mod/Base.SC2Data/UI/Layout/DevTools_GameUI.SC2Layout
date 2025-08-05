@@ -44,6 +44,7 @@
 				<TabListItem val="$this/ShowUpgradeManager"/>
 				<TabListItem val="$this/ShowWeaponManager"/>
 				<TabListItem val="$this/ShowLightingManager"/>
+				<TabListItem val="$this/ShowSoundtrackManager"/>
 				<TabListItem val="$this/ShowRaceManager"/>
 				<TabListItem val="$this/ShowSkinManager"/>
 				<TabListItem val="$this/ShowPortraitManager"/>
@@ -56,6 +57,7 @@
 				<PanelListItem val="$parent/UpgradeManager"/>
 				<PanelListItem val="$parent/WeaponManager"/>
 				<PanelListItem val="$parent/LightingManager"/>
+				<PanelListItem val="$parent/SoundtrackManager"/>
 				<PanelListItem val="$parent/RaceManager"/>
 				<PanelListItem val="$parent/SkinManager"/>
 				<PanelListItem val="$parent/PortraitManager"/>
@@ -150,10 +152,18 @@
 					<Text val="Lighting"/>
 				</Frame>
 			</Frame>
-			<Frame type="Control" name="RaceManager" template="CatalogManager/CatalogManager">
-				<Visible val="{$parent/CatalogManagerList/ShowRaceManager/@Toggled}"/>
+			<Frame type="Control" name="SoundtrackManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowSoundtrackManager/@Toggled}"/>
 				<Anchor side="Top" relative="$parent/LightingManager" pos="Min" offset="0"/>
 				<Anchor side="Right" relative="$parent/LightingManager" pos="Min" offset="-10"/>
+				<Frame type="Label" name="Title">
+					<Text val="Soundtrack"/>
+				</Frame>
+			</Frame>
+			<Frame type="Control" name="RaceManager" template="CatalogManager/CatalogManager">
+				<Visible val="{$parent/CatalogManagerList/ShowRaceManager/@Toggled}"/>
+				<Anchor side="Top" relative="$parent/SoundtrackManager" pos="Min" offset="0"/>
+				<Anchor side="Right" relative="$parent/SoundtrackManager" pos="Min" offset="-10"/>
 				<Frame type="Label" name="Title">
 					<Text val="Race"/>
 				</Frame>
