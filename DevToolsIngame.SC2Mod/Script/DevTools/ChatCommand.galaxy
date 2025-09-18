@@ -1,0 +1,195 @@
+include "Script/DevTools/ChatCommand/index"
+include "Script/debug_h";
+include "Script/ItemList";
+static const string ItemList = "ChatCommands";
+static const string ParamsItemList = "ChatCommandsParams";
+static const string c_ChatCommandkey = "DevTools.ChatCommand.";
+static const string c_DefaultPrefix = "-";
+trigger DevTools_ChatCommand;
+
+
+string DevTools_ChatCommandPrefix(){
+	return "";
+}
+
+string DevTools_ChatCommandKey(string cmd){
+	return c_ChatCommandkey+cmd;
+}
+
+string DevTools_ChatCommandParamKey(string cmd, string param){
+	return DevTools_ChatCommandKey(cmd)+".Params."+param;
+}
+
+
+void DevTools_ChatCommandEventPlayerSet(string cmd, int player){
+	string key = TriggerEventParamName("DevTools_ChatCommand.Exec."+cmd,"_player");
+	DataTableSetInt(false,key,player);
+}
+
+
+int DevTools_ChatCommandEventPlayerGet(){
+	string key = TriggerEventParamName(EventGenericName(),"_player");
+	if(DataTableValueExists(false,key)){
+		return DataTableGetInt(false,key);
+	}
+	return -1;
+}
+
+void DevTools_ChatCommandEventCommandSet(string cmd){
+	string key = TriggerEventParamName("DevTools_ChatCommand.Exec."+cmd,"_cmd");
+	DataTableSetString(false,key,cmd);
+}
+
+string DevTools_ChatCommandEventCommandGet(){
+	string cmd = null;
+	string key = TriggerEventParamName(EventGenericName(),"_cmd");
+	if(!DataTableValueExists(false,key)){return null;}
+	cmd = DataTableGetString(false,key);
+	return cmd;
+}
+
+void DevTools_ChatCommandEventParamValueSet(string cmd, string param, string value){
+	string key = DevTools_ChatCommandParamKey(cmd,param);
+	key = TriggerEventParamName("DevTools_ChatCommand.Exec."+cmd,key);
+	DataTableSetString(false,key,value);
+}
+
+string DevTools_ChatCommandEventParamValueGet(string cmd, string param){
+	string key = DevTools_ChatCommandParamKey(cmd,param);
+	key = TriggerEventParamName("DevTools_ChatCommand.Exec."+cmd,key);
+	if(DataTableValueExists(false,key)){
+		return DataTableGetString(false,key);
+	}
+	return null;
+}
+
+
+
+void DevTools_ChatCommandParamSetDescription(string cmd, string param, text description){
+	DataTableSetText(true,DevTools_ChatCommandParamKey(cmd,param)+".Description",description);
+}
+
+text DevTools_ChatCommandParamGetDescription(string cmd, string param){
+	string key = DevTools_ChatCommandParamKey(cmd,param)+".Description";
+	if(!DataTableValueExists(true,key)){
+		return null;
+	}
+	return DataTableGetText(true,key);
+}
+
+string DevTools_ChatCommandParamGet(string cmd, int index){
+	return ItemListGetVal(ParamsItemList+"."+cmd,index);
+}
+
+void DevTools_ChatCommandParamAdd(string cmd, string param, text description){
+	ItemListAdd(ParamsItemList+"."+cmd,param);
+	DevTools_ChatCommandParamSetDescription(cmd, param, description);
+}
+
+int  DevTools_ChatCommandParamCount(string cmd){
+	return ItemListGetCount(ParamsItemList+"."+cmd);
+}
+
+
+void DevTools_ChatCommandSetDescription(string cmd, text description){
+	DataTableSetText(true,DevTools_ChatCommandKey(cmd)+".Description",description);
+}
+
+text DevTools_ChatCommandGetDescription(string cmd){
+	string key = DevTools_ChatCommandKey(cmd)+".Description";
+	if(!DataTableValueExists(true,key)){
+		return null;
+	}
+	return DataTableGetText(true,key);
+}
+
+
+void DevTools_ChatCommandCreate(string cmd, trigger handler, text description){
+	print("Creating command "+cmd);
+	ItemListAdd(ItemList,cmd);
+	TriggerAddEventChatMessage(DevTools_ChatCommand,c_playerAny,cmd,false);
+	TriggerAddEventGeneric(handler,"DevTools_ChatCommand.Exec."+cmd);
+	DevTools_ChatCommandSetDescription(cmd, description);
+}
+
+
+void DevTools_ChatCommandSend(string cmd){
+	TriggerSendEvent("DevTools_ChatCommand.Exec."+cmd);
+}
+
+bool DevTools_ChatCommand_Func(bool a, bool b){
+	string msg = EventChatMessage(false);
+	string word;
+	string cmd;
+	string params;
+	string param="";
+	int i = 0;
+	cmd = StringWord(msg,1);
+	if(cmd!=EventChatMessage(true)){
+		return false;
+	}
+	
+	params = StringSub(
+		msg,
+		StringLength(cmd)+1,
+		StringLength(msg)
+	);
+	word=StringWord(params,1);
+	DevTools_ChatCommandEventCommandSet(cmd);
+	DevTools_ChatCommandEventPlayerSet(cmd, EventPlayer());
+	while(word!=null){
+		param = DevTools_ChatCommandParamGet(cmd,i);
+		print("Param "+IntToString(i)+": "+param+" = {"+word+"}");
+		DevTools_ChatCommandEventParamValueSet(cmd,param,word);
+		i+=1;
+		word=StringWord(params,i+1);
+	}
+	DevTools_ChatCommandSend(cmd);
+	return true;
+}
+
+bool DevTools_ChatCommand_List(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+	string param;
+	string cmd_item=DevTools_ChatCommandEventParamValueGet(cmd, "help_command");
+	int i=0;
+	print(cmd+":");
+	if(cmd_item!=null){
+		print(cmd_item);
+		printT(StringToText("\t")+DevTools_ChatCommandGetDescription(cmd_item));
+		if(DevTools_ChatCommandParamCount(cmd_item)>0)
+		{
+			print("Parameters:");
+			for(i=0;i<DevTools_ChatCommandParamCount(cmd_item);i+=1){
+				param = DevTools_ChatCommandParamGet(cmd_item,i);
+				print("\t· "+param);
+				printT(StringToText("\t\t")+DevTools_ChatCommandParamGetDescription(cmd_item,param));
+			}
+		}
+		return true;
+	}
+	for(i=0;i<ItemListGetCount(ItemList);i+=1){
+		cmd_item = ItemListGetVal(ItemList,i);
+		print(cmd_item);
+		printT(DevTools_ChatCommandGetDescription(cmd_item));
+	}
+	
+	return true;
+}
+
+
+void DevTools_ChatCommand_Init(){
+	string cmd;
+	DevTools_ChatCommand = TriggerCreate("DevTools_ChatCommand_Func");
+	cmd = "help";
+	DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("DevTools_ChatCommand_List"),
+		StringToText("List all available chat commands")
+	);
+	DevTools_ChatCommandParamAdd(
+		cmd,
+		"help_command",
+		StringToText("(Optional) Help for the Command")
+	);
+}

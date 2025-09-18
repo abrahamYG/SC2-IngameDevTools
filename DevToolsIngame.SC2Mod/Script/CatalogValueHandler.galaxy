@@ -1,5 +1,6 @@
 include "Script/debug_h";
 include "Script/ItemList";
+include "Script/DevTools/ChatCommand"
 
 static const string CONTAINERDLG_PATH = "UIContainer/ConsoleUIContainer/MiscOptionsManager/CatalogValueManager";
 static const string EDITBOX_PATH = "Item";
@@ -36,6 +37,63 @@ CatalogValueContainerStruct CatalogValueContainer;
 
 static string ItemList;
 static ListBoxFilterStruct ListBoxFilter;
+
+
+
+static string tabsFromIdentLevel(int indentLevel){
+	string tab = "";
+	int indentLevelIterator = indentLevel;
+	while (indentLevelIterator>1){tab+="\t"; indentLevelIterator-=1;}
+	return tab;
+}
+
+static string printFieldsfromScope(string scope, int indentLevel){
+	int count = 0;
+	int index = 0;
+	int typeCategory = c_catalogFieldTypeUnknown;
+	string type = "";
+	string entry = "";
+	string row = "";
+	string output = "";
+	string tab = tabsFromIdentLevel(indentLevel);
+	string fieldFormat = "[{type}{array}] ${name}; #{fieldType}";
+	count = CatalogFieldCount (scope);
+	output = "\n"+tab+"{";
+	for(index=0;index<count;index+=1){
+		
+		
+		tab = tabsFromIdentLevel(indentLevel+1);
+		row = "\n"+tab+fieldFormat;
+		entry = CatalogFieldGet (scope, index);
+		if(CatalogFieldIsScope (scope, entry)){
+			row = StringReplaceWord(row,"{name}",entry,1,false);
+			if(CatalogFieldIsArray (scope, entry)){
+				row = StringReplaceWord(row,"{array}","[]",1,false);
+			}
+			else{row = StringReplaceWord(row,"{array}","",1,false);}
+			type = CatalogFieldType(scope,entry);
+			typeCategory = CatalogFieldTypeCategory (scope, entry);
+			row = StringReplaceWord(row,"{type}",type,1,false);
+			if(typeCategory==c_catalogFieldTypeStruct){
+				row = StringReplaceWord(row,"{fieldType}","struct",1,false);
+				//row = StringReplaceWord(row,";","",1,false);
+				//row += printFieldsfromScope(type,indentLevel+1);
+			}
+			else if(typeCategory==c_catalogFieldTypeEnum){
+				row = StringReplaceWord(row,"{fieldType}","enum",1,false);
+			}
+			else {
+				row = StringReplaceWord(row,"{fieldType}","fieldtype: "+IntToString(typeCategory),1,false);
+			}
+			output += row;
+		}
+	}
+	tab = tabsFromIdentLevel(indentLevel);
+	output += "\n"+tab+"}";
+	return output;
+}
+
+
 bool CatalogValueListBoxSelectionChanged(bool a, bool b){
 	return ItemList_FilterBoxSelectionChanged(ItemList, ListBoxFilter, EventPlayer());
 }
@@ -272,59 +330,6 @@ static int CatalogValueContainerCatalogValue(string val){
 	
 }
 
-static string tabsFromIdentLevel(int indentLevel){
-	string tab = "";
-	int indentLevelIterator = indentLevel;
-	while (indentLevelIterator>1){tab+="\t"; indentLevelIterator-=1;}
-	return tab;
-}
-
-static string printFieldsfromScope(string scope, int indentLevel){
-	int count = 0;
-	int index = 0;
-	int typeCategory = c_catalogFieldTypeUnknown;
-	string type = "";
-	string entry = "";
-	string row = "";
-	string output = "";
-	string tab = tabsFromIdentLevel(indentLevel);
-	string fieldFormat = "[{type}{array}] ${name}; #{fieldType}";
-	count = CatalogFieldCount (scope);
-	output = "\n"+tab+"{";
-	for(index=0;index<count;index+=1){
-		
-		
-		tab = tabsFromIdentLevel(indentLevel+1);
-		row = "\n"+tab+fieldFormat;
-		entry = CatalogFieldGet (scope, index);
-		if(CatalogFieldIsScope (scope, entry)){
-			row = StringReplaceWord(row,"{name}",entry,1,false);
-			if(CatalogFieldIsArray (scope, entry)){
-				row = StringReplaceWord(row,"{array}","[]",1,false);
-			}
-			else{row = StringReplaceWord(row,"{array}","",1,false);}
-			type = CatalogFieldType(scope,entry);
-			typeCategory = CatalogFieldTypeCategory (scope, entry);
-			row = StringReplaceWord(row,"{type}",type,1,false);
-			if(typeCategory==c_catalogFieldTypeStruct){
-				row = StringReplaceWord(row,"{fieldType}","struct",1,false);
-				//row = StringReplaceWord(row,";","",1,false);
-				//row += printFieldsfromScope(type,indentLevel+1);
-			}
-			else if(typeCategory==c_catalogFieldTypeEnum){
-				row = StringReplaceWord(row,"{fieldType}","enum",1,false);
-			}
-			else {
-				row = StringReplaceWord(row,"{fieldType}","fieldtype: "+IntToString(typeCategory),1,false);
-			}
-			output += row;
-		}
-	}
-	tab = tabsFromIdentLevel(indentLevel);
-	output += "\n"+tab+"}";
-	return output;
-}
-
 bool CatalogValueContainerSendHandler(bool a, bool b){
 	bool trigRan = true;
 	int player = EventPlayer();
@@ -384,35 +389,8 @@ bool CatalogValueContainerSendHandler(bool a, bool b){
 	return trigRan;
 }
 
-string getAbilsFromUnit(unit u){
-    string s;
-    int count = UnitAbilityCount(u);
-    int i;
-    s = UnitGetType(u)+IntToString(UnitGetTag(u))+"\n";
-	for(i=1;i<=count;i+=1){
-		s+=UnitAbilityGet(u,i)+"\n";
-	}
-    return s;
-}
-
-bool getAbilsFromSelectedUnits(bool a, bool b){
-	string msg = EventChatMessage(false);
-	string log = "UnitAbils";
-	int i;
-	unitgroup ug = UnitGroupSelected(EventPlayer());
-	unit u;
-	if(StringWord(msg,1)==EventChatMessage(true)){
-		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
-		for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
-            u = UnitGroupUnit(ug,i);
-			CatalogValueHandler_console(getAbilsFromUnit(u));
-		}
-	}
-	return true;
-}
-
 bool printPropertyFromCatalogTrig(bool a, bool b){
-	string msg = EventChatMessage(false);
+	string cmd = DevTools_ChatCommandEventCommandGet();
 	int catalog;
 	int count; int i;
 	string catalogName = "";
@@ -420,36 +398,25 @@ bool printPropertyFromCatalogTrig(bool a, bool b){
 	string log = "CatalogVal";
 	string entry;
 	string value;
-	if(StringWord(msg,1)==EventChatMessage(true)){
-		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
-		catalogName = StringWord(msg,2);
-		property = StringWord(msg,3);
-		catalog= DataTableGetInt(true,"Catalog."+catalogName);
-    	count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
-		log += "."+catalogName+"."+property;
-		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
-    	for(i=1;i<=count;i+=1){
-        	entry = CatalogEntryGet(catalog,i);
-			value = CatalogFieldValueGet(catalog,entry,property,EventPlayer());
-			CatalogValueHandler_console(entry+"."+property+": "+value);
-		}
-	}
-	return true;
-}
-
-bool printFieldsfromScopeTrig(bool a, bool b){
-	string msg = EventChatMessage(false);
-	string scope = "";
-	string log = "Misc";
-	if(StringWord(msg,1)==EventChatMessage(true)){
-		scope = StringWord(msg,2);
-	}
-	log = "printFieldsfromScope."+scope;
 	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
-	CatalogValueHandler_console("\nclass "+scope+printFieldsfromScope(scope,1));
+	catalogName = DevTools_ChatCommandEventParamValueGet(cmd, "catalogName");
+	property = DevTools_ChatCommandEventParamValueGet(cmd, "property");
+	catalog= DataTableGetInt(true,"Catalog."+catalogName);
+	count = MinI(CatalogEntryCount(catalog),ITEM_LIST_MAX);
+	log += "."+catalogName+"."+property;
+	print(cmd);
+	print(catalogName);
+	print(property);
+
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+	for(i=1;i<=count;i+=1){
+		entry = CatalogEntryGet(catalog,i);
+		value = CatalogFieldValueGet(catalog,entry,property,DevTools_ChatCommandEventPlayerGet());
+		CatalogValueHandler_console(entry+"."+property+": "+value);
+	}
+
 	return true;
 }
-
 
 
 
@@ -538,7 +505,7 @@ bool resolveRequirementTrig(bool a, bool b){
 void CatalogValueHandler_Init(){
 	playergroup pg = PlayerGroupAll();
 	trigger t;
-
+	string cmd;
 	
 
 	ItemList = "CatalogValueList";
@@ -565,14 +532,26 @@ void CatalogValueHandler_Init(){
 	ItemList_FilterListRebuild(ItemList,ListBoxFilter,"",pg);
 	t = TriggerCreate("CatalogValueListBoxSelectionChanged");
 	TriggerAddEventDialogControl(t,c_playerAny,ListBoxFilter.list,c_triggerControlEventTypeSelectionChanged);
-	t =TriggerCreate("printFieldsfromScopeTrig");
-	TriggerAddEventChatMessage(t,c_playerAny,"scopedump",false);
 	t =TriggerCreate("resolveRequirementTrig");
 	TriggerAddEventChatMessage(t,c_playerAny,"resreq",false);
-	t =TriggerCreate("printPropertyFromCatalogTrig");
-	TriggerAddEventChatMessage(t,c_playerAny,"fetchval",false);
-	t =TriggerCreate("getAbilsFromSelectedUnits");
-	TriggerAddEventChatMessage(t,c_playerAny,"getabils",false);
+
+	cmd = "fetchval";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("printPropertyFromCatalogTrig"),
+		StringToText("Get value from catalog")
+	);
+	
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "catalogName",
+        StringToText("Name of the Catalog")
+    );
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "property",
+        StringToText("Property to get value")
+    );
 	//TriggerExecute(t,true,false);
 	
 

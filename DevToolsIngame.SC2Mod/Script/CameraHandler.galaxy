@@ -120,33 +120,9 @@ void CameraHandler_InitHookup(){
 }
 
 
-bool CameraHandler_CinematicModeEndHandler(bool a, bool b){
-    int player = EventPlayer();
-    libNtve_gf_CinematicMode(false,PlayerGroupSingle(player),0.0);
-    //CinematicMode(PlayerGroupSingle(player),false,0.0);
-    return true;
-}
-
-
-bool CameraHandler_CinematicModeStartHandler(bool a, bool b){
-    int player = EventPlayer();
-    libNtve_gf_CinematicMode(true,PlayerGroupSingle(player),0.0);
-    //CinematicMode(PlayerGroupSingle(player),true,0.0);
-    return true;
-}
-
-
-void CameraHandler_InitCinematicMode(){
-    trigger t;
-    t= TriggerCreate("CameraHandler_CinematicModeStartHandler");
-    TriggerAddEventChatMessage(t,c_playerAny,"cineon",false);
-    t= TriggerCreate("CameraHandler_CinematicModeEndHandler");
-    TriggerAddEventChatMessage(t,c_playerAny,"cineoff",false);
-}
 
 void CameraHandler_Init(){
     camerainfo cam = CameraInfoDefault ();
     CameraHandler_InitHookup();
     CameraHandler_InitValues(cam, PlayerGroupActive());
-    CameraHandler_InitCinematicMode();
 }

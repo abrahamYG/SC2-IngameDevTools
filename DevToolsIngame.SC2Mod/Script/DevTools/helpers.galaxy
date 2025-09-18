@@ -1,4 +1,5 @@
 include "Script/DevTools/helpers_h";
+include "Script/DevTools/ChatCommand"
 
 static const string PREFIX="DevToolsHelper";
 
@@ -46,17 +47,6 @@ void DevTools_ClearSpawnPoint(int player){
 	DataTableValueRemove(true,GetSpawnPointKey(player));
 }
 
-
-string getBehaviorsFromUnit(unit u){
-    string s;
-    int count = UnitBehaviorCountAll(u);
-    int i;
-    s = UnitGetType(u)+IntToString(UnitGetTag(u))+"\n";
-	for(i=1;i<=count;i+=1){
-		s+=UnitBehaviorGet(u,i)+"\n";
-	}
-    return s;
-}
 
 static trigger t_MovementTracker;
 
@@ -116,18 +106,20 @@ bool MovementTracker(bool a, bool b){
 
 
 bool MovementTrackerAdd(bool a, bool b){
-    string msg = EventChatMessage(false);
-	unitgroup ug = UnitGroupSelected(EventPlayer());
+    string cmd = DevTools_ChatCommandEventCommandGet();
+	unitgroup ug = UnitGroupSelected(DevTools_ChatCommandEventPlayerGet());
 	unit u = UnitGroupUnit(ug,1);
-	if(StringWord(msg,1)=="trackmovementstart"){
+	if(cmd=="trackmovementstart"){
 		DataTableSetUnit(true,MovementTrackerKey(),u);
 	}
-    if(StringWord(msg,1)=="trackmovementstop"){
+    if(cmd=="trackmovementstop"){
 		DataTableSetUnit(true,MovementTrackerKey(),null);
 	}
     return true;
 }
 
+
+trigger EffectTrackerTrig;
 
 bool EffectTracker(bool a, bool b){
     string effect = EventPlayerEffectUsed();
@@ -142,24 +134,50 @@ bool EffectTracker(bool a, bool b){
     return true;
 }
 
+
+bool EffectTrackAdd(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+	string effect=DevTools_ChatCommandEventParamValueGet(cmd, "effect");
+	TriggerAddEventPlayerEffectUsed(EffectTrackerTrig,DevTools_ChatCommandEventPlayerGet(),effect);
+    
+	return true;
+}
+
 static void EffectTrackerInit(){
     trigger t; 
     int player = c_playerAny;
     string effect;
 	timer lv_timer = TimerCreate();
-    t = TriggerCreate("EffectTracker");
-    effect = "GuassRifle";
-    TriggerAddEventPlayerEffectUsed(t,player,effect);
-    effect = "MarineSCBWWeapon@Damage";
-    TriggerAddEventPlayerEffectUsed(t,player,effect);
+	string cmd = "effecttrack";
+    EffectTrackerTrig = TriggerCreate("EffectTracker");
+    
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("EffectTrackAdd"),
+		StringToText("Track The period of time between effects occuring. Used mostly for weapons.")
+	);
+	
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "effect",
+        StringToText("The effect to track")
+    );
 
     t = TriggerCreate("MovementTracker");
 	TriggerAddEventTimer(t,lv_timer);
 	TimerStart(lv_timer,1.0/8.0,true,c_timeGame);
 	t = TriggerCreate("MovementTrackerAdd");
-	TriggerAddEventChatMessage(t,c_playerAny,"trackmovementstart",false);
-	TriggerAddEventChatMessage(t,c_playerAny,"trackmovementstop",false);
-    //effect = "StaggerUDStepIncreasePhase1";
+	DevTools_ChatCommandCreate(
+		"trackmovementstart",
+		t,
+		StringToText("Track the movement speed of a unit.")
+	);
+	DevTools_ChatCommandCreate(
+		"trackmovementstop",
+		t,
+		StringToText("Stop tracking the movement speed of a unit.")
+	);
+	//effect = "StaggerUDStepIncreasePhase1";
     //TriggerAddEventPlayerEffectUsed(t,player,effect);
     //effect = "StaggerUDStepIncreasePhase2";
     //TriggerAddEventPlayerEffectUsed(t,player,effect);
@@ -172,31 +190,11 @@ static void EffectTrackerInit(){
 }
 
 
-
-bool getBehaviorsFromSelectedUnits(bool a, bool b){
-	string msg = EventChatMessage(false);
-	string log = "UnitBehaviors";
-	int i;
-	unitgroup ug = UnitGroupSelected(EventPlayer());
-	unit u;
-	if(StringWord(msg,1)==EventChatMessage(true)){
-		TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
-		for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
-            u = UnitGroupUnit(ug,i);
-			print(getBehaviorsFromUnit(u));
-		}
-	}
-	return true;
-}
-
 void helpersInit(){
 	trigger t;
 	
 	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, DEBUG_TYPE_ANY_FILENAME);
 
-	t =TriggerCreate("getBehaviorsFromSelectedUnits");
-	TriggerAddEventChatMessage(t,c_playerAny,"getbehaviors",false);
-	
     EffectTrackerInit();
 	
 }

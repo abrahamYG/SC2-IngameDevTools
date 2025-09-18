@@ -94,33 +94,8 @@ void FogHandler_InitHookup(){
 }
 
 
-bool FogHandler_CinematicModeEndHandler(bool a, bool b){
-    int player = EventPlayer();
-    libNtve_gf_CinematicMode(false,PlayerGroupSingle(player),0.0);
-    //CinematicMode(PlayerGroupSingle(player),false,0.0);
-    return true;
-}
-
-
-bool FogHandler_CinematicModeStartHandler(bool a, bool b){
-    int player = EventPlayer();
-    libNtve_gf_CinematicMode(true,PlayerGroupSingle(player),0.0);
-    //CinematicMode(PlayerGroupSingle(player),true,0.0);
-    return true;
-}
-
-
-void FogHandler_InitCinematicMode(){
-    trigger t;
-    t= TriggerCreate("FogHandler_CinematicModeStartHandler");
-    TriggerAddEventChatMessage(t,c_playerAny,"cineon",false);
-    t= TriggerCreate("FogHandler_CinematicModeEndHandler");
-    TriggerAddEventChatMessage(t,c_playerAny,"cineoff",false);
-}
-
 void FogHandler_Init(){
     string terrainSet = GameTerrainSet ();
     FogHandler_InitHookup();
     FogHandler_InitValues(terrainSet, PlayerGroupActive());
-    FogHandler_InitCinematicMode();
 }

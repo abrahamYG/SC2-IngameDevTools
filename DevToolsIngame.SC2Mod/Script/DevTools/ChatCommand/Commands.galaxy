@@ -1,0 +1,232 @@
+include "Script/DevTools/ChatCommand"
+static const string DEBUG_TYPE_ANY_FILENAME = "UnitTest";
+static const int DEBUG_TYPE_INFO = 12;
+
+bool DevTools_ChatCommand_Commands_CinematicModeEnd(bool a, bool b){
+    int player = DevTools_ChatCommandEventPlayerGet();
+    libNtve_gf_CinematicMode(false,PlayerGroupSingle(player),0.0);
+    //CinematicMode(PlayerGroupSingle(player),false,0.0);
+    return true;
+}
+
+bool DevTools_ChatCommand_Commands_CinematicModeStart(bool a, bool b){
+    int player = DevTools_ChatCommandEventPlayerGet();
+    libNtve_gf_CinematicMode(true,PlayerGroupSingle(player),0.0);
+    //CinematicMode(PlayerGroupSingle(player),true,0.0);
+    return true;
+}
+
+
+
+static string tabsFromIdentLevel(int indentLevel){
+	string tab = "";
+	int indentLevelIterator = indentLevel;
+	while (indentLevelIterator>1){tab+="\t"; indentLevelIterator-=1;}
+	return tab;
+}
+
+static string printFieldsfromScope(string scope, int indentLevel){
+	int count = 0;
+	int index = 0;
+	int typeCategory = c_catalogFieldTypeUnknown;
+	string type = "";
+	string entry = "";
+	string row = "";
+	string output = "";
+	string tab = tabsFromIdentLevel(indentLevel);
+	string fieldFormat = "[{type}{array}] ${name}; #{fieldType}";
+	count = CatalogFieldCount (scope);
+	output = "\n"+tab+"{";
+	for(index=0;index<count;index+=1){
+		
+		
+		tab = tabsFromIdentLevel(indentLevel+1);
+		row = "\n"+tab+fieldFormat;
+		entry = CatalogFieldGet (scope, index);
+		if(CatalogFieldIsScope (scope, entry)){
+			row = StringReplaceWord(row,"{name}",entry,1,false);
+			if(CatalogFieldIsArray (scope, entry)){
+				row = StringReplaceWord(row,"{array}","[]",1,false);
+			}
+			else{row = StringReplaceWord(row,"{array}","",1,false);}
+			type = CatalogFieldType(scope,entry);
+			typeCategory = CatalogFieldTypeCategory (scope, entry);
+			row = StringReplaceWord(row,"{type}",type,1,false);
+			if(typeCategory==c_catalogFieldTypeStruct){
+				row = StringReplaceWord(row,"{fieldType}","struct",1,false);
+				//row = StringReplaceWord(row,";","",1,false);
+				//row += printFieldsfromScope(type,indentLevel+1);
+			}
+			else if(typeCategory==c_catalogFieldTypeEnum){
+				row = StringReplaceWord(row,"{fieldType}","enum",1,false);
+			}
+			else {
+				row = StringReplaceWord(row,"{fieldType}","fieldtype: "+IntToString(typeCategory),1,false);
+			}
+			output += row;
+		}
+	}
+	tab = tabsFromIdentLevel(indentLevel);
+	output += "\n"+tab+"}";
+	return output;
+}
+
+
+bool printFieldsfromScopeTrig(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+	string scope=DevTools_ChatCommandEventParamValueGet(cmd, "scope");
+	
+	string log = "Misc";
+	log = "printFieldsfromScope."+scope;
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+	console("\nclass "+scope+printFieldsfromScope(scope,1));
+	return true;
+}
+
+
+string getAbilsFromUnit(unit u){
+    string s;
+    int count = UnitAbilityCount(u);
+    int i;
+    s = UnitGetType(u)+IntToString(UnitGetTag(u))+"\n";
+	for(i=1;i<=count;i+=1){
+		s+=UnitAbilityGet(u,i)+"\n";
+	}
+    return s;
+}
+
+
+string getBehaviorsFromUnit(unit u){
+    string s = "Unit: {unittype}#{unittag}\n";
+    int count = UnitBehaviorCountAll(u);
+    int i;
+	s = StringReplaceWord(s,"{unittype}",UnitGetType(u),1,true);
+	s = StringReplaceWord(s,"{unittag}",IntToString(UnitGetTag(u)),1,true);
+	for(i=1;i<=count;i+=1){
+		s+=UnitBehaviorGet(u,i)+"\n";
+	}
+    return s;
+}
+bool getBehaviorsFromSelectedUnits(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+	string log = "UnitBehaviors";
+	int i;
+	unitgroup ug = UnitGroupSelected(DevTools_ChatCommandEventPlayerGet());
+	unit u;
+    TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+    for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+        u = UnitGroupUnit(ug,i);
+        print(getBehaviorsFromUnit(u));
+    }
+	return true;
+}
+
+bool getAbilsFromSelectedUnits(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+	string log = "UnitAbils";
+	int i;
+	unitgroup ug = UnitGroupSelected(DevTools_ChatCommandEventPlayerGet());
+	unit u;
+    print("getAbilsFromSelectedUnits player"+IntToString(DevTools_ChatCommandEventPlayerGet()));
+    TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+    for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
+        u = UnitGroupUnit(ug,i);
+        console(getAbilsFromUnit(u));
+    }
+
+	return true;
+}
+
+
+bool sum_test_trig(bool a, bool b){
+	string cmd = DevTools_ChatCommandEventCommandGet();
+    string strA = DevTools_ChatCommandEventParamValueGet(cmd, "a");
+    string strB = DevTools_ChatCommandEventParamValueGet(cmd, "b");
+    int sum = StringToInt(strA)+StringToInt(strB);
+
+	print("Sum Test");
+	print("A: "+strA);
+	print("B: "+strB);
+    print("Sum: "+IntToString(sum));
+	
+	return true;
+}
+
+bool clear (bool a,bool b){
+    string cmd = DevTools_ChatCommandEventCommandGet();
+    string area = DevTools_ChatCommandEventParamValueGet(cmd, "area");
+	if(area==null || StringLength(area)==0){ area="0"; }
+    UIClearMessages(PlayerGroupSingle(DevTools_ChatCommandEventPlayerGet()),StringToInt(area));
+    return true;
+}
+
+void DevTools_ChatCommand_Commands_Init(){
+	string cmd;
+    cmd = "clear";
+	DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("clear"),
+		StringToText("Clears all text from a give message area")
+	);
+
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "area",
+        StringToText("Message Area to clear")
+    );
+
+	cmd = "sum";
+	DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("sum_test_trig"),
+		StringToText("Sum 2 numbers")
+	);
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "a",
+        StringToText("Left value")
+    );
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "b",
+        StringToText("Right value")
+    );
+
+    cmd = "cineon";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("DevTools_ChatCommand_Commands_CinematicModeStart"),
+		StringToText("Starts Cinematic Mode")
+	);
+    cmd = "cineoff";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("DevTools_ChatCommand_Commands_CinematicModeEnd"),
+		StringToText("Ends Cinematic Mode")
+	);
+
+    cmd = "scopedump";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("printFieldsfromScopeTrig"),
+		StringToText("Prints all fields from a given catalog scope to console")
+	);
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "scope",
+        StringToText("Scope to print")
+    );
+    cmd = "getabils";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("getAbilsFromSelectedUnits"),
+		StringToText("Get the Abilities from the Selected Units")
+	);
+	
+	cmd = "getbehaviors";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("getBehaviorsFromSelectedUnits"),
+		StringToText("Get the Behaviors from the Selected Units")
+	);
+}

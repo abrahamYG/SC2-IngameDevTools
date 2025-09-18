@@ -21,10 +21,13 @@ include "Script/DataEditorHandler";
 include "Script/CameraHandler";
 include "Script/CameraShakeHandler";
 include "Script/FogHandler";
+include "Script/DevTools/ChatCommand";
+include "Script/DevTools/ChatCommand/Commands";
 //include "Script/PortView";
 //include "Script/libGalExe_init";
 
 void DevToolsMain_Init(){
+    DevTools_ChatCommand_Init();
     helpersInit();
     ActorMessageHandler_Init();
     CatalogValueHandler_Init();
@@ -47,6 +50,7 @@ void DevToolsMain_Init(){
     CameraHandler_Init();
     CameraShakeHandler_Init();
     FogHandler_Init();
+    DevTools_ChatCommand_Commands_Init();
     PlayerSetAlliance(2,c_allianceIdControl,1,true);
     PlayerSetAlliance(2,c_allianceIdSpend,1,true);
     //PortView_Init();
