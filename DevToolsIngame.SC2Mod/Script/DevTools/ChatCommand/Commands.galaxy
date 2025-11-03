@@ -2,6 +2,16 @@ include "Script/DevTools/ChatCommand"
 static const string DEBUG_TYPE_ANY_FILENAME = "UnitTest";
 static const int DEBUG_TYPE_INFO = 12;
 
+static void chatcommand_print(string s){
+	TriggerDebugOutput(DEBUG_TYPE_INFO,StringToText(s),true);
+}
+
+
+static void chatcommand_console(string s){
+	TriggerDebugOutput(DEBUG_TYPE_INFO,StringToText(s),false);
+}
+
+
 bool DevTools_ChatCommand_Commands_CinematicModeEnd(bool a, bool b){
     int player = DevTools_ChatCommandEventPlayerGet();
     libNtve_gf_CinematicMode(false,PlayerGroupSingle(player),0.0);
@@ -131,7 +141,7 @@ bool getAbilsFromSelectedUnits(bool a, bool b){
     TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
     for(i=1;i<=UnitGroupCount(ug,c_unitCountAll);i+=1){
         u = UnitGroupUnit(ug,i);
-        console(getAbilsFromUnit(u));
+        print(getAbilsFromUnit(u));
     }
 
 	return true;
@@ -160,6 +170,34 @@ bool clear (bool a,bool b){
     return true;
 }
 
+bool datatableget_trig (bool a,bool b){
+    string cmd = DevTools_ChatCommandEventCommandGet();
+    string key = DevTools_ChatCommandEventParamValueGet(cmd, "key");
+	string log = "DataTable";
+	int i;
+	TriggerDebugSetTypeFile(DEBUG_TYPE_INFO, log);
+	
+	if(key==null || StringLength(key)==0){ key=""; }
+	if(key!=""){
+		chatcommand_print(key+": "+DataTableGetString(true,key));
+		return true;
+	}
+	print("Datatable keys:");
+	for(i=0;i<DataTableValueCount(true);i+=1){
+		key = DataTableValueName(true,i);
+		chatcommand_print(key);
+	}
+    return true;
+}
+
+
+bool datatableset_trig (bool a,bool b){
+    string cmd = DevTools_ChatCommandEventCommandGet();
+    string key = DevTools_ChatCommandEventParamValueGet(cmd, "key");
+	string value = DevTools_ChatCommandEventParamValueGet(cmd, "value");
+	DataTableSetString(true,key,value);
+    return true;
+}
 void DevTools_ChatCommand_Commands_Init(){
 	string cmd;
     cmd = "clear";
@@ -229,4 +267,32 @@ void DevTools_ChatCommand_Commands_Init(){
 		TriggerCreate("getBehaviorsFromSelectedUnits"),
 		StringToText("Get the Behaviors from the Selected Units")
 	);
+
+	cmd = "datatableget";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("datatableget_trig"),
+		StringToText("Get values from datatable")
+	);
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "key",
+        StringToText("Datatable Key")
+    );
+	cmd = "datatableset";
+    DevTools_ChatCommandCreate(
+		cmd,
+		TriggerCreate("datatableset_trig"),
+		StringToText("Set values from datatable")
+	);
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "key",
+        StringToText("Datatable Key")
+    );
+	DevTools_ChatCommandParamAdd(
+        cmd,
+        "value",
+        StringToText("Datatable Value")
+    );
 }

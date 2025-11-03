@@ -8,6 +8,8 @@ static const string c_DefaultPrefix = "-";
 trigger DevTools_ChatCommand;
 
 
+
+
 string DevTools_ChatCommandPrefix(){
 	return "";
 }
